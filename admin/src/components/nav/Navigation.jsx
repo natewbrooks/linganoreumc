@@ -1,0 +1,30 @@
+import React from 'react';
+import NavLink from './NavLink';
+import NavLabel from './NavLabel';
+
+function Navigation() {
+	const links = [
+		{ to: '/edit/home', title: 'Home' },
+		{ to: '/edit/events', title: 'Events' },
+		{ to: '/', title: 'Sermons' },
+	];
+
+	return (
+		<nav className='h-full w-fit flex flex-col space-y-2'>
+			<NavLink
+				to={'/'}
+				title={'General'}
+			/>
+			<NavLabel title={'Pages'} />
+			{links.map((link, index) => (
+				<NavLink
+					key={index}
+					to={link.to}
+					title={link.title}
+				/>
+			))}
+		</nav>
+	);
+}
+
+export default Navigation;
