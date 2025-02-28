@@ -30,7 +30,6 @@ export const createEvent = async (req, res) => {
 	const { title, description, isRecurring } = req.body;
 
 	// Validate required fields.
-	// Note: Since isRecurring can be 0 (falsy), we check explicitly for undefined or null.
 	if (!title || !description || isRecurring === undefined || isRecurring === null) {
 		return res.status(400).json({ error: 'All fields required' });
 	}
