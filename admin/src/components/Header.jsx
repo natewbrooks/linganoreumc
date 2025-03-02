@@ -1,10 +1,17 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import Logo from '../assets/header-logo.svg?react';
 
 function Header() {
 	return (
-		<div className={`w-full flex justify-center`}>
-			<h1 className={`text-4xl font-dm`}>Linganore United Methodist Church ADMIN</h1>
+		<div className={`relative w-full flex justify-around bg-red h-[60px] mb-20`}>
+			<div className={`relative`}>
+				<Logo
+					width={400}
+					className={`relative -top-10`}
+				/>
+				<h3 className={`absolute -bottom-13 right-18 font-newb text-xl`}>Admin Dashboard</h3>
+			</div>
+			<button className={`font-dm text-bkg text-2xl cursor-pointer`}>Logout</button>
 		</div>
 	);
 }

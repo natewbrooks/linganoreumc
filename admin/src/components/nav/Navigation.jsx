@@ -10,7 +10,8 @@ function Navigation() {
 	];
 
 	return (
-		<nav className='h-full w-fit flex flex-col space-y-2'>
+		<nav className='h-full w-[400px] flex flex-col space-y-1'>
+			<NavLabel title={'Settings'} />
 			<NavLink
 				to={'/'}
 				title={'General'}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import EventItem from './EventItem';
+import { Link } from 'react-router-dom';
 
 function ListEvents() {
 	const [events, setEvents] = useState([]);
@@ -27,15 +28,31 @@ function ListEvents() {
 	}
 
 	return (
-		<div className='flex flex-col space-y-2 font-dm'>
-			{events.map((event) => (
-				<EventItem
-					key={event.id}
-					id={event.id}
-					title={event.title}
-					description={event.description}
-				/>
-			))}
+		<div className={`flex flex-col space-y-4`}>
+			{/* Header */}
+			<div className={`flex flex-row items-center justify-between`}>
+				<div className={`flex flex-col`}>
+					<div className={`font-dm text-2xl`}>All Events ({events.length})</div>
+					<div className={`font-dm text-md`}>Select an event to edit</div>
+				</div>
+				<Link
+					to={'/edit/event/new'}
+					className={`font-dm text-bkg text-lg bg-red px-2 `}>
+					New Event
+				</Link>
+			</div>
+
+			{/* list */}
+			<div className='flex flex-col font-dm'>
+				{events.map((event) => (
+					<EventItem
+						key={event.id}
+						id={event.id}
+						title={event.title}
+						description={event.description}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }

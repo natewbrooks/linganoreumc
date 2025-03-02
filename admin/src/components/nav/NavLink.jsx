@@ -9,7 +9,7 @@ function NavLink({ to, title }) {
 		<Link
 			className={`${
 				isActive ? 'border-darkred' : 'border-transparent'
-			} border-r-4 bg-red px-2 py-1 w-[200px] text-center shadow-sm text-bkg font-dm`}
+			} border-r-4 bg-red px-2 py-1 w-[200px] text-right shadow-sm text-bkg font-dm`}
 			to={to}>
 			{title}
 		</Link>
