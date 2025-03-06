@@ -5,15 +5,15 @@
 - MySQL server
   - port 3306
 - Express server
-  - `cd /backend`
+  - `cd backend`
   - `nodemon node.js`
  
 ## Admin Panel
-  - `cd /admin`
+  - `cd admin`
   - `npm run dev`
 
 ## Frontend
-  - `cd /frontend`
+  - `cd frontend`
   - `npm run dev`
   
  
