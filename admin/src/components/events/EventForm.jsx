@@ -32,14 +32,14 @@ function EventForm({ mode = 'create', initialData = null }) {
 		try {
 			let response;
 			if (mode === 'create') {
-				response = await fetch('http://localhost:5000/events', {
+				response = await fetch('http://localhost:5000/admin/events', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ title, description, isRecurring, date, times }),
 				});
 			} else if (mode === 'edit' && initialData) {
 				// Assuming initialData contains the event id
-				response = await fetch(`http://localhost:5000/events/${initialData.id}`, {
+				response = await fetch(`http://localhost:5000/admin/events/${initialData.id}`, {
 					method: 'PUT', // or PATCH, as needed
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ title, description, isRecurring, date, times }),

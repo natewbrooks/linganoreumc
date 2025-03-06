@@ -4,7 +4,6 @@ import Home from './pages/edit/Home.jsx';
 import General from './pages/General.jsx';
 import Events from './pages/edit/Events.jsx';
 import EditEvent from './components/events/EditEvent.jsx';
-import CreateEventForm from './components/events/EventForm.jsx';
 import CreateEvent from './components/events/CreateEvent.jsx';
 
 // Handles routing
