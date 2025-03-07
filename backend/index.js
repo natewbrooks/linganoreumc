@@ -12,42 +12,28 @@ import verifyJWT from './middleware/verifyJWT.js';
 dotenv.config();
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Create the permissions guard instance
+// Permissions guard instance
 const permissionsGuard = guard({
 	permissionsProperty: 'permissions',
 });
 
-// Admin authentication and authorization middleware for /admin routes
-app.use('/admin', (req, res, next) => {
-	// Allow access to login route without JWT verification
-	if (req.path.startsWith('/login')) {
-		return next();
-	}
+// Public API Routes (No Authentication Needed)
+app.use('/api/events', publicEventsRouter);
 
-	// Verify the JWT token.
-	verifyJWT(req, res, (err) => {
-		if (err) {
-			return res.redirect('/admin/login');
-		}
-		// Check that the token includes the "admin" permission
-		return permissionsGuard.check(['admin'])(req, res, next);
-	});
-});
+// Admin Authentication Route (No JWT Needed)
+app.use('/api/admin/login', loginRoute);
 
-// Restricted endpoints for admins
-app.use('/admin/login', loginRoute);
-app.use('/admin/events', adminEventsRouter);
+// Admin Protected Routes (JWT Required)
+app.use('/api/admin', verifyJWT, permissionsGuard.check(['admin']), adminEventsRouter);
 
-// Public endpoints
-app.use('/events', publicEventsRouter);
-
-app.get('/', (req, res) => {
-	res.send('hello');
+app.get('/api/', (req, res) => {
+	res.json({ message: 'API is working!' });
 });
 
 const PORT = process.env.PORT || 5000;

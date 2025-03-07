@@ -3,15 +3,7 @@ import axios from 'axios';
 
 function App() {
 	const [message, setMessage] = useState('');
-
-	useEffect(() => {
-		axios
-			.get('/api')
-			.then((res) => setMessage(res.data))
-			.catch((err) => console.error(err));
-	}, []);
-
-	return <h1>{message}</h1>;
+	return <h1>home</h1>;
 }
 
 export default App;

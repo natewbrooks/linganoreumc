@@ -7,7 +7,7 @@ import Header from './components/Header.jsx';
 
 // Essentially the layout pages
 createRoot(document.getElementById('root')).render(
-	<BrowserRouter>
+	<BrowserRouter basename='/admin'>
 		<div className={`flex flex-col my-8`}>
 			<Header />
 
