@@ -11,6 +11,7 @@ function App() {
 	return (
 		<Routes>
 			{/* Admin Landing Page */}
+			{/* website.com/admin/ */}
 			<Route
 				path='/'
 				element={<General />}
@@ -18,24 +19,24 @@ function App() {
 
 			{/* Edit Home Page */}
 			<Route
-				path='/edit/home'
+				path='/edit/home-page/'
 				element={<Home />}
 			/>
 
 			{/* Edit Events Page */}
 			<Route
-				path='/edit/events'
+				path='/events/'
 				element={<Events />}
 			/>
 
 			{/* Edit a specific event */}
 			<Route
-				path='/edit/event/:id'
+				path='/edit/event/:id/'
 				element={<EditEvent />}
 			/>
 
 			<Route
-				path='/edit/event/new'
+				path='/new/event/'
 				element={<CreateEvent />}
 			/>
 		</Routes>

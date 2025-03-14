@@ -1,23 +1,40 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: Newborough;
+  src: url(./assets/fonts/NEWBOROU.TTF);
 }
 
+@import "tailwindcss";
+
+@theme {
+  --color-bkg: #FFF8EF;
+  --color-red: #AD2C3F;
+  --color-darkred: #47121A;
+  --color-accent: #FFCC00;
+  --color-tp: rgba(0, 0, 0, .1);
+  --font-dm: DM Serif Text, "serif";
+  --font-newb: Newborough, "sans-serif";
+}
+
+#parallelogram {
+  padding: 8px;
+  display: inline-block;
+  background: #AD2C3F;
+  transform: skewX(-30deg);
+}
+
+:root {
+  background-color: #FFF8EF;
+}
+
+/*
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -46,9 +63,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -59,10 +78,12 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
-}
+} */

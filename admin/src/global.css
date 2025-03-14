@@ -17,6 +17,13 @@
   --font-newb: Newborough, "sans-serif";
 }
 
+#parallelogram {
+  padding: 8px;
+  display: inline-block;
+  background: #AD2C3F;
+  transform: skewX(-30deg);
+}
+
 :root {
   background-color: #FFF8EF;
 }

@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import guard from 'express-jwt-permissions';
 import publicEventsRouter from './routes/public/events.js';
-import adminEventsRouter from './routes/admin/events.js';
-import loginRoute from './routes/admin/login.js';
+import adminEventsRoute from './routes/admin/events.js';
+import adminLoginRoute from './routes/admin/login.js';
 import verifyJWT from './middleware/verifyJWT.js';
 
 dotenv.config();
@@ -24,13 +24,15 @@ const permissionsGuard = guard({
 });
 
 // Public API Routes (No Authentication Needed)
-app.use('/api/events', publicEventsRouter);
+app.use('/api/events/', publicEventsRouter);
 
 // Admin Authentication Route (No JWT Needed)
-app.use('/api/admin/login', loginRoute);
+app.use('/api/admin/login/', adminLoginRoute);
 
 // Admin Protected Routes (JWT Required)
-app.use('/api/admin', verifyJWT, permissionsGuard.check(['admin']), adminEventsRouter);
+// app.use('/api/admin', verifyJWT, permissionsGuard.check(['admin']), adminEventsRouter);
+
+app.use('/api/admin/events/', adminEventsRoute);
 
 app.get('/api/', (req, res) => {
 	res.json({ message: 'API is working!' });

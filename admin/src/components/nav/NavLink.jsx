@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import ParallelogramBG from '../ParallelogramBG';
 
 function NavLink({ to, title }) {
 	const location = useLocation();
@@ -7,11 +8,13 @@ function NavLink({ to, title }) {
 
 	return (
 		<Link
-			className={`${
-				isActive ? 'border-darkred' : 'border-transparent'
-			} border-r-4 bg-red px-2 py-1 w-[200px] text-right shadow-sm text-bkg font-dm`}
-			to={to}>
-			{title}
+			to={to}
+			className={``}>
+			<ParallelogramBG
+				text={title}
+				textSize={18}
+				width={200}
+			/>
 		</Link>
 	);
 }

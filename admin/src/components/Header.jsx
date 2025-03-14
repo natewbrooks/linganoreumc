@@ -4,7 +4,7 @@ import Logo from '../assets/header-logo.svg?react';
 function Header() {
 	return (
 		<div className={`relative w-full flex justify-around bg-red h-[60px] mb-20`}>
-			<div className={`relative`}>
+			<div className={`relative right-20`}>
 				<Logo
 					width={400}
 					className={`relative -top-10`}

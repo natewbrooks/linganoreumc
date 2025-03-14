@@ -11,7 +11,7 @@ services:
       - DB_PORT=3306
       - DB_USER=root
       - DB_PASSWORD=rootpassword
-      - DB_NAME=mydatabase
+      - DB_NAME=Linganore
     ports:
       - '5000:5000'
     volumes:
@@ -68,13 +68,12 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_DATABASE: Linganore
     ports:
       - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
 volumes:
   mysql_data:
