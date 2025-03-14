@@ -1,20 +1,24 @@
-# Development Setup
+# Project Setup
 
-## Backend
+This project uses a multi-container docker application with the following services:
 
-- MySQL server
-  - port 3306
-- Express server
-  - `cd backend`
-  - `nodemon node.js`
- 
-## Admin Panel
-  - `cd admin`
-  - `npm run dev`
+- **MySQL Server:** SQL database service on port `3306`.
+- **Express Server:** Runs the backend API using Node.js with nodemon for live reloading on port `5000`.
+- **Admin Panel:** A private-facing administrative using Vite and React interface on port `5173`.
+- **Frontend:** The public-facing application using Vite and React on port `5174`.
 
-## Frontend
-  - `cd frontend`
-  - `npm run dev`
-  
- 
-# 
+---
+
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) must be installed.
+- [Docker Compose](https://docs.docker.com/compose/install/) is used for running the services together.
+
+---
+
+## Running it
+
+- Open Docker App
+- `docker-compose build` - Builds all containers
+- `docker-compose up` - Starts the services
+- `docker-compose down` - Stops the services
