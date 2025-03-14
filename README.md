@@ -4,7 +4,7 @@ This project uses a multi-container docker application with the following servic
 
 - **MySQL Server:** SQL database service on port `3306`.
 - **Express Server:** Runs the backend API using Node.js with nodemon for live reloading on port `5000`.
-- **Admin Panel:** A private-facing administrative using Vite and React interface on port `5173`.
+- **Admin Panel:** A private-facing administrative interface using Vite and React on port `5173`.
 - **Frontend:** The public-facing application using Vite and React on port `5174`.
 
 ---
