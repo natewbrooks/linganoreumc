@@ -1,0 +1,27 @@
+{
+  "announcementBanner": {
+    "enabled": false,
+    "title": "INCLEMENT WEATHER ALERT",
+    "subtext": "Due to weather conditions, we will be canceling today’s sermons. Stay safe and god bless!"
+  },
+  "contactInformation": {
+    "name": "Linganore United Methodist Church",
+    "phoneNumber": "(555) 123-4567",
+    "email": "info@examplechurch.org",
+    "address": "123 Church St, Hometown, USA"
+  },
+  "socialMediaLinks": [
+    {
+      "platform": "YouTube",
+      "url": "https://www.youtube.com/@mynewwoodunitedmethodist"
+    },
+    {
+      "platform": "Zoom",
+      "url": "https://zoom.us/j/8316030604"
+    },
+    {
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/ExampleChurch"
+    }
+  ]
+}

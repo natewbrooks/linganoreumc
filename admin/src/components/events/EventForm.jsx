@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DateTimeFields from './DateTimeFields';
+import TextInput from '../ui/TextInput';
+import BodyTextInput from '../ui/BodyTextInput';
 
 function EventForm({ mode = 'create', initialData = null }) {
 	const navigate = useNavigate();
@@ -280,28 +282,19 @@ function EventForm({ mode = 'create', initialData = null }) {
 				<div className='flex flex-col '>
 					<span className={`font-newb text-md`}>Details</span>
 					<div className='flex flex-col space-y-2 px-4 py-3'>
-						<label className='flex flex-col'>
-							<span className='text-sm'>Title</span>
-							<input
-								className='bg-tp px-2 py-1 outline-none border-l-4 border-red'
-								placeh
-								older='Title'
-								type='text'
-								maxLength={40}
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-							/>
-						</label>
-						<label className='flex flex-col'>
-							<span className='text-sm'>Description</span>
-							<textarea
-								className='bg-tp px-2 py-1 outline-none border-l-4 flex-wrap flex border-red min-h-[100px]'
-								placeholder='Description'
-								maxLength={110}
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-							/>
-						</label>
+						<TextInput
+							title={`Title`}
+							value={title}
+							type={`text`}
+							maxLength={40}
+							onChange={(e) => setTitle(e.target.value)}
+						/>
+						<BodyTextInput
+							title={`Description`}
+							value={description}
+							maxLength={110}
+							onChange={(e) => setDescription(e.target.value)}
+						/>
 
 						<div className='flex w-full items-center justify-end space-x-2 mt-2 text-sm'>
 							<input

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import TextInput from '../ui/TextInput';
 
 /**
  *   dateTimeData: [
@@ -78,6 +79,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData }) {
 									value={safeDateValue}
 									onChange={(e) => handleDateChange(dateIndex, e.target.value)}
 								/>
+
 								{/* If it's the first date, show a plus icon; otherwise a trash icon.*/}
 								{dateIndex === 0 ? (
 									<div

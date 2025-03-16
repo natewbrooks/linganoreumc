@@ -1,0 +1,44 @@
+{
+	"headerImageUrl": "https://example.com/images/church-header.jpg",
+	"youtubeBroadcastUrl": "https://www.youtube.com/watch?v=abc123",
+	"mottoBanner": "Offering Ourselves to be Christ-like in Our Community",
+	"recurringEvents": [
+		{
+			"title": "Worship Service",
+			"time": "Sundays at 10:00 AM",
+			"description": "Main worship service in the sanctuary."
+		},
+		{
+			"title": "Online Worship",
+			"time": "Sundays at 10:00 AM",
+			"description": "Live-streamed worship service on YouTube."
+		},
+		{
+			"title": "Sunday School",
+			"time": "Sundays at 9:00 AM",
+			"description": "Various classes for adults and children."
+		}
+	],
+	"featuredEvents": [
+		{
+			"title": "Community Picnic",
+			"date": "2025-07-15",
+			"description": "Annual picnic at the church grounds for everyone."
+		},
+		{
+			"title": "Prayer Walk",
+			"date": "2025-07-20",
+			"description": "Join us for a reflective walk through the neighborhood."
+		}
+	],
+	"homepageSocialLinks": [
+		{
+			"platform": "YouTube",
+			"url": "https://www.youtube.com/@mynewwoodunitedmethodist"
+		},
+		{
+			"platform": "Zoom",
+			"url": "https://zoom.us/j/8316030604"
+		}
+	]
+}

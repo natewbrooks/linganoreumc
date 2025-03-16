@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import guard from 'express-jwt-permissions';
 import publicEventsRouter from './routes/public/events.js';
+import publicSettingsRouter from './routes/public/settings.js';
+import adminSettingsRouter from './routes/admin/settings.js';
 import adminEventsRoute from './routes/admin/events.js';
 import adminLoginRoute from './routes/admin/login.js';
 import verifyJWT from './middleware/verifyJWT.js';
@@ -25,6 +27,7 @@ const permissionsGuard = guard({
 
 // Public API Routes (No Authentication Needed)
 app.use('/api/events/', publicEventsRouter);
+app.use('/api/settings/', publicSettingsRouter);
 
 // Admin Authentication Route (No JWT Needed)
 app.use('/api/admin/login/', adminLoginRoute);
@@ -33,6 +36,7 @@ app.use('/api/admin/login/', adminLoginRoute);
 // app.use('/api/admin', verifyJWT, permissionsGuard.check(['admin']), adminEventsRouter);
 
 app.use('/api/admin/events/', adminEventsRoute);
+app.use('/api/admin/settings/', adminSettingsRouter);
 
 app.get('/api/', (req, res) => {
 	res.json({ message: 'API is working!' });
