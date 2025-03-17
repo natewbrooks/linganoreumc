@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/edit/Home.jsx';
 import General from './pages/General.jsx';
-import Events from './pages/edit/Events.jsx';
+import Events from './pages/Events.jsx';
 import EditEvent from './components/events/EditEvent.jsx';
 import CreateEvent from './components/events/CreateEvent.jsx';
 

@@ -56,16 +56,22 @@ export const getArchivedEvents = async (req, res) => {
 
 // Admin: Create a new Event
 export const createEvent = async (req, res) => {
-	const { title, description, isRecurring } = req.body;
+	const { title, description, isRecurring, isFeatured } = req.body;
 
-	if (!title || !description || isRecurring === undefined || isRecurring === null) {
+	if (
+		!title ||
+		!description ||
+		isRecurring === undefined ||
+		isRecurring === null ||
+		isFeatured === null
+	) {
 		return res.status(400).json({ error: 'All fields required' });
 	}
 
 	try {
 		const [result] = await pool.query(
-			'INSERT INTO Events (title, description, isRecurring) VALUES (?, ?, ?)',
-			[title, description, isRecurring]
+			'INSERT INTO Events (title, description, isRecurring, isFeatured) VALUES (?, ?, ?, ?)',
+			[title, description, isRecurring, isFeatured]
 		);
 
 		const eventID = result.insertId;
@@ -82,7 +88,7 @@ export const createEvent = async (req, res) => {
 // Admin: Update an Event via it's eventID
 export const updateEvent = async (req, res) => {
 	const { id } = req.params;
-	const { title, description, isRecurring } = req.body;
+	const { title, description, isRecurring, isFeatured } = req.body;
 
 	if (!title || !description) {
 		return res.status(400).json({ error: 'Title and description are required' });
@@ -90,8 +96,8 @@ export const updateEvent = async (req, res) => {
 
 	try {
 		const [result] = await pool.query(
-			'UPDATE Events SET title = ?, description = ?, isRecurring = ? WHERE id = ?',
-			[title, description, isRecurring, id]
+			'UPDATE Events SET title = ?, description = ?, isRecurring = ?, isFeatured =? WHERE id = ?',
+			[title, description, isRecurring, isFeatured, id]
 		);
 
 		console.log(JSON.stringify(result));

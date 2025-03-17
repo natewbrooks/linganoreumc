@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FaClock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useEvents } from '../../contexts/EventsContext';
 import ParallelogramBG from '../ParallelogramBG';
 
 function formatShortDate(dateStr) {
-	// "2025-04-05" --> "4/5/25"
 	const [year, month, day] = dateStr.split('-').map(Number);
 	return `${month}/${day}/${String(year).slice(-2)}`;
 }
 
 function formatTime(timeStr) {
-	// "17:30:00" --> "5:30 PM"
 	const [hour, minute] = timeStr.split(':').map(Number);
 	const dateObj = new Date(0, 0, 0, hour, minute);
 	return dateObj.toLocaleString('en-US', {
@@ -21,41 +20,28 @@ function formatTime(timeStr) {
 }
 
 function EventItem({ id, title, description }) {
+	const { fetchEventDatesById, fetchEventTimesByDateId } = useEvents();
 	const [eventDates, setEventDates] = useState([]);
 	const [timesMap, setTimesMap] = useState({});
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch(`http://localhost:5000/api/events/dates/${id}/`)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Failed to fetch event dates');
-				}
-				return response.json();
-			})
-			.then((data) => setEventDates(data))
+		fetchEventDatesById(id)
+			.then(setEventDates)
 			.catch((err) => setError(err.message));
-	}, [id]);
+	}, [id, fetchEventDatesById]);
 
-	function getTimesForDate(eventDateId) {
-		if (!timesMap[eventDateId]) {
-			fetch(`http://localhost:5000/api/events/times/${eventDateId}/`)
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error(`Failed to fetch event times for eventDateID ${eventDateId}`);
-					}
-					return response.json();
-				})
-				.then((data) => {
-					setTimesMap((prevMap) => ({
-						...prevMap,
-						[eventDateId]: data,
-					}));
-				})
-				.catch((err) => setError(err.message));
-		}
-		return timesMap[eventDateId] || [];
-	}
+	useEffect(() => {
+		eventDates.forEach((dateObj) => {
+			if (!timesMap[dateObj.id]) {
+				fetchEventTimesByDateId(dateObj.id)
+					.then((data) => {
+						setTimesMap((prevMap) => ({ ...prevMap, [dateObj.id]: data }));
+					})
+					.catch((err) => setError(err.message));
+			}
+		});
+	}, [eventDates, fetchEventTimesByDateId]);
 
 	if (error) {
 		return <div>Error: {error}</div>;
@@ -64,28 +50,19 @@ function EventItem({ id, title, description }) {
 	return (
 		<div className='w-full'>
 			{/* Date/Time row */}
-			<div className={`text-sm text-darkred px-2 w-full flex flex-wrap items-center space-x-2`}>
+			<div className='text-sm text-darkred px-2 w-full flex flex-wrap items-center space-x-2 pb-1'>
 				<FaClock size={10} />
 				{eventDates.map((dateObj, idx) => {
-					const times = getTimesForDate(dateObj.id);
-					// If no times, skip
+					const times = timesMap[dateObj.id] || [];
 					if (!times.length) return null;
 
-					// For the first time in `times`, print "DATE @ TIME",
-					// for subsequent times, print just ", TIME"
 					const date = formatShortDate(dateObj.date);
-					const timesString = times
-						.map((t, i) => {
-							const tFormatted = formatTime(t.time);
-							return i === 0 ? `${date} @ ${tFormatted}` : `, ${tFormatted}`;
-						})
-						.join('');
+					const timesString = times.map((t) => formatTime(t.time)).join(', ');
 
 					return (
 						<React.Fragment key={dateObj.id}>
-							{/* Put a separator "|" before any date after the first */}
-							{idx > 0 && <span className='mx-2'>|</span>}
-							<span>{timesString}</span>
+							{idx > 0 && <span className=''>|</span>}
+							<span>{`${date} @ ${timesString}`}</span>
 						</React.Fragment>
 					);
 				})}
@@ -95,12 +72,12 @@ function EventItem({ id, title, description }) {
 			<div className='relative flex items-center text-black'>
 				<Link
 					to={`/edit/event/${id}`}
-					className={`flex w-fit space-x-1 whitespace-nowrap `}>
+					className='flex w-fit space-x-1 whitespace-nowrap'>
 					<ParallelogramBG
 						text={`#${id}`}
 						textSize={18}
 						flipped={false}
-						bgColorClass={'bg-darkred'}
+						bgColorClass='bg-darkred'
 					/>
 					<ParallelogramBG
 						text={title}
@@ -108,10 +85,9 @@ function EventItem({ id, title, description }) {
 						flipped={false}
 					/>
 				</Link>
-				<p
-					className={`-z-10 bg-tp relative -left-5 text-left text-md pl-8 py-[5.5px] w-full -skew-x-[30deg] overflow-hidden whitespace-nowrap text-ellipsis`}>
-					<p className={`skew-x-[30deg] text-darkred`}>{description}</p>
-				</p>
+				<div className='-z-10 bg-tp relative -left-5 text-left text-md pl-8 py-[5.5px] w-full -skew-x-[30deg] overflow-hidden whitespace-nowrap text-ellipsis'>
+					<p className='skew-x-[30deg] text-darkred'>{description}</p>
+				</div>
 			</div>
 		</div>
 	);

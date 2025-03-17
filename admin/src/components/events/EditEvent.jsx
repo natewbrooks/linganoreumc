@@ -77,6 +77,7 @@ function EditEvent() {
 					title: fetchedEvent.title,
 					description: fetchedEvent.description,
 					isRecurring: fetchedEvent.isRecurring,
+					isFeatured: fetchedEvent.isFeatured,
 
 					// Build eventDateData from fetchedEventDates & their times
 					eventDateData: fetchedEventDates.map((dateObj, index) => {
