@@ -1,44 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useEvents } from '../contexts/EventsContext';
 import Navigation from '../components/Navigation';
 
 function Events() {
-	const [events, setEvents] = useState([]);
-
-	useEffect(() => {
-		// Fetch events
-		fetch('http://localhost:5000/api/events/all/')
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Failed to fetch event dates');
-				}
-				return response.json();
-			})
-			.then((data) => {
-				setEvents(data);
-			})
-			.catch((error) => {
-				console.error('Error fetching events:', error);
-			});
-	}, []);
+	const { events } = useEvents();
 
 	return (
 		<div>
-			<Navigation />
 			<div>
 				<h1>Featured Events</h1>
 				{events.length > 0 ? (
-					events.map((event, index) => (
-						<div key={index}>{event.isFeatured === 1 ? event.title : ''}</div>
-					))
+					events.map((event, index) =>
+						event.isFeatured === 1 ? <div key={index}>{event.title}</div> : null
+					)
 				) : (
 					<p>No events found</p>
 				)}
-				<h1>All events</h1>
 
+				<h1>All events</h1>
 				{events.length > 0 ? (
-					events.map((event, index) => (
-						<div key={index}>{event.isFeatured === 0 ? event.title : ''}</div>
-					))
+					events.map((event, index) =>
+						event.isFeatured === 0 ? <div key={index}>{event.title}</div> : null
+					)
 				) : (
 					<p>No events found</p>
 				)}
