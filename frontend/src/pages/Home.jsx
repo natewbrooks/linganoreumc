@@ -14,7 +14,6 @@ function Home() {
 		<div className='w-full flex flex-col'>
 			<Header />
 			<Motto />
-			{homeSettings.welcomeMessage && <h1>{homeSettings.welcomeMessage}</h1>}
 
 			<h1>Events</h1>
 			{events.length > 0 ? (

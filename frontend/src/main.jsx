@@ -13,7 +13,7 @@ const Layout = () => {
 	const { settings } = useSettings();
 
 	return (
-		<div className='flex flex-col'>
+		<div className='relative flex flex-col'>
 			{settings.general?.announcementBanner?.enabled && (
 				<AnnouncementBanner
 					title={settings.general.announcementBanner.title}
@@ -21,6 +21,7 @@ const Layout = () => {
 				/>
 			)}
 			<Navigation />
+
 			<App />
 			<Footer />
 		</div>

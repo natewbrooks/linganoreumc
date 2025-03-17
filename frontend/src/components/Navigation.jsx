@@ -5,11 +5,12 @@ import logoNoBkgWhite from '../assets/logos/logo-no-bkg-white.svg';
 
 function Navigation() {
 	return (
-		<div className={`relative w-full flex justify-around bg-red h-[60px] mt-10 mb-20`}>
+		<div
+			className={`relative w-full flex justify-around bg-red outline-8 outline-bkg h-[60px] mt-8`}>
 			<div className={`relative right-10`}>
 				{/* <Logo className={`relative -top-10 w-[400px] lg:-[500px]`} /> */}
 				<div
-					className={`relative -top-6 bg-red outline-8 outline-bkg  -skew-x-[30deg] w-fit px-6 py-4`}>
+					className={`z-10 relative -top-6 bg-red outline-8 outline-bkg  -skew-x-[30deg] w-fit px-6 py-4`}>
 					<img
 						src={logoNoBkgWhite}
 						className={`skew-x-[30deg] translate-x-1 -translate-y-1`}
