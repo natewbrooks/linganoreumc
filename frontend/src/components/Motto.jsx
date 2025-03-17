@@ -1,7 +1,4 @@
 import React from 'react';
-import linganoreBrightPic from './assets/linganore-bright-pic.png';
-import logoNoBkg from './assets/logo-no-bkg.svg';
-import { Link } from 'react-router-dom';
 
 function Motto() {
 	return (

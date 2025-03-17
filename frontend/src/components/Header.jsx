@@ -1,6 +1,6 @@
 import React from 'react';
-import linganoreBrightPic from './assets/linganore-bright-pic.png';
-import logoNoBkg from './assets/logo-no-bkg.svg';
+import linganoreBrightPic from '../assets/linganore-bright-pic.png';
+import logoNoBkg from '../assets/logo-no-bkg.svg';
 import { Link } from 'react-router-dom';
 
 function Header() {
@@ -25,7 +25,7 @@ function Header() {
 						<p className={`-skew-x-[30deg] text-bkg`}>SERMONS</p>
 					</Link>
 					<Link
-						to={`http://localhost:5000/api/events/all`}
+						to={`/events/`}
 						className={`skew-x-[30deg] bg-darkred px-3 hover:scale-105`}>
 						<p className={`-skew-x-[30deg] text-bkg`}>EVENTS</p>
 					</Link>
