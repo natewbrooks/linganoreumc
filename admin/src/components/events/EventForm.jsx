@@ -103,7 +103,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 					finalDateID = newDate.eventDateID;
 				} else {
 					await updateEventDate(eventDateID, date);
-					await deleteEventTimes(eventDateID); // ✅ Remove old times before adding new ones
+					await deleteEventTimes(eventDateID);
 				}
 
 				// Add times for this date

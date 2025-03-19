@@ -4,7 +4,16 @@ import { SiZoom } from 'react-icons/si';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
 
-function LivestreamEmbed({ ytChannelID, ytAPIKey, size }) {
+function LivestreamEmbed({
+	liveTitle,
+	liveSubtext,
+	offlineTitle,
+	offlineSubtext,
+	ytChannelID,
+	ytAPIKey,
+	socialLinks,
+	size,
+}) {
 	const [isLive, setIsLive] = useState(false);
 	const [ytVideoID, setYTVideoID] = useState('');
 
@@ -36,7 +45,6 @@ function LivestreamEmbed({ ytChannelID, ytAPIKey, size }) {
 	}, []);
 
 	const opts = {
-		width: size,
 		playerVars: {
 			autoplay: 1,
 			allowFullscreen: 1,
@@ -47,41 +55,29 @@ function LivestreamEmbed({ ytChannelID, ytAPIKey, size }) {
 		<div className={`w-full flex items-center justify-center space-x-10`}>
 			{/* ICONS/LINKS */}
 			<div className={`grid-cols-1 space-y-2`}>
-				<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
-					<FaFacebook
-						className={`skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red skew-x-[30deg] px-3 py-2`}>
-					<FaYoutube
-						className={`-skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
-					<SiZoom
-						className={`skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red skew-x-[30deg] px-3 py-2`}>
-					<FaYoutube
-						className={`-skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
+				{socialLinks.map((link, index) => (
+					<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
+						<Link
+							key={index}
+							href={link.url}
+							target='_blank'
+							rel='noopener noreferrer'
+							className='text-bkg skew-x-[30deg]'>
+							{link.platform}
+						</Link>
+					</div>
+				))}
 			</div>
 			{isLive ? (
 				// The current livestream
 				<div className={`flex flex-col justify-center items-center text-center`}>
 					<div className={`flex flex-col leading-2 mb-2`}>
-						<span className={`font-dm text-lg`}>WE'RE IN SESSION</span>
-						<h1 className={`font-dm text-xl`}>Watch our live broadcast!</h1>
+						<span className={`font-dm text-lg`}>{liveTitle}</span>
+						<h1 className={`font-dm text-xl`}>{liveSubtext}</h1>
 					</div>
-					<div className={`flex flex-col space-y-1`}>
+					<div className={`flex flex-col space-y-1 `}>
 						<YouTube
-							className={`aspect-video`}
+							className={`aspect-video w-full`}
 							videoId={ytVideoID}
 							opts={opts}
 						/>
@@ -102,8 +98,8 @@ function LivestreamEmbed({ ytChannelID, ytAPIKey, size }) {
 				// A previous video
 				<div className={`flex flex-col justify-center items-center text-center`}>
 					<div className={`flex flex-col leading-2 mb-2`}>
-						<span className={`font-dm text-md`}>WE'RE NOT IN SESSION...</span>
-						<h1 className={`font-dm text-2xl`}>Enjoy our previous broadcast!</h1>
+						<span className={`font-dm text-md`}>{offlineTitle}</span>
+						<h1 className={`font-dm text-2xl`}>{offlineSubtext}</h1>
 					</div>
 					<div className={`flex flex-col space-y-1`}>
 						<YouTube
@@ -123,7 +119,7 @@ function LivestreamEmbed({ ytChannelID, ytAPIKey, size }) {
 					</div>
 				</div>
 			)}
-			<div className={`grid-cols-1 space-y-2 invisible`}>
+			<div className={`grid-cols-1 space-y-2 `}>
 				<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
 					<FaFacebook
 						className={`skew-x-[30deg] text-bkg`}

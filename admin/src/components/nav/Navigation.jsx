@@ -36,6 +36,7 @@ function Navigation() {
 			<div className={`flex flex-col space-y-1 relative -left-3 text-end`}>
 				{links.map((link, index) => (
 					<NavLink
+						key={link.title + link.index}
 						to={link.to}
 						title={link.title}
 						subLinks={link.subLinks}

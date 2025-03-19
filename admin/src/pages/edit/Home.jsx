@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { useHomePageSettings } from '../../contexts/HomepageSettingsContext';
 import TextInput from '../../components/ui/TextInput';
+import SelectEventDropdown from '../../components/ui/SelectEventDropdown';
 
 function HomePageSettingsAdmin() {
-	const [settings, setSettings] = useState({
-		headerImageUrl: '',
-		youtubeBroadcastUrl: '',
-		mottoBanner: '',
-		recurringEvents: [],
-		featuredEvents: [],
-		homepageSocialLinks: [],
-	});
-	const [loading, setLoading] = useState(true);
+	const { homepageSettings, loading, updateHomepageSettings } = useHomePageSettings();
+	const [settings, setSettings] = useState(null);
 
-	// Fetch existing settings on component mount
+	// Sync local state when homepage settings load
 	useEffect(() => {
-		fetch('/api/settings/pages/home')
-			.then((res) => res.json())
-			.then((data) => {
-				setSettings(data);
-				setLoading(false);
-			})
-			.catch((err) => console.error(err));
-	}, []);
+		if (homepageSettings) {
+			setSettings({
+				headerImages: homepageSettings.header?.images || [],
+				mottoTitle: homepageSettings.mottoBanner?.text?.title || '',
+				mottoSubtext: homepageSettings.mottoBanner?.text?.subtext || '',
+				displayedSermonsTitle: homepageSettings.displayedSermons?.text?.title || '',
+				displayedSermonsSubtext: homepageSettings.displayedSermons?.text?.subtext || '',
+				sermonImageURL: homepageSettings.displayedSermons?.sermonImageURL || '',
+				associatedRecurringEvents:
+					homepageSettings.displayedSermons?.associatedRecurringEvents || [],
+				youtubeAPIKey: homepageSettings.livestream?.youtubeAPIKey || '',
+				youtubeChannelID: homepageSettings.livestream?.youtubeChannelID || '',
+				overrideOfflineVideoURL: homepageSettings.livestream?.overrideOfflineVideoURL || '',
+				liveTitle: homepageSettings.livestream?.text?.live?.title || '',
+				liveSubtext: homepageSettings.livestream?.text?.live?.subtext || '',
+				offlineTitle: homepageSettings.livestream?.text?.offline?.title || '',
+				offlineSubtext: homepageSettings.livestream?.text?.offline?.subtext || '',
+				seeMoreText: homepageSettings.livestream?.text?.seeMore || '',
+				socialLinks: homepageSettings.livestream?.socialLinks || [],
+				upcomingEventsTitle: homepageSettings.upcomingEvents?.text?.title || '',
+				upcomingEventsSubtext: homepageSettings.upcomingEvents?.text?.subtext || '',
+				upcomingEventsSeeMore: homepageSettings.upcomingEvents?.text?.seeMore || '',
+			});
+		}
+	}, [homepageSettings]);
 
-	// Handle form changes for simple text inputs
+	// Handle input changes
 	const handleChange = (field, value) => {
 		setSettings((prev) => ({
 			...prev,
@@ -31,7 +43,7 @@ function HomePageSettingsAdmin() {
 		}));
 	};
 
-	// Handle changes in array fields (Recurring Events, Featured Events, Social Links)
+	// Handle array changes
 	const handleArrayChange = (section, index, field, value) => {
 		setSettings((prev) => {
 			const updatedArray = [...prev[section]];
@@ -40,7 +52,7 @@ function HomePageSettingsAdmin() {
 		});
 	};
 
-	// Add new items to arrays
+	// Add new item to an array section
 	const addItem = (section, newItem) => {
 		setSettings((prev) => ({
 			...prev,
@@ -48,7 +60,7 @@ function HomePageSettingsAdmin() {
 		}));
 	};
 
-	// Remove items from arrays
+	// Remove an item from an array section
 	const removeItem = (section, index) => {
 		setSettings((prev) => ({
 			...prev,
@@ -56,190 +68,206 @@ function HomePageSettingsAdmin() {
 		}));
 	};
 
-	// Save settings to the backend
+	// Save settings to the backend via context
 	const saveSettings = () => {
-		fetch('/api/admin/settings/pages/home', {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(settings),
-		})
-			.then((res) => res.json())
-			.then((response) => {
-				alert(response.message || 'Settings updated');
-			})
-			.catch((err) => console.error(err));
+		if (settings) {
+			const updatedSettings = {
+				...homepageSettings,
+				header: { images: settings.headerImages },
+				mottoBanner: {
+					text: { title: settings.mottoTitle, subtext: settings.mottoSubtext },
+				},
+				displayedSermons: {
+					text: {
+						title: settings.displayedSermonsTitle,
+						subtext: settings.displayedSermonsSubtext,
+					},
+					sermonImageURL: settings.sermonImageURL,
+					associatedRecurringEvents: settings.associatedRecurringEvents,
+				},
+				livestream: {
+					youtubeAPIKey: settings.youtubeAPIKey,
+					youtubeChannelID: settings.youtubeChannelID,
+					overrideOfflineVideoURL: settings.overrideOfflineVideoURL,
+					text: {
+						live: { title: settings.liveTitle, subtext: settings.liveSubtext },
+						offline: { title: settings.offlineTitle, subtext: settings.offlineSubtext },
+						seeMore: settings.seeMoreText,
+					},
+					socialLinks: settings.socialLinks,
+				},
+				upcomingEvents: {
+					text: {
+						title: settings.upcomingEventsTitle,
+						subtext: settings.upcomingEventsSubtext,
+						seeMore: settings.upcomingEventsSeeMore,
+					},
+				},
+			};
+
+			updateHomepageSettings(updatedSettings);
+		}
 	};
 
-	if (loading) return <div>Loading...</div>;
+	// Show loading state
+	if (loading || !settings) return <div>Loading homepage settings...</div>;
 
 	return (
 		<div className='flex flex-col'>
 			<h2 className='font-dm text-2xl'>Homepage Settings</h2>
 
-			<div className={`flex flex-col space-y-8 pt-4`}>
-				{/* Header Image URL */}
-				<TextInput
-					title='Header Image URL'
-					type='text'
-					maxLength={255}
-					value={settings.headerImageUrl}
-					onChange={(e) => handleChange('headerImageUrl', e.target.value)}
-				/>
-
-				{/* YouTube Broadcast URL */}
-				<TextInput
-					title='YouTube Broadcast URL'
-					type='text'
-					maxLength={255}
-					value={settings.youtubeBroadcastUrl}
-					onChange={(e) => handleChange('youtubeBroadcastUrl', e.target.value)}
-				/>
+			<div className='flex flex-col space-y-8 pt-4'>
+				{/* Header Images */}
+				<div className={`flex flex-col space-y-2`}>
+					<h3 className={`font-dm`}>Headers</h3>
+					<div className={`flex flex-col space-y-1 pl-8`}>
+						<h3 className='font-dm'>Header Images</h3>
+						{settings.headerImages.map((image, index) => (
+							<div
+								key={index}
+								className='flex items-center space-x-2 border p-2'>
+								<TextInput
+									title='Image URL'
+									value={image.url}
+									onChange={(e) => handleArrayChange('headerImages', index, 'url', e.target.value)}
+								/>
+								<button
+									className='text-red-600'
+									onClick={() => removeItem('headerImages', index)}>
+									✕
+								</button>
+							</div>
+						))}
+						<button
+							className='bg-gray-200 px-2 py-1'
+							onClick={() => addItem('headerImages', { url: '', active: false })}>
+							Add Header Image
+						</button>
+					</div>
+				</div>
 
 				{/* Motto Banner */}
-				<TextInput
-					title='Motto Banner'
-					type='text'
-					maxLength={255}
-					value={settings.mottoBanner}
-					onChange={(e) => handleChange('mottoBanner', e.target.value)}
-				/>
-
-				{/* Recurring Events */}
-				<div className='flex flex-col space-y-2'>
-					<h3 className='font-dm'>Recurring Events</h3>
-					{settings.recurringEvents.map((event, index) => (
-						<div
-							key={index}
-							className='flex flex-col space-y-2 pl-8 border p-2'>
-							<TextInput
-								title='Title'
-								type='text'
-								maxLength={100}
-								value={event.title}
-								onChange={(e) =>
-									handleArrayChange('recurringEvents', index, 'title', e.target.value)
-								}
-							/>
-							<TextInput
-								title='Time'
-								type='text'
-								maxLength={100}
-								value={event.time}
-								onChange={(e) =>
-									handleArrayChange('recurringEvents', index, 'time', e.target.value)
-								}
-							/>
-							<TextInput
-								title='Description'
-								type='text'
-								maxLength={255}
-								value={event.description}
-								onChange={(e) =>
-									handleArrayChange('recurringEvents', index, 'description', e.target.value)
-								}
-							/>
-							<button
-								className='text-red-600'
-								onClick={() => removeItem('recurringEvents', index)}>
-								Remove
-							</button>
-						</div>
-					))}
-					<button
-						className='bg-gray-200 px-2 py-1'
-						onClick={() => addItem('recurringEvents', { title: '', time: '', description: '' })}>
-						Add Recurring Event
-					</button>
+				<div className={`flex flex-col space-y-2`}>
+					<h3 className={`font-dm`}>Motto</h3>
+					<div className={`flex flex-col space-y-1 pl-8`}>
+						<TextInput
+							title='Motto Title'
+							value={settings.mottoTitle}
+							onChange={(e) => handleChange('mottoTitle', e.target.value)}
+						/>
+						<TextInput
+							title='Motto Subtext'
+							value={settings.mottoSubtext}
+							onChange={(e) => handleChange('mottoSubtext', e.target.value)}
+						/>
+					</div>
 				</div>
 
-				{/* Featured Events */}
-				<div className='flex flex-col space-y-2'>
-					<h3 className='font-dm'>Featured Events</h3>
-					{settings.featuredEvents.map((event, index) => (
-						<div
-							key={index}
-							className='flex flex-col space-y-2 pl-8 border p-2'>
-							<TextInput
-								title='Title'
-								type='text'
-								maxLength={100}
-								value={event.title}
-								onChange={(e) =>
-									handleArrayChange('featuredEvents', index, 'title', e.target.value)
-								}
-							/>
-							<TextInput
-								title='Date'
-								type='date'
-								value={event.date}
-								onChange={(e) => handleArrayChange('featuredEvents', index, 'date', e.target.value)}
-							/>
-							<TextInput
-								title='Description'
-								type='text'
-								maxLength={255}
-								value={event.description}
-								onChange={(e) =>
-									handleArrayChange('featuredEvents', index, 'description', e.target.value)
-								}
-							/>
-							<button
-								className='text-red-600'
-								onClick={() => removeItem('featuredEvents', index)}>
-								Remove
-							</button>
+				{/* Displayed Sermons */}
+				<div className={`flex flex-col space-y-2`}>
+					<h3 className={`font-dm`}>Sermon Event Schedule</h3>
+					<div className={`flex flex-col space-y-1 pl-8`}>
+						<TextInput
+							title='Sermon Title'
+							value={settings.displayedSermonsTitle}
+							onChange={(e) => handleChange('displayedSermonsTitle', e.target.value)}
+						/>
+						<TextInput
+							title='Sermon Subtext'
+							value={settings.displayedSermonsSubtext}
+							onChange={(e) => handleChange('displayedSermonsSubtext', e.target.value)}
+						/>
+
+						<TextInput
+							title='Sermon Image URL'
+							value={settings.sermonImageURL}
+							onChange={(e) => handleChange('sermonImageURL', e.target.value)}
+						/>
+						<div>
+							<span className='text-sm font-dm'>Recurring Events Displayed</span>
+							<SelectEventDropdown eventType={'recurring'} />
+							<SelectEventDropdown eventType={'recurring'} />
+							<SelectEventDropdown eventType={'recurring'} />
+							<SelectEventDropdown eventType={'recurring'} />
 						</div>
-					))}
-					<button
-						className='bg-gray-200 px-2 py-1'
-						onClick={() => addItem('featuredEvents', { title: '', date: '', description: '' })}>
-						Add Featured Event
-					</button>
+					</div>
 				</div>
 
-				{/* Social Media Links */}
-				<div className='flex flex-col space-y-2'>
-					<h3 className='font-dm'>Homepage Social Links</h3>
-					{settings.homepageSocialLinks.map((link, index) => (
+				{/* Livestream */}
+				<div className={`flex flex-col space-y-2`}>
+					<h3 className={`font-dm`}>YouTube Livestream Information</h3>
+					<div className={`flex flex-col space-y-1 pl-8`}>
+						<TextInput
+							title='YouTube API Key'
+							value={settings.youtubeAPIKey}
+							onChange={(e) => handleChange('youtubeAPIKey', e.target.value)}
+						/>
+						<TextInput
+							title='YouTube Channel ID'
+							value={settings.youtubeChannelID}
+							onChange={(e) => handleChange('youtubeChannelID', e.target.value)}
+						/>
+						<div className={``}>
+							<TextInput
+								title='Override Offline Video URL'
+								value={settings.overrideOfflineVideoURL}
+								onChange={(e) => handleChange('overrideOfflineVideoURL', e.target.value)}
+							/>
+							<p className={`font-dm text-xs text-end`}>(otherwise use the most recent video)</p>
+						</div>
+					</div>
+				</div>
+
+				{/* Upcoming Events */}
+				<div className={`flex flex-col space-y-2`}>
+					<h3 className={`font-dm`}>Upcoming Events</h3>
+					<div className={`flex flex-col pl-8`}>
+						<div>
+							<span className='text-sm font-dm'>Events Displayed</span>
+							<SelectEventDropdown />
+							<SelectEventDropdown />
+							<SelectEventDropdown />
+							<SelectEventDropdown />
+						</div>
+					</div>
+				</div>
+
+				{/* Social Links */}
+				<div>
+					<h3 className='font-dm'>Social Links</h3>
+					{settings.socialLinks.map((link, index) => (
 						<div
 							key={index}
-							className='flex flex-col space-y-2 pl-8 border p-2'>
+							className='flex items-center space-x-2 border p-2'>
 							<TextInput
 								title='Platform'
-								type='text'
-								maxLength={50}
 								value={link.platform}
 								onChange={(e) =>
-									handleArrayChange('homepageSocialLinks', index, 'platform', e.target.value)
+									handleArrayChange('socialLinks', index, 'platform', e.target.value)
 								}
 							/>
 							<TextInput
 								title='URL'
-								type='text'
-								maxLength={255}
 								value={link.url}
-								onChange={(e) =>
-									handleArrayChange('homepageSocialLinks', index, 'url', e.target.value)
-								}
+								onChange={(e) => handleArrayChange('socialLinks', index, 'url', e.target.value)}
 							/>
 							<button
 								className='text-red-600'
-								onClick={() => removeItem('homepageSocialLinks', index)}>
-								Remove
+								onClick={() => removeItem('socialLinks', index)}>
+								✕
 							</button>
 						</div>
 					))}
 					<button
 						className='bg-gray-200 px-2 py-1'
-						onClick={() => addItem('homepageSocialLinks', { platform: '', url: '' })}>
+						onClick={() => addItem('socialLinks', { platform: '', url: '' })}>
 						Add Social Link
 					</button>
 				</div>
-			</div>
 
-			<div className={`w-full flex justify-end my-4`}>
+				{/* Save Button */}
 				<button
-					className={`bg-red w-fit px-2 font-dm text-bkg`}
+					className='bg-red w-fit px-2 font-dm text-bkg'
 					onClick={saveSettings}>
 					Save Settings
 				</button>

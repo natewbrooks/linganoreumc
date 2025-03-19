@@ -1,44 +1,73 @@
 {
-	"headerImageUrl": "https://example.com/images/church-header.jpg",
-	"youtubeBroadcastUrl": "https://www.youtube.com/watch?v=abc123",
-	"mottoBanner": "Offering Ourselves to be Christ-like in Our Community",
-	"recurringEvents": [
-		{
-			"title": "Worship Service",
-			"time": "Sundays at 10:00 AM",
-			"description": "Main worship service in the sanctuary."
-		},
-		{
-			"title": "Online Worship",
-			"time": "Sundays at 10:00 AM",
-			"description": "Live-streamed worship service on YouTube."
-		},
-		{
-			"title": "Sunday School",
-			"time": "Sundays at 9:00 AM",
-			"description": "Various classes for adults and children."
-		}
-	],
-	"featuredEvents": [
-		{
-			"title": "Community Picnic",
-			"date": "2025-07-15",
-			"description": "Annual picnic at the church grounds for everyone."
-		},
-		{
-			"title": "Prayer Walk",
-			"date": "2025-07-20",
-			"description": "Join us for a reflective walk through the neighborhood."
-		}
-	],
-	"homepageSocialLinks": [
-		{
-			"platform": "YouTube",
-			"url": "https://www.youtube.com/@mynewwoodunitedmethodist"
-		},
-		{
-			"platform": "Zoom",
-			"url": "https://zoom.us/j/8316030604"
-		}
-	]
+  "header": {
+    "images": [
+      {
+        "url": "https://example.com/images/church-header.jpg",
+        "active": true
+      },
+      {
+        "url": "https://example.com/images/church-header2.jpg",
+        "active": false
+      }
+    ]
+  },
+  "mottoBanner": {
+    "text": {
+      "title": "Offering Ourselves to be Christ-like in Our Community",
+      "subtext": "One of the oldest congregation in the Baltimore-Washington Conference of the United Methodist Church with a tradition going back to the 1790s."
+    }
+  },
+  "displayedSermons": {
+    "text": {
+      "title": "JOIN US FOR WORSHIP",
+      "subtext": "Sundays"
+    },
+    "sermonImageURL": "",
+    "associatedRecurringEvents": [
+      {
+        "eventID": 0
+      },
+      {
+        "eventID": 1
+      }
+    ]
+  },
+  "livestream": {
+    "youtubeAPIKey": "X",
+    "youtubeChannelID": "Y",
+    "overrideOfflineVideoURL": "https://www.youtube.com/watch?v=abc123",
+    "text": {
+      "live": {
+        "title": "WE'RE IN SESSION",
+        "subtext": "Watch our live broadcast!"
+      },
+      "offline": {
+        "title": "WE'RE NOT IN SESSION...",
+        "subtext": "Enjoy our previous broadcast!"
+      },
+      "seeMore": "VIEW PREVIOUS SERMONS"
+    },
+    "socialLinks": [
+      {
+        "platform": "YouTube",
+        "url": "https://www.youtube.com/@mynewwoodunitedmethodist"
+      },
+      {
+        "platform": "Facebook",
+        "url": "https://www.facebook.com"
+      },
+      {
+        "platform": "Zoom",
+        "url": "https://zoom.us/j/8316030604"
+      }
+    ]
+  },
+  "upcomingEvents": {
+    "text": {
+      "title": "GET EXCITED FOR...",
+      "subtext": "Our upcoming events",
+      "seeMore": "VIEW ALL EVENTS"
+    },
+    "events": []
+  }
 }

@@ -61,7 +61,7 @@ function GeneralSettingsAdmin() {
 						/>
 						<label>Enable Announcement Banner</label>
 					</div>
-					<div className={`flex flex-col  pl-8`}>
+					<div className={`flex flex-col space-y-1 pl-8`}>
 						<TextInput
 							title='Banner Title'
 							type='text'
@@ -82,7 +82,7 @@ function GeneralSettingsAdmin() {
 				{/* Contact Information */}
 				<div className={`flex flex-col space-y-2`}>
 					<h3 className={`font-dm`}>Contact Information</h3>
-					<div className={`flex flex-col pl-8`}>
+					<div className={`flex flex-col space-y-1 pl-8`}>
 						<TextInput
 							title='Name'
 							type='text'

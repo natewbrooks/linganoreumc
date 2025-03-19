@@ -14,13 +14,25 @@ const Layout = () => {
 
 	return (
 		<div className='relative flex flex-col'>
-			{settings.general?.announcementBanner?.enabled && (
-				<AnnouncementBanner
-					title={settings.general.announcementBanner.title}
-					subtext={settings.general.announcementBanner.subtext}
-				/>
-			)}
-			<Navigation />
+			<div className={`sticky top-0 z-20 flex flex-col`}>
+				{settings.general?.announcementBanner?.enabled ? (
+					<>
+						<AnnouncementBanner
+							title={settings.general.announcementBanner.title}
+							subtext={settings.general.announcementBanner.subtext}
+						/>
+						<div className={`-translate-y-2`}>
+							<Navigation />
+						</div>
+					</>
+				) : (
+					<div className={`sticky top-0 z-30`}>
+						<>
+							<Navigation />
+						</>
+					</div>
+				)}
+			</div>
 
 			<App />
 			<Footer />

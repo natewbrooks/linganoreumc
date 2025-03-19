@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Events from './pages/Events';
 import Home from './pages/Home';
+import Calendar from './pages/Calendar';
 
 function App() {
 	return (
@@ -16,6 +17,12 @@ function App() {
 			<Route
 				path='/events/'
 				element={<Events />}
+			/>
+
+			{/* Calendar Page */}
+			<Route
+				path='/calendar/'
+				element={<Calendar />}
 			/>
 		</Routes>
 	);
