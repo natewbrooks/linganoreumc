@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CalendarGrid from '../components/calendar/grid/CalendarGrid';
+import CalendarList from '../components/calendar/list/CalendarList';
 
 function Calendar() {
 	const [month, setMonth] = useState(new Date().getMonth());
@@ -56,19 +57,24 @@ function Calendar() {
 			{/* Title header thing */}
 			<div className={`flex flex-col jusify-center`}>
 				<div className={`w-full flex justify-center items-center`}>
-					<div className={`text-black text-3xl text-center -translate-x-5 font-dm`}>CALENDAR</div>
+					<div className={`text-black text-xl font-dm`}>CALENDAR</div>
 				</div>
-				<div className={`flex justify-around  items-center bg-red w-full py-2 text-bkg`}>
+				<div className={`flex justify-around items-center bg-red w-full py-2 text-bkg`}>
 					<button
 						onClick={() => returnToToday()}
-						className={`bg-bkg rounded-full font-dm text-red px-2 text-xl cursor-pointer`}>
+						className={`bg-bkg rounded-full hover:opacity-50 w-[80px] sm:w-[100px] font-dm text-red text-sm sm:text-lg cursor-pointer`}>
 						TODAY
 					</button>
-					<div className={`flex justify-center text-center space-x-4 text-3xl`}>
+					<div className={`flex justify-center text-center space-x-4 text-2xl`}>
 						<button
 							onClick={() => previousMonth()}
 							className={`cursor-pointer`}>{`<`}</button>
-						<h1 className={`font-dm w-[250px]`}>
+						<h1 className={`block sm:hidden font-dm w-[120px] md:w-[200px]`}>
+							{monthNames[month].toUpperCase()}
+							<br />
+							{year}
+						</h1>
+						<h1 className={`hidden sm:block font-dm w-[120px] md:w-[200px]`}>
 							{monthNames[month].toUpperCase()}
 							{` `}
 							{year}
@@ -77,7 +83,8 @@ function Calendar() {
 							className={`cursor-pointer`}
 							onClick={() => nextMonth()}>{`>`}</button>
 					</div>
-					<div className={`space-x-4 font-dm text-xl`}>
+					<div
+						className={`invisible sm:visible space-x-2 w-[80px] sm:w-[100px] font-dm text-sm sm:text-lg`}>
 						<button
 							onClick={() => changeMode()}
 							className={`${mode == 'grid' ? 'underline underline-offset-2' : ''} cursor-pointer`}>
@@ -92,10 +99,28 @@ function Calendar() {
 					</div>
 				</div>
 			</div>
-			<CalendarGrid
-				month={month}
-				year={year}
-			/>
+
+			<div className={`px-4 md:px-20 lg:px-40 xl:px-80`}>
+				<div className={`block sm:hidden`}>
+					<CalendarList
+						month={month}
+						year={year}
+					/>
+				</div>
+				<div className={`hidden sm:block`}>
+					{mode === 'grid' ? (
+						<CalendarGrid
+							month={month}
+							year={year}
+						/>
+					) : (
+						<CalendarList
+							month={month}
+							year={year}
+						/>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 }

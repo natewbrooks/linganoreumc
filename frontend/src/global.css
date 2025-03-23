@@ -15,7 +15,13 @@
   --color-tp: rgba(0, 0, 0, .1);
   --font-dm: DM Serif Text, "serif";
   --font-newb: Newborough, "sans-serif";
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 800px;
+  --breakpoint-md: 1080px;
+  --breakpoint-lg: 1440px;
+  --breakpoint-xl: 1600px;
 }
+
 
 #parallelogram {
   padding: 8px;

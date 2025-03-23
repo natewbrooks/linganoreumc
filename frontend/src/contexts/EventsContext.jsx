@@ -66,6 +66,35 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
+	// Find all event dates associated with this event ID
+	const fetchEventTimesByEventId = (eventId) => {
+		const matchingDates = eventDates.filter((date) => date.eventID === eventId);
+
+		const matchingTimes = eventTimes
+			.filter((time) => matchingDates.some((date) => date.id === time.eventDateID))
+			.map((time) => ({
+				eventDateID: time.eventDateID,
+				time: time.time,
+			}));
+
+		return matchingTimes;
+	};
+
+	function formatDate(dateStr) {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		return `${month}/${day}/${String(year).slice(-2)}`;
+	}
+
+	function formatTime(timeStr) {
+		const [hour, minute] = timeStr.split(':').map(Number);
+		const dateObj = new Date(0, 0, 0, hour, minute);
+		return dateObj.toLocaleString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		});
+	}
+
 	return (
 		<EventsContext.Provider
 			value={{
@@ -77,6 +106,9 @@ export const EventsProvider = ({ children }) => {
 				fetchEventById,
 				fetchEventDatesById,
 				fetchEventTimesByDateId,
+				fetchEventTimesByEventId,
+				formatDate,
+				formatTime,
 			}}>
 			{children}
 		</EventsContext.Provider>

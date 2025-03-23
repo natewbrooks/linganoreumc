@@ -7,7 +7,7 @@ import './global.css';
 import App from './App.jsx';
 import Footer from './components/Footer.jsx';
 import Navigation from './components/Navigation.jsx';
-import AnnouncementBanner from './components/AnnouncementBanner';
+import AnnouncementBanner from './components/home/AnnouncementBanner.jsx';
 
 const Layout = () => {
 	const { settings } = useSettings();
@@ -21,7 +21,7 @@ const Layout = () => {
 							title={settings.general.announcementBanner.title}
 							subtext={settings.general.announcementBanner.subtext}
 						/>
-						<div className={`-translate-y-2`}>
+						<div className={`-translate-y-1`}>
 							<Navigation />
 						</div>
 					</>

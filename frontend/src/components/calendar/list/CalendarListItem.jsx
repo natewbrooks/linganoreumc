@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../../contexts/EventsContext';
-import CalendarGridItemEvent from './CalendarGridItemEvent';
+import CalendarListItemEvent from './CalendarListItemEvent';
 
-function CalendarGridItem({ day, date, isCurrentMonth }) {
+function CalendarListItem({ day, date, isCurrentMonth }) {
 	const { events, eventDates, eventTimes } = useEvents();
 	const [sortedEventEntries, setSortedEventEntries] = useState([]);
 
@@ -82,7 +82,7 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 			</div>
 			<div className='flex flex-col p-2 space-y-1 w-full '>
 				{sortedEventEntries.map((e, index) => (
-					<CalendarGridItemEvent
+					<CalendarListItemEvent
 						key={`${e.id}-${index}`}
 						event={e}
 						date={date}
@@ -95,4 +95,4 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 	);
 }
 
-export default CalendarGridItem;
+export default CalendarListItem;

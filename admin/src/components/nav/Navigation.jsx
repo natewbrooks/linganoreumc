@@ -18,7 +18,7 @@ function Navigation() {
 	];
 
 	return (
-		<nav className={`h-full flex-col text-md hidden lg:flex `}>
+		<nav className={`h-full flex-col text-md hidden sm:flex `}>
 			<NavLabel title={'Settings'} />
 			<div className={`flex flex-col space-y-1 relative -left-3 text-end`}>
 				<NavLink

@@ -3,26 +3,25 @@ import CalendarGridItem from './CalendarGridItem';
 
 function CalendarGrid({ month, year }) {
 	const [date, setDate] = useState(new Date(year, month + 1, 0)); // Last day of the current month
-	const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+	const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']; // Sunday first
 
 	useEffect(() => {
 		setDate(new Date(year, month + 1, 0)); // Update last day when month/year changes
 	}, [month, year]);
 
-	// Get first and last day of the current month
+	// First and last day of the month
 	const firstDayOfMonth = new Date(year, month, 1);
 	const lastDayOfMonth = new Date(year, month + 1, 0);
 
-	// Get how many days we need from the previous month
-	const prevMonthDays = (firstDayOfMonth.getDay() + 6) % 7; // Adjust to start week on Monday
-	const nextMonthDays = 42 - (prevMonthDays + lastDayOfMonth.getDate()); // Fill up 6 rows
+	// Days from previous month to show before the 1st
+	const prevMonthDays = firstDayOfMonth.getDay(); // Sunday = 0, Monday = 1, etc.
+	const nextMonthDays = 42 - (prevMonthDays + lastDayOfMonth.getDate()); // Total 42 days (6 weeks)
 
-	// Get previous month's last few days
+	// Get previous month’s info
 	const prevMonth = month === 0 ? 11 : month - 1;
 	const prevMonthYear = month === 0 ? year - 1 : year;
 	const lastDayPrevMonth = new Date(prevMonthYear, prevMonth + 1, 0).getDate();
 
-	// Generate all calendar days (previous month, current month, next month)
 	const allDays = [];
 
 	// Previous month's trailing days
@@ -55,8 +54,8 @@ function CalendarGrid({ month, year }) {
 	}
 
 	return (
-		<div className='w-full flex flex-col justify-center px-4 lg:px-40 xl:px-80'>
-			<div className='flex justify-around font-dm text-2xl p-2'>
+		<div className='w-full flex flex-col justify-center '>
+			<div className='grid grid-cols-7 gap-1 text-center w-full font-dm text-md pt-2'>
 				{days.map((day, i) => (
 					<div key={i}>{day}</div>
 				))}
