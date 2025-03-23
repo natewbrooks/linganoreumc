@@ -10,14 +10,23 @@ export const HomePageSettingsProvider = ({ children }) => {
 		fetch('/api/settings/pages/home')
 			.then((res) => res.json())
 			.then((data) => {
+				// Safely map server data into the new JSON structure:
 				setHomepageSettings({
-					header: data.header || { images: [] },
-					mottoBanner: data.mottoBanner || { text: { title: '', subtext: '' } },
-					displayedSermons: data.displayedSermons || {
-						text: { title: '', subtext: '' },
-						sermonImageURL: '',
-						associatedRecurringEvents: [],
+					// header
+					header: data.header || {
+						images: [],
 					},
+					// mottoBanner
+					mottoBanner: data.mottoBanner || {
+						text: { title: '', subtext: '' },
+					},
+					// joinUs
+					joinUs: data.joinUs || {
+						text: { title: '', subtext: '', address: '' },
+						sermonImageURL: '',
+						events: [],
+					},
+					// livestream
 					livestream: data.livestream || {
 						youtubeAPIKey: '',
 						youtubeChannelID: '',
@@ -29,11 +38,12 @@ export const HomePageSettingsProvider = ({ children }) => {
 						},
 						socialLinks: [],
 					},
+					// upcomingEvents
 					upcomingEvents: data.upcomingEvents || {
 						text: { title: '', subtext: '', seeMore: '' },
-						events: [],
 					},
 				});
+
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -43,8 +53,10 @@ export const HomePageSettingsProvider = ({ children }) => {
 	}, []);
 
 	const updateHomepageSettings = (newSettings) => {
+		// Immediately reflect changes in local state
 		setHomepageSettings(newSettings);
 
+		// Also persist to server
 		fetch('/api/admin/settings/pages/home', {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },

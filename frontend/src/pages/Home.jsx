@@ -11,6 +11,10 @@ function Home() {
 	const { settings } = useSettings();
 	const homeSettings = settings.pages?.home || {};
 
+	// Find the active header image URL from the header images array.
+	const activeHeaderImage =
+		(homeSettings.header?.images || []).find((img) => img.active)?.url || null;
+
 	const mottoTitle = homeSettings.mottoBanner?.text?.title || 'Welcome!';
 	const mottoSubtext = homeSettings.mottoBanner?.text?.subtext || '';
 	const ytChannelID = homeSettings.livestream?.youtubeChannelID || 'default_channel_id';
@@ -31,9 +35,9 @@ function Home() {
 	return (
 		<div className='w-full flex flex-col overflow-hidden'>
 			{/* Header */}
-			<Header />
+			<Header activeHeaderImage={activeHeaderImage} />
 
-			<div className={`flex flex-col space-y-46`}>
+			<div className='flex flex-col space-y-46'>
 				{/* Motto Banner */}
 				<Motto
 					title={mottoTitle}

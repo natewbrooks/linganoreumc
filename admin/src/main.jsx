@@ -17,13 +17,13 @@ createRoot(document.getElementById('root')).render(
 
 					<div className={`flex flex-row `}>
 						<Navigation />
-						<div className={`justify-center flex w-full h-full  mt-8`}>
+						<div className={`pl-32 flex w-full h-full  mt-8`}>
 							<div className={`min-w-[500px] w-[700px]`}>
 								<App />
 							</div>
 						</div>
 						{/* used just for spacing, same width as navigation component */}
-						<div className={`hidden lg:flex w-[400px]`}></div>
+						{/* <div className={`hidden lg:flex w-[400px]`}></div> */}
 					</div>
 				</div>
 			</HomePageSettingsProvider>

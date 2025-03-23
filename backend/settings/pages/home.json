@@ -1,77 +1,80 @@
 {
-	"header": {
-		"images": [
-			{
-				"url": "https://example.com/images/church-header.jpg",
-				"active": true
-			},
-			{
-				"url": "https://example.com/images/church-header2.jpg",
-				"active": false
-			}
-		]
-	},
-	"mottoBanner": {
-		"text": {
-			"title": "OFFERING OURSELVES TO BE CHRIST-LIKE IN OUR COMMUNITY",
-			"subtext": "One of the oldest congregation in the Baltimore-Washington Conference of the United Methodist Church with a tradition going back to the 1790s."
-		}
-	},
-	"joinUs": {
-		"text": {
-			"title": "JOIN US FOR WORSHIP",
-			"subtext": "Sundays",
-			"address": "Linganore United Methodist Church\n\n8921 Clemsonville Road Union Bridge, Maryland 21791"
-		},
-		"sermonImageURL": "",
-		"events": [
-			{
-				"eventID": 1
-			},
-			{
-				"eventID": 2
-			},
-			{
-				"eventID": 4
-			}
-		]
-	},
-	"livestream": {
-		"youtubeAPIKey": "X",
-		"youtubeChannelID": "Y",
-		"overrideOfflineVideoURL": "https://www.youtube.com/watch?v=abc123",
-		"text": {
-			"live": {
-				"title": "WE'RE IN SESSION",
-				"subtext": "Watch our live broadcast!"
-			},
-			"offline": {
-				"title": "WE'RE NOT IN SESSION...",
-				"subtext": "Enjoy our previous broadcast!"
-			},
-			"seeMore": "VIEW PREVIOUS SERMONS"
-		},
-		"socialLinks": [
-			{
-				"platform": "YouTube",
-				"url": "https://www.youtube.com/@mynewwoodunitedmethodist"
-			},
-			{
-				"platform": "Facebook",
-				"url": "https://www.facebook.com"
-			},
-			{
-				"platform": "Zoom",
-				"url": "https://zoom.us/j/8316030604"
-			}
-		]
-	},
-	"upcomingEvents": {
-		"text": {
-			"title": "GET EXCITED FOR...",
-			"subtext": "Our upcoming events",
-			"seeMore": "VIEW ALL EVENTS"
-		},
-		"events": []
-	}
+  "header": {
+    "images": [
+      {
+        "url": "/api/media/images/linganore-bright-pic-upscale.webp",
+        "active": true
+      },
+      {
+        "url": "/api/media/images/dark-linganore-pic.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/zoom.svg",
+        "active": false
+      }
+    ]
+  },
+  "mottoBanner": {
+    "text": {
+      "title": "OFFERING OURSELVES TO BE CHRIST-LIKE IN OUR COMMUNITY",
+      "subtext": "One of the oldest congregation in the Baltimore-Washington Conference of the United Methodist Church with a tradition going back to the 1790s."
+    }
+  },
+  "joinUs": {
+    "text": {
+      "title": "JOIN US FOR WORSHIP",
+      "subtext": "Sundays",
+      "address": "Linganore United Methodist Church 8921\nClemsonville Road Union Bridge, Maryland 21791"
+    },
+    "sermonImageURL": "",
+    "events": [
+      {
+        "eventID": 1
+      },
+      {
+        "eventID": 2
+      },
+      {
+        "eventID": 4
+      }
+    ]
+  },
+  "livestream": {
+    "youtubeAPIKey": "X",
+    "youtubeChannelID": "Y",
+    "overrideOfflineVideoURL": "https://www.youtube.com/watch?v=abc123",
+    "text": {
+      "live": {
+        "title": "WE'RE IN SESSION",
+        "subtext": "Watch our live broadcast!"
+      },
+      "offline": {
+        "title": "WE'RE NOT IN SESSION...",
+        "subtext": "Enjoy our previous broadcast!"
+      },
+      "seeMore": "VIEW PREVIOUS SERMONS"
+    },
+    "socialLinks": [
+      {
+        "platform": "YouTube",
+        "url": "https://www.youtube.com/@mynewwoodunitedmethodist"
+      },
+      {
+        "platform": "Facebook",
+        "url": "https://www.facebook.com"
+      },
+      {
+        "platform": "Zoom",
+        "url": "https://zoom.us/j/8316030604"
+      }
+    ]
+  },
+  "upcomingEvents": {
+    "text": {
+      "title": "GET EXCITED FOR...",
+      "subtext": "Our upcoming events",
+      "seeMore": "VIEW ALL EVENTS"
+    }
+  }
 }

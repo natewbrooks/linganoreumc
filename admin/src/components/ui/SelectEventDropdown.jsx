@@ -1,100 +1,121 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaSearch } from 'react-icons/fa';
-import { useHomePageSettings } from '../../contexts/HomepageSettingsContext';
 import { useEvents } from '../../contexts/EventsContext';
 
-function SelectEventDropdown({ eventType }) {
-	const { homepageSettings } = useHomePageSettings();
+function SelectEventDropdown({
+	eventType,
+	initialSelectedEventID = '',
+	onSelectedEventIDChange,
+	onXButtonClick,
+}) {
 	const { events } = useEvents();
-
 	const [enabled, setEnabled] = useState(false);
-	const [selectedEventID, setSelectedEventID] = useState('');
+	const [selectedEventID, setSelectedEventID] = useState(initialSelectedEventID);
 	const [searchTerm, setSearchTerm] = useState('');
 	const dropdownRef = useRef(null);
 
-	// Close dropdown if clicking outside
+	// Sync with prop changes.
+	useEffect(() => {
+		setSelectedEventID(initialSelectedEventID);
+	}, [initialSelectedEventID]);
+
+	// Close dropdown on outside click.
 	useEffect(() => {
 		function handleClickOutside(event) {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 				setEnabled(false);
 			}
 		}
-
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, []);
 
-	// Filter events based on eventType and searchTerm
-	const filteredEvents = events.filter((event) => {
+	// When user clicks an event, update state and call parent callback.
+	const handleSelect = (id) => {
+		setSelectedEventID(id);
+		if (onSelectedEventIDChange) {
+			onSelectedEventIDChange(id);
+		}
+		setEnabled(false);
+	};
+
+	// Filter events based on eventType and searchTerm.
+	const filteredEvents = events.filter((ev) => {
 		const matchesType =
-			(eventType === 'recurring' && event.isRecurring) ||
-			(eventType === 'featured' && event.isFeatured) ||
-			(eventType === 'archived' && event.isArchived) ||
-			!eventType; // Show all if no eventType is specified
-
-		const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase());
-
+			(eventType === 'recurring' && ev.isRecurring) ||
+			(eventType === 'featured' && ev.isFeatured) ||
+			(eventType === 'archived' && ev.isArchived) ||
+			!eventType; // if no eventType, show all
+		const matchesSearch = ev.title.toLowerCase().includes(searchTerm.toLowerCase());
 		return matchesType && matchesSearch;
 	});
 
 	return (
 		<div
 			ref={dropdownRef}
-			className='relative flex flex-col'>
-			<div className='flex font-dm'>
-				<div
-					onClick={() => setEnabled(!enabled)}
-					className='inline-block relative h-[32px] bg-tp cursor-pointer w-full px-2 py-1 outline-none border-l-4 border-red'>
-					{selectedEventID ? (
-						<p className='text-black'>
-							{events.find((event) => event.id === selectedEventID)?.title}
-						</p>
-					) : (
-						<p className='text-black/50'>{'Select event...'}</p>
-					)}
-					<FaPlus
-						size={16}
-						onClick={(e) => {
-							e.stopPropagation();
-							setEnabled(false);
-							setSelectedEventID('');
-						}}
-						className='absolute right-2 rotate-45 hover:scale-105 top-2 z-10 text-black/50'
-					/>
-				</div>
+			className='relative flex flex-col w-full'>
+			{/* Clickable field */}
+			<div className='font-dm relative border-l-4 border-red bg-tp cursor-pointer px-2 py-1 h-[32px]'>
+				{selectedEventID ? (
+					<p
+						onClick={() => setEnabled(!enabled)}
+						className='text-black'>
+						{events.find((e) => e.id === selectedEventID)?.title || '(Event not found)'}
+					</p>
+				) : (
+					<p
+						onClick={() => setEnabled(!enabled)}
+						className='text-black/50'>
+						Select event...
+					</p>
+				)}
+				{/* Clear (X) button */}
+				<FaPlus
+					size={16}
+					onClick={(e) => {
+						e.stopPropagation();
+						onXButtonClick && onXButtonClick();
+						setSelectedEventID('');
+						setEnabled(false);
+					}}
+					className='absolute right-2 rotate-45 hover:scale-105 top-2 z-10 text-black/50'
+				/>
 			</div>
+
+			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-full max-h-[200px] translate-y-[32px] z-30 overflow-hidden overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
-					<div className='flex flex-col md:flex-row md:space-x-4 items-center'>
-						<div className='font-dm text-black'>
+				<div className='absolute w-full max-h-[200px] translate-y-[32px] z-30 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
+					<div className='flex flex-col md:flex-row md:space-x-4 items-center py-2'>
+						<span className='font-dm text-black'>
 							{eventType === 'recurring'
-								? 'All Recurring Events'
+								? 'Recurring Events'
 								: eventType === 'featured'
-								? 'All Featured Events'
+								? 'Featured Events'
 								: eventType === 'archived'
-								? 'All Archived Events'
+								? 'Archived Events'
 								: 'All Events'}
-						</div>
+						</span>
 						<div className='flex space-x-2 items-center'>
 							<input
 								type='text'
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='font-dm border-l-4 text-black/50 border-red md:border-transparent px-2 outline-none bg-transparent'
-								placeholder='Search term'
+								className='font-dm border-l-4 text-black/50 border-red px-2 outline-none bg-transparent'
+								placeholder='Search...'
+							/>
+							<FaSearch
+								size={14}
+								className='text-black/50'
 							/>
 						</div>
 					</div>
 					{filteredEvents.length > 0 ? (
-						filteredEvents.map((event) => (
+						filteredEvents.map((ev) => (
 							<div
-								key={event.id}
-								onClick={() => {
-									setSelectedEventID(event.id);
-									setEnabled(false);
-								}}
-								className='bg-red text-bkg p-1 w-full font-dm cursor-pointer hover:bg-red/50'>
-								{event.title}
+								key={ev.id}
+								onClick={() => handleSelect(ev.id)}
+								className='bg-red text-bkg p-1 w-full font-dm cursor-pointer hover:bg-red/80'>
+								{ev.title}
 							</div>
 						))
 					) : (
