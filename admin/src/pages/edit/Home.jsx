@@ -15,7 +15,7 @@ function HomePageSettingsAdmin() {
 	const [availableUploads, setAvailableUploads] = useState([]);
 
 	useEffect(() => {
-		fetch('/api/media/images/') // <- Updated here
+		fetch('/api/media/images/header/')
 			.then((res) => res.json())
 			.then((data) => setAvailableUploads(data || []))
 			.catch((err) => console.error('Error fetching uploads:', err));
@@ -147,7 +147,7 @@ function HomePageSettingsAdmin() {
 						}
 						availableUploads={availableUploads}
 						setAvailableUploads={setAvailableUploads}
-						uploadEndpoint='/api/admin/media/images/'
+						uploadEndpoint='/api/admin/media/images/header/'
 					/>
 				</div>
 

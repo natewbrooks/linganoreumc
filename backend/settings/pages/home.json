@@ -4,14 +4,6 @@
       {
         "url": "/api/media/images/linganore-bright-pic-upscale.webp",
         "active": true
-      },
-      {
-        "url": "/api/media/images/dark-linganore-pic.png",
-        "active": false
-      },
-      {
-        "url": "/api/media/images/zoom.svg",
-        "active": false
       }
     ]
   },

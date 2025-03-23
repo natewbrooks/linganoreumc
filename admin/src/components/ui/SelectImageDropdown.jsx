@@ -3,15 +3,16 @@ import { FaCheck, FaMinus, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import ImageWithDimensions from './ImageWithDimensions';
 
 export default function SelectImageDropdown({
-	availableUploads, // either array of strings or objects
+	availableUploads,
 	initialSelectedImage = '',
-	onSelectedImageChange, // callback with new selected image URL
-	onRemoveImage, // callback when an image is removed (for deletion)
-	onFileSelect, // callback when a file is selected (to upload)
-	handleDeleteImage, // function passed from parent to delete an image by filename
-	active, // boolean flag indicating if this header image is active
-	disableRemove, // boolean; true if this is the only header image
-	onSelectActive, // callback to set this header image as active
+	onSelectedImageChange,
+	onRemoveImage,
+	onFileSelect,
+	handleDeleteImage,
+	active,
+	disableRemove,
+	onSelectActive,
+	folderFilter,
 }) {
 	const [enabled, setEnabled] = useState(false);
 	const [selectedImage, setSelectedImage] = useState(initialSelectedImage);
@@ -19,12 +20,10 @@ export default function SelectImageDropdown({
 	const dropdownRef = useRef(null);
 	const fileInputRef = useRef(null);
 
-	// Update selected image when prop changes.
 	useEffect(() => {
 		setSelectedImage(initialSelectedImage);
 	}, [initialSelectedImage]);
 
-	// Close dropdown on outside click.
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -35,31 +34,31 @@ export default function SelectImageDropdown({
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, []);
 
-	// Handle file selection from the hidden input.
 	const handleFileChange = (e) => {
 		if (e.target.files && e.target.files[0]) {
 			onFileSelect && onFileSelect(e.target.files[0]);
 		}
 	};
 
-	// Helper: get file path whether availableUploads is an array of strings or objects.
-	const getFilePath = (item) => (typeof item === 'string' ? item : item.filePath);
-
-	// Filter available uploads based on search term.
-	const filteredUploads =
-		Array.isArray(availableUploads) &&
-		availableUploads.filter((item) => {
-			const filePath = getFilePath(item);
-			const parts = filePath.split('/');
-			const filename = parts[parts.length - 1];
-			return filename.toLowerCase().includes(searchTerm.toLowerCase());
-		});
+	const getFilename = (item) => {
+		const fullPath = typeof item === 'string' ? item : item.filePath;
+		return fullPath.split('/').pop();
+	};
+	const filteredUploads = Array.isArray(availableUploads)
+		? availableUploads.filter((item) => {
+				const originalPath = typeof item === 'string' ? item : item.filePath;
+				const filename = getFilename(item);
+				const matchesFolder = folderFilter ? originalPath.startsWith(folderFilter) : true;
+				const matchesSearch = filename.toLowerCase().includes(searchTerm.toLowerCase());
+				return matchesFolder && matchesSearch;
+		  })
+		: [];
 
 	return (
 		<div
 			ref={dropdownRef}
 			className='relative flex flex-col w-full items-center justify-center text-center'>
-			{/* Clickable field */}
+			{/* Clickable image preview */}
 			<div
 				className='font-dm relative border-l-4 border-red bg-tp cursor-pointer h-[100px] w-full items-center justify-center flex'
 				onClick={() => setEnabled(true)}>
@@ -74,18 +73,16 @@ export default function SelectImageDropdown({
 				)}
 			</div>
 
-			{/* Icon controls */}
+			{/* Control icons */}
 			<div className='flex flex-row absolute -top-0 -right-0 space-x-1 outline-4 bg-bkg outline-bkg'>
 				{active ? (
 					<>
-						{/* Active icon: FaCheck does nothing */}
 						<div className='bg-green-500 p-1 cursor-default'>
 							<FaCheck
 								size={12}
 								className='text-bkg'
 							/>
 						</div>
-						{/* Delete only allowed if more than one exists */}
 						{!disableRemove && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
@@ -101,7 +98,6 @@ export default function SelectImageDropdown({
 					</>
 				) : (
 					<>
-						{/* Inactive: FaMinus sets this image to active */}
 						<div className='bg-gray-500 p-1 cursor-pointer hover:opacity-50'>
 							<FaMinus
 								size={12}
@@ -128,7 +124,7 @@ export default function SelectImageDropdown({
 				)}
 			</div>
 
-			{/* Hidden file input for uploading a new image */}
+			{/* File input */}
 			<input
 				type='file'
 				accept='image/*'
@@ -142,7 +138,9 @@ export default function SelectImageDropdown({
 				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
 					<div className='flex flex-col items-center space-y-2 py-2'>
 						<div className='flex flex-row w-full justify-between'>
-							<span className='font-dm text-sm text-black'>Uploaded Images</span>
+							<span className='font-dm text-sm text-black'>
+								{folderFilter ? 'Header Images' : 'Uploaded Images'}
+							</span>
 							<button
 								className='font-dm cursor-pointer'
 								onClick={() => {
@@ -165,10 +163,13 @@ export default function SelectImageDropdown({
 							/>
 						</div>
 					</div>
-					{filteredUploads && filteredUploads.length > 0 ? (
+
+					{filteredUploads.length > 0 ? (
 						<div className='grid grid-cols-3 gap-1'>
 							{filteredUploads.map((item, idx) => {
-								const filePath = getFilePath(item);
+								const filename = getFilename(item);
+								const filePath = `/api/media/images/${filename}`;
+
 								return (
 									<div
 										key={idx}
@@ -184,12 +185,10 @@ export default function SelectImageDropdown({
 												alt={`upload-${idx}`}
 												className='object-contain h-24 w-full'
 											/>
-											{/* Delete icon for uploads */}
 											<FaPlus
 												className='absolute top-0 right-0 rotate-45 text-red'
 												onClick={(e) => {
 													e.stopPropagation();
-													const filename = filePath.split('/').pop();
 													handleDeleteImage && handleDeleteImage(filename);
 												}}
 											/>

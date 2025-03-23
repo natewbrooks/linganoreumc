@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import guard from 'express-jwt-permissions';
 import path from 'path';
-import multer from 'multer';
 import { fileURLToPath } from 'url';
 
 import publicEventsRouter from './routes/public/events.js';
@@ -16,8 +15,6 @@ import adminLoginRoute from './routes/admin/login.js';
 
 import publicMediaRouter from './routes/public/media.js';
 import adminMediaRouter from './routes/admin/media.js';
-
-import verifyJWT from './middleware/verifyJWT.js';
 
 dotenv.config();
 const app = express();
@@ -32,27 +29,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const permissionsGuard = guard({
 	permissionsProperty: 'permissions',
 });
+
+// Directory context
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Multer storage setup using "media/images" folder
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, path.join(__dirname, 'media', 'images'));
-	},
-	filename: (req, file, cb) => {
-		// Replace spaces with hyphens (or perform any other sanitization)
-		const sanitized = file.originalname.replace(/\s+/g, '-');
-		cb(null, sanitized);
-	},
-});
-
-const upload = multer({
-	storage,
-	limits: {
-		fileSize: 10 * 1024 * 1024, // Allow files up to 10MB
-	},
-});
 
 // Public API Routes (No Authentication Needed)
 app.use('/api/events/', publicEventsRouter);
@@ -65,12 +45,20 @@ app.use('/api/admin/login/', adminLoginRoute);
 // Admin Protected Routes (JWT Required)
 app.use('/api/admin/events/', adminEventsRoute);
 app.use('/api/admin/settings/', adminSettingsRouter);
-// Admin media route uses multer middleware for single file (field name "image")
-app.use('/api/admin/media', upload.single('image'), adminMediaRouter);
+app.use('/api/admin/media', adminMediaRouter); // <-- Multer handled in router
 
-// Example root endpoint
+// Health check
 app.get('/api/', (req, res) => {
 	res.json({ message: 'API is working!' });
+});
+
+// Global error handler for multer and other uncaught errors
+app.use((err, req, res, next) => {
+	console.error('Global error handler:', err);
+	if (err.name === 'MulterError') {
+		return res.status(400).json({ error: err.message });
+	}
+	res.status(500).json({ error: err.message });
 });
 
 const PORT = process.env.PORT || 5000;
