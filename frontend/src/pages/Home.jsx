@@ -58,8 +58,10 @@ function Home() {
 						socialLinks={socialLinks}
 						liveTitle={livestreamText.live?.title}
 						liveSubtext={livestreamText.live?.subtext}
+						liveSeeMore={livestreamText.live?.seeMore}
 						offlineTitle={livestreamText.offline?.title}
 						offlineSubtext={livestreamText.offline?.subtext}
+						offlineSeeMore={livestreamText.offline?.seeMore}
 						ytAPIKey={ytAPIKey}
 						ytChannelID={ytChannelID}
 						size={600}

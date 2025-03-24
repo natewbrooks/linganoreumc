@@ -7,8 +7,10 @@ import YouTube from 'react-youtube';
 function LivestreamEmbed({
 	liveTitle,
 	liveSubtext,
+	liveSeeMore,
 	offlineTitle,
 	offlineSubtext,
+	offlineSeeMore,
 	ytChannelID,
 	ytAPIKey,
 	socialLinks,
@@ -90,7 +92,7 @@ function LivestreamEmbed({
 							<Link
 								to={'/'}
 								className={`font-dm text-xl`}>
-								VIEW PREVIOUS SERMONS
+								{liveSeeMore}
 							</Link>
 						</div>
 					</div>
@@ -115,7 +117,7 @@ function LivestreamEmbed({
 							<Link
 								to={'/'}
 								className={`font-dm text-xl `}>
-								VIEW PREVIOUS SERMONS
+								{offlineSeeMore}
 							</Link>
 						</div>
 					</div>

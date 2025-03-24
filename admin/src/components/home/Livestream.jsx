@@ -7,9 +7,10 @@ export default function Livestream({
 	overrideOfflineVideoURL,
 	liveTitle,
 	liveSubtext,
+	liveSeeMore,
 	offlineTitle,
 	offlineSubtext,
-	seeMoreText,
+	offlineSeeMore,
 	onChange,
 }) {
 	return (
@@ -33,42 +34,49 @@ export default function Livestream({
 				/>
 			</div>
 
-			<div className={`flex flex-col space-y-2`}>
-				<div className={`flex flex-col`}>
-					<div className={`font-dm text-sm`}>Live</div>
-					<div className={``}>
-						<TextInput
-							title='Live Title'
-							value={liveTitle}
-							onChange={(e) => onChange('liveTitle', e.target.value)}
-						/>
-						<TextInput
-							title='Live Subtext'
-							value={liveSubtext}
-							onChange={(e) => onChange('liveSubtext', e.target.value)}
-						/>
+			<div className={`flex flex-col`}>
+				<div className={`flex flex-col space-y-1`}>
+					<div className={`flex flex-col`}>
+						<div className={`font-dm text-sm`}>Live</div>
+						<div className={``}>
+							<TextInput
+								title='Live Title'
+								value={liveTitle}
+								onChange={(e) => onChange('liveTitle', e.target.value)}
+							/>
+							<TextInput
+								title='Live Subtext'
+								value={liveSubtext}
+								onChange={(e) => onChange('liveSubtext', e.target.value)}
+							/>
+							<TextInput
+								title='Live See More'
+								value={liveSeeMore}
+								onChange={(e) => onChange('liveSeeMore', e.target.value)}
+							/>
+						</div>
+					</div>
+					<div className={`flex flex-col`}>
+						<div className={`font-dm text-sm`}>Offline</div>
+						<div className={``}>
+							<TextInput
+								title='Offline Title'
+								value={offlineTitle}
+								onChange={(e) => onChange('offlineTitle', e.target.value)}
+							/>
+							<TextInput
+								title='Offline Subtext'
+								value={offlineSubtext}
+								onChange={(e) => onChange('offlineSubtext', e.target.value)}
+							/>
+							<TextInput
+								title='Offline See More'
+								value={offlineSeeMore}
+								onChange={(e) => onChange('offlineSeeMore', e.target.value)}
+							/>
+						</div>
 					</div>
 				</div>
-				<div className={`flex flex-col`}>
-					<div className={`font-dm text-sm`}>Offline</div>
-					<div className={``}>
-						<TextInput
-							title='Offline Title'
-							value={offlineTitle}
-							onChange={(e) => onChange('offlineTitle', e.target.value)}
-						/>
-						<TextInput
-							title='Offline Subtext'
-							value={offlineSubtext}
-							onChange={(e) => onChange('offlineSubtext', e.target.value)}
-						/>
-					</div>
-				</div>
-				<TextInput
-					title='See More Text'
-					value={seeMoreText}
-					onChange={(e) => onChange('seeMoreText', e.target.value)}
-				/>
 			</div>
 		</div>
 	);

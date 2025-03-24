@@ -39,13 +39,14 @@
     "text": {
       "live": {
         "title": "WE'RE IN SESSION",
-        "subtext": "Watch our live broadcast!"
+        "subtext": "Watch our live broadcast!",
+        "seeMore": "VIEW PREVIOUS SERMONS"
       },
       "offline": {
         "title": "WE'RE NOT IN SESSION...",
-        "subtext": "Enjoy our previous broadcast!"
-      },
-      "seeMore": "VIEW PREVIOUS SERMONS"
+        "subtext": "Enjoy our previous broadcast!",
+        "seeMore": "VIEW PREVIOUS SERMONS"
+      }
     },
     "socialLinks": [
       {

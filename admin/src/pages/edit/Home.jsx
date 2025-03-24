@@ -45,9 +45,10 @@ function HomePageSettingsAdmin() {
 				overrideOfflineVideoURL: homepageSettings.livestream?.overrideOfflineVideoURL || '',
 				liveTitle: homepageSettings.livestream?.text?.live?.title || '',
 				liveSubtext: homepageSettings.livestream?.text?.live?.subtext || '',
+				liveSeeMore: homepageSettings.livestream?.text?.live?.seeMore || '',
 				offlineTitle: homepageSettings.livestream?.text?.offline?.title || '',
 				offlineSubtext: homepageSettings.livestream?.text?.offline?.subtext || '',
-				seeMoreText: homepageSettings.livestream?.text?.seeMore || '',
+				offlineSeeMore: homepageSettings.livestream?.text?.offline?.seeMore || '',
 				socialLinks: homepageSettings.livestream?.socialLinks || [],
 
 				// UPCOMING EVENTS
@@ -110,9 +111,16 @@ function HomePageSettingsAdmin() {
 				youtubeChannelID: settings.youtubeChannelID,
 				overrideOfflineVideoURL: settings.overrideOfflineVideoURL,
 				text: {
-					live: { title: settings.liveTitle, subtext: settings.liveSubtext },
-					offline: { title: settings.offlineTitle, subtext: settings.offlineSubtext },
-					seeMore: settings.seeMoreText,
+					live: {
+						title: settings.liveTitle,
+						subtext: settings.liveSubtext,
+						seeMore: settings.liveSeeMore,
+					},
+					offline: {
+						title: settings.offlineTitle,
+						subtext: settings.offlineSubtext,
+						seeMore: settings.offlineSeeMore,
+					},
 				},
 				socialLinks: settings.socialLinks,
 			},
@@ -188,9 +196,10 @@ function HomePageSettingsAdmin() {
 						overrideOfflineVideoURL={settings.overrideOfflineVideoURL}
 						liveTitle={settings.liveTitle}
 						liveSubtext={settings.liveSubtext}
+						liveSeeMore={settings.liveSeeMore}
 						offlineTitle={settings.offlineTitle}
 						offlineSubtext={settings.offlineSubtext}
-						seeMoreText={settings.seeMoreText}
+						offlineSeeMore={settings.offlineSeeMore}
 						onChange={handleChange}
 					/>
 				</div>
