@@ -143,15 +143,17 @@ function HomePageSettingsAdmin() {
 				{/* SELECT HEADER IMAGES */}
 				<div className='flex flex-col space-y-2'>
 					<h3 className='font-dm'>Header</h3>
-					<SelectHeaderImages
-						headerImages={settings.headerImages}
-						onChangeHeaderImages={(newArray) =>
-							setSettings((prev) => ({ ...prev, headerImages: newArray }))
-						}
-						availableUploads={availableUploads}
-						setAvailableUploads={setAvailableUploads}
-						uploadEndpoint='/api/admin/media/images/header/'
-					/>
+					<div className={`pl-8`}>
+						<SelectHeaderImages
+							headerImages={settings.headerImages}
+							onChangeHeaderImages={(newArray) =>
+								setSettings((prev) => ({ ...prev, headerImages: newArray }))
+							}
+							availableUploads={availableUploads}
+							setAvailableUploads={setAvailableUploads}
+							uploadEndpoint='/api/admin/media/images/header/'
+						/>
+					</div>
 				</div>
 
 				{/* MOTTO BANNER */}

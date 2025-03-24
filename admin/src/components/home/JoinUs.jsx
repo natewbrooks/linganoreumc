@@ -33,7 +33,7 @@ export default function JoinUs({
 			</div>
 
 			<div className={`w-full flex flex-col justify-end items-end`}>
-				<div className={`w-full pl-8 flex flex-col justify-end `}>
+				<div className={`w-full flex flex-col space-y-1 justify-end `}>
 					<span className='text-sm font-dm mb-1'>Events displayed:</span>
 					{joinUsEvents.map((evt, index) => (
 						<SelectEventDropdown
