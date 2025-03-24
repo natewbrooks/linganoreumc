@@ -1,58 +1,76 @@
 import React, { useState, useEffect } from 'react';
+import { useGeneralSettings } from '../contexts/GeneralSettingsContext';
 import TextInput from '../components/ui/TextInput';
+import SocialMediaLinks from '../components/general/socialmedia/SocialMediaLinks';
 
 function GeneralSettingsAdmin() {
-	const [settings, setSettings] = useState({
-		announcementBanner: { enabled: false, title: '', subtext: '' },
-		contactInformation: { name: '', phoneNumber: '', email: '', address: '' },
-		socialMediaLinks: [],
-	});
-	const [loading, setLoading] = useState(true);
+	const { generalSettings, loading, updateGeneralSettings } = useGeneralSettings();
+	const [settings, setSettings] = useState(null);
 
-	// Fetch existing settings on component mount
+	// Load settings from context into local state
 	useEffect(() => {
-		fetch('/api/settings/general/')
-			.then((res) => res.json())
-			.then((data) => {
-				setSettings(data);
-				setLoading(false);
-			})
-			.catch((err) => console.error(err));
-	}, []);
+		if (generalSettings) {
+			setSettings({
+				announcementBanner: {
+					enabled: generalSettings.announcementBanner?.enabled || false,
+					title: generalSettings.announcementBanner?.title || '',
+					subtext: generalSettings.announcementBanner?.subtext || '',
+				},
+				contactInformation: {
+					name: generalSettings.contactInformation?.name || '',
+					phoneNumber: generalSettings.contactInformation?.phoneNumber || '',
+					email: generalSettings.contactInformation?.email || '',
+					locationName: generalSettings.contactInformation?.locationName || '',
+					address: generalSettings.contactInformation?.address || '',
+				},
+				socialMediaLinks: generalSettings.socialMediaLinks || [],
+			});
+		}
+	}, [generalSettings]);
 
-	// Handle form changes
-	const handleChange = (section, field, value) => {
+	// Handle social media changes
+	const handleReorderSocialLinks = (newOrder) => {
+		setSettings((prev) => ({ ...prev, socialMediaLinks: newOrder }));
+	};
+
+	const handleSocialMediaChange = (index, field, value) => {
+		const updatedLinks = [...settings.socialMediaLinks];
+		updatedLinks[index] = { ...updatedLinks[index], [field]: value };
+		setSettings((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
+	};
+
+	const addSocialMediaLink = () => {
 		setSettings((prev) => ({
 			...prev,
-			[section]: {
-				...prev[section],
-				[field]: value,
-			},
+			socialMediaLinks: [...prev.socialMediaLinks, { platform: '', url: '', reactIcon: '' }],
 		}));
 	};
 
-	// Save settings to the backend
-	const saveSettings = () => {
-		fetch('/api/admin/settings/general', {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(settings),
-		})
-			.then((res) => res.json())
-			.then((response) => {
-				alert(response.message || 'Settings updated');
-			})
-			.catch((err) => console.error(err));
+	const removeSocialMediaLink = (index) => {
+		setSettings((prev) => ({
+			...prev,
+			socialMediaLinks: prev.socialMediaLinks.filter((_, i) => i !== index),
+		}));
 	};
 
-	if (loading) return <div>Loading...</div>;
+	// Save settings
+	const saveSettings = () => {
+		if (!settings) return;
+		updateGeneralSettings(settings);
+		alert('Settings saved successfully.');
+	};
+
+	if (loading || !settings) {
+		return <div>Loading general settings...</div>;
+	}
 
 	return (
 		<div className='flex flex-col'>
 			<h2 className='font-dm text-2xl'>General Settings</h2>
 
-			<div className={`flex flex-col space-y-8 pt-4`}>
-				<div className={`flex flex-col space-y-2`}>
+			<div className='flex flex-col space-y-8 pt-4'>
+				{/* Announcement Banner */}
+				<div className='flex flex-col space-y-2'>
 					<div className='font-dm flex space-x-2 items-center accent-red'>
 						<input
 							type='checkbox'
@@ -61,7 +79,7 @@ function GeneralSettingsAdmin() {
 						/>
 						<label>Enable Announcement Banner</label>
 					</div>
-					<div className={`flex flex-col pl-8`}>
+					<div className='flex flex-col pl-8'>
 						<TextInput
 							title='Banner Title'
 							type='text'
@@ -80,9 +98,9 @@ function GeneralSettingsAdmin() {
 				</div>
 
 				{/* Contact Information */}
-				<div className={`flex flex-col space-y-2`}>
-					<h3 className={`font-dm`}>Contact Information</h3>
-					<div className={`flex flex-col pl-8`}>
+				<div className='flex flex-col space-y-2'>
+					<h3 className='font-dm'>Contact Information</h3>
+					<div className='flex flex-col pl-8'>
 						<TextInput
 							title='Name'
 							type='text'
@@ -104,6 +122,20 @@ function GeneralSettingsAdmin() {
 							value={settings.contactInformation.email}
 							onChange={(e) => handleChange('contactInformation', 'email', e.target.value)}
 						/>
+					</div>
+				</div>
+
+				{/* Location Information */}
+				<div className='flex flex-col space-y-2'>
+					<h3 className='font-dm'>Location Information</h3>
+					<div className='flex flex-col pl-8'>
+						<TextInput
+							title='Location Name'
+							type='text'
+							maxLength={100}
+							value={settings.contactInformation.locationName}
+							onChange={(e) => handleChange('contactInformation', 'locationName', e.target.value)}
+						/>
 						<TextInput
 							title='Address'
 							type='text'
@@ -113,15 +145,23 @@ function GeneralSettingsAdmin() {
 						/>
 					</div>
 				</div>
+
+				{/* Social Media Links */}
+				<SocialMediaLinks
+					socialLinks={settings.socialMediaLinks}
+					onReorder={handleReorderSocialLinks}
+					onChange={handleSocialMediaChange}
+					onRemove={removeSocialMediaLink}
+					onAdd={addSocialMediaLink}
+				/>
 			</div>
 
-			<div className={`w-full flex justify-end my-4`}>
-				<button
-					className={`bg-red w-fit px-2 font-dm text-bkg`}
-					onClick={saveSettings}>
-					Save Settings
-				</button>
-			</div>
+			{/* Save Button */}
+			<button
+				className='bg-red w-fit px-2 font-dm text-bkg'
+				onClick={saveSettings}>
+				Save Settings
+			</button>
 		</div>
 	);
 }

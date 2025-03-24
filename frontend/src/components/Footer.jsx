@@ -1,16 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
-import { SiZoom } from 'react-icons/si';
 import logoNoBkgWhite from '../assets/logos/logo-no-bkg-white.svg';
+import { useSettings } from '../contexts/SettingsContext';
+import * as FaIcons from 'react-icons/fa';
+import * as Fa6Icons from 'react-icons/fa6';
+import * as SiIcons from 'react-icons/si';
 
 function Footer() {
+	const { settings } = useSettings();
+	const generalSettings = settings.general || {};
+	const contactInfo = generalSettings.contactInformation || {};
+	const socialLinks = generalSettings.socialMediaLinks || [];
+
+	// Combine all possible icon sets
+	const iconSets = { ...FaIcons, ...Fa6Icons, ...SiIcons };
+
 	return (
-		<div className={`flex flex-col font-dm text-bkg `}>
+		<div className={`flex flex-col font-dm text-bkg`}>
+			{/* Header Section */}
 			<div className={`flex flex-col justify-center items-center bg-red py-6 space-y-8`}>
 				<img
 					src={logoNoBkgWhite}
 					width={250}
+					alt='Church Logo'
 				/>
 
 				<div
@@ -42,28 +54,36 @@ function Footer() {
 					</Link>
 				</div>
 			</div>
+
+			{/* Social Media Links */}
 			<div className={`bg-darkred flex space-x-4 py-1 justify-center items-center`}>
-				<Link>
-					<FaFacebook size={24} />
-				</Link>
-				<Link>
-					<FaInstagram size={24} />
-				</Link>
-				<Link>
-					<FaYoutube size={28} />
-				</Link>
-				<Link>
-					<SiZoom size={32} />
-				</Link>
+				{socialLinks.map((link, index) => {
+					const IconComponent = iconSets[link.reactIcon] || null;
+					return (
+						<Link
+							key={index}
+							to={link.url}
+							target='_blank'
+							rel='noopener noreferrer'>
+							{IconComponent ? <IconComponent size={24} /> : <span>{link.platform}</span>}
+						</Link>
+					);
+				})}
 			</div>
+
+			{/* Contact Information */}
 			<div className={`bg-black flex justify-between py-2 px-4`}>
-				<div className={`flex flex-col text-sm sm:text-xl`}>
-					<span>Pastor Rev. William Carpenter</span>
-					<span>443-937-5353</span>
+				<div className={`flex flex-col text-sm sm:text-md`}>
+					<span>{contactInfo.name || 'Pastor Name'}</span>
+					<div className={`flex space-x-2`}>
+						<span>{contactInfo.phoneNumber || 'Phone Number'}</span>
+						<span>|</span>
+						<span>{contactInfo.email || 'Email'}</span>
+					</div>
 				</div>
-				<div className={`flex flex-col text-end text-sm sm:text-xl`}>
-					<span>Linganore United Methodist Church</span>
-					<span>8921 Clemsonville Road Union Bridge, Maryland 2179</span>
+				<div className={`flex flex-col text-end text-sm sm:text-md`}>
+					<span>{contactInfo.locationName || 'Church Name'}</span>
+					<span>{contactInfo.address || 'Church Address'}</span>
 				</div>
 			</div>
 		</div>

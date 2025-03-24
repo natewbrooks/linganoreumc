@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaFacebook, FaYoutube } from 'react-icons/fa';
-import { SiZoom } from 'react-icons/si';
+import * as FaIcons from 'react-icons/fa';
+import * as Fa6Icons from 'react-icons/fa6';
+import * as SiIcons from 'react-icons/si';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
 
@@ -48,28 +49,39 @@ function LivestreamEmbed({
 
 	const opts = {
 		playerVars: {
-			autoplay: 1,
 			allowFullscreen: 1,
 		},
+	};
+
+	const getIconComponent = (iconName) => {
+		if (FaIcons[iconName]) return FaIcons[iconName];
+		if (Fa6Icons[iconName]) return Fa6Icons[iconName];
+		if (SiIcons[iconName]) return SiIcons[iconName];
+		return null;
 	};
 
 	return (
 		<div className={`w-full flex items-center justify-center space-x-10`}>
 			{/* ICONS/LINKS */}
-			{/* <div className={`grid-cols-1 space-y-2`}>
-				{socialLinks.map((link, index) => (
-					<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
-						<Link
+			<div className={`grid-cols-1 space-y-2`}>
+				{socialLinks.map((link, index) => {
+					const IconComponent = getIconComponent(link.reactIcon);
+					return (
+						<a
 							key={index}
 							href={link.url}
 							target='_blank'
 							rel='noopener noreferrer'
-							className='text-bkg skew-x-[30deg]'>
-							{link.platform}
-						</Link>
-					</div>
-				))}
-			</div> */}
+							className={`flex items-center justify-center bg-red ${
+								index % 2 == 0 ? 'skew-x-[30deg]' : '-skew-x-[30deg]'
+							} text-bkg px-3 py-2 transition hover:bg-red/80`}>
+							<span className={`${index % 2 == 0 ? '-skew-x-[30deg]' : 'skew-x-[30deg]'}`}>
+								{IconComponent && <IconComponent size={42} />}
+							</span>
+						</a>
+					);
+				})}
+			</div>
 			{isLive ? (
 				// The current livestream
 				<div className={`flex flex-col justify-center items-center text-center`}>

@@ -5,7 +5,6 @@ import SelectEventDropdown from '../../components/ui/SelectEventDropdown';
 export default function JoinUs({
 	joinUsTitle,
 	joinUsSubtext,
-	joinUsAddress,
 	joinUsSermonImageURL,
 	joinUsEvents,
 	onChange, // for single-field changes like title, subtext, address
@@ -25,11 +24,6 @@ export default function JoinUs({
 					title='Subtext'
 					value={joinUsSubtext}
 					onChange={(e) => onChange('joinUsSubtext', e.target.value)}
-				/>
-				<TextInput
-					title='Address'
-					value={joinUsAddress}
-					onChange={(e) => onChange('joinUsAddress', e.target.value)}
 				/>
 				<TextInput
 					title='Sermon Image URL'

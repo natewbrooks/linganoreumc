@@ -9,28 +9,39 @@ import JoinUs from '../components/home/JoinUs';
 function Home() {
 	const { events } = useEvents();
 	const { settings } = useSettings();
+
+	const generalSettings = settings.general || {};
 	const homeSettings = settings.pages?.home || {};
 
-	// Find the active header image URL from the header images array.
+	// Active Header Image
 	const activeHeaderImage =
 		(homeSettings.header?.images || []).find((img) => img.active)?.url || null;
 
+	// Motto Banner
 	const mottoTitle = homeSettings.mottoBanner?.text?.title || 'Welcome!';
 	const mottoSubtext = homeSettings.mottoBanner?.text?.subtext || '';
+
+	// Livestream Details
 	const ytChannelID = homeSettings.livestream?.youtubeChannelID || 'default_channel_id';
 	const ytAPIKey = homeSettings.livestream?.youtubeAPIKey || '';
 	const livestreamText = homeSettings.livestream?.text || {};
-	const socialLinks = homeSettings.livestream?.socialLinks || [];
+
+	// Displayed Sermons & Events
 	const displayedSermons = homeSettings.displayedSermons?.associatedRecurringEvents || [];
 	const upcomingEvents = homeSettings.upcomingEvents?.events || [];
 
+	// Join Us Settings
 	const joinUsSettings = {
 		title: homeSettings.joinUs?.text?.title || '',
 		subtext: homeSettings.joinUs?.text?.subtext || '',
 		events: homeSettings.joinUs?.events || [],
-		address: homeSettings.joinUs?.text?.address || '',
+		locationName: generalSettings.contactInformation?.locationName || '',
+		address: generalSettings.contactInformation?.address || '',
 		picture: homeSettings.joinUs?.sermonImageURL || '',
 	};
+
+	// General Settings Social Media Links
+	const socialMediaLinks = generalSettings.socialMediaLinks || [];
 
 	return (
 		<div className='w-full flex flex-col overflow-hidden'>
@@ -44,10 +55,12 @@ function Home() {
 					subtext={mottoSubtext}
 				/>
 
+				{/* Join Us Section */}
 				<JoinUs
 					title={joinUsSettings.title}
 					subtext={joinUsSettings.subtext}
 					eventIDs={joinUsSettings.events}
+					locationName={joinUsSettings.locationName}
 					address={joinUsSettings.address}
 					picture={joinUsSettings.picture}
 				/>
@@ -55,7 +68,6 @@ function Home() {
 				{/* Livestream Section */}
 				<div className='flex flex-col items-center text-center py-6'>
 					<LivestreamEmbed
-						socialLinks={socialLinks}
 						liveTitle={livestreamText.live?.title}
 						liveSubtext={livestreamText.live?.subtext}
 						liveSeeMore={livestreamText.live?.seeMore}
@@ -65,6 +77,7 @@ function Home() {
 						ytAPIKey={ytAPIKey}
 						ytChannelID={ytChannelID}
 						size={600}
+						socialLinks={socialMediaLinks}
 					/>
 				</div>
 

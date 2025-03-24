@@ -5,7 +5,6 @@ import SelectHeaderImages from '../../components/home/SelectHeaderImages';
 import MottoBanner from '../../components/home/MottoBanner';
 import JoinUs from '../../components/home/JoinUs';
 import Livestream from '../../components/home/Livestream';
-import SocialMediaLinks from '../../components/home/SocialMediaLinks';
 import UpcomingEvents from '../../components/home/UpcomingEvents';
 
 function HomePageSettingsAdmin() {
@@ -35,7 +34,6 @@ function HomePageSettingsAdmin() {
 				// JOIN US
 				joinUsTitle: homepageSettings.joinUs?.text?.title || '',
 				joinUsSubtext: homepageSettings.joinUs?.text?.subtext || '',
-				joinUsAddress: homepageSettings.joinUs?.text?.address || '',
 				joinUsSermonImageURL: homepageSettings.joinUs?.sermonImageURL || '',
 				joinUsEvents: homepageSettings.joinUs?.events || [],
 
@@ -49,7 +47,6 @@ function HomePageSettingsAdmin() {
 				offlineTitle: homepageSettings.livestream?.text?.offline?.title || '',
 				offlineSubtext: homepageSettings.livestream?.text?.offline?.subtext || '',
 				offlineSeeMore: homepageSettings.livestream?.text?.offline?.seeMore || '',
-				socialLinks: homepageSettings.livestream?.socialLinks || [],
 
 				// UPCOMING EVENTS
 				upcomingEventsTitle: homepageSettings.upcomingEvents?.text?.title || '',
@@ -101,7 +98,6 @@ function HomePageSettingsAdmin() {
 				text: {
 					title: settings.joinUsTitle,
 					subtext: settings.joinUsSubtext,
-					address: settings.joinUsAddress,
 				},
 				sermonImageURL: settings.joinUsSermonImageURL,
 				events: settings.joinUsEvents,
@@ -122,7 +118,6 @@ function HomePageSettingsAdmin() {
 						seeMore: settings.offlineSeeMore,
 					},
 				},
-				socialLinks: settings.socialLinks,
 			},
 			upcomingEvents: {
 				text: {
@@ -175,7 +170,6 @@ function HomePageSettingsAdmin() {
 					<JoinUs
 						joinUsTitle={settings.joinUsTitle}
 						joinUsSubtext={settings.joinUsSubtext}
-						joinUsAddress={settings.joinUsAddress}
 						joinUsSermonImageURL={settings.joinUsSermonImageURL}
 						joinUsEvents={settings.joinUsEvents}
 						onChange={handleChange}
@@ -203,14 +197,6 @@ function HomePageSettingsAdmin() {
 						onChange={handleChange}
 					/>
 				</div>
-
-				{/* SOCIAL MEDIA LINKS */}
-				<SocialMediaLinks
-					socialLinks={settings.socialLinks}
-					onAddLink={(link) => addItem('socialLinks', link)}
-					onRemoveLink={(idx) => removeItem('socialLinks', idx)}
-					onChangeLink={(idx, field, val) => handleArrayFieldChange('socialLinks', idx, field, val)}
-				/>
 
 				{/* UPCOMING EVENTS */}
 				<div className='flex flex-col space-y-2'>

@@ -5,23 +5,27 @@
     "subtext": "Due to weather conditions, we will be canceling today’s sermons. Stay safe and god bless!"
   },
   "contactInformation": {
-    "name": "Linganore United Methodist Church",
-    "phoneNumber": "(555) 123-4567",
-    "email": "info@examplechurch.org",
-    "address": "123 Church St, Hometown, USA"
+    "name": "Pastor Rev. William Carpenter",
+    "phoneNumber": "(443) 937-5353",
+    "email": "lingamoreumc@gmail.com",
+    "locationName": "Linganore United Methodist Church",
+    "address": "8921 Clemsonville Road Union Bridge, Maryland 21791"
   },
   "socialMediaLinks": [
     {
       "platform": "YouTube",
-      "url": "https://www.youtube.com/@mynewwoodunitedmethodist"
+      "url": "https://www.youtube.com/@mynewwoodunitedmethodist",
+      "reactIcon": "FaYoutube"
     },
     {
       "platform": "Zoom",
-      "url": "https://zoom.us/j/8316030604"
+      "url": "https://zoom.us/j/8316030604",
+      "reactIcon": "SiZoom"
     },
     {
       "platform": "Facebook",
-      "url": "https://www.facebook.com/ExampleChurch"
+      "url": "https://www.facebook.com/ExampleChurch",
+      "reactIcon": "FaFacebookF"
     }
   ]
 }

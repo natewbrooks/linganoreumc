@@ -3,7 +3,7 @@ import { useEvents } from '../../contexts/EventsContext';
 import BKG from '../../assets/linganore-bright-pic-upscale.webp';
 import { Link } from 'react-router-dom';
 
-function JoinUs({ title, subtext, eventIDs, address, picture }) {
+function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 	const { events, fetchEventTimesByEventId, formatTime } = useEvents();
 	const [timesMap, setTimesMap] = useState({});
 
@@ -65,10 +65,9 @@ function JoinUs({ title, subtext, eventIDs, address, picture }) {
 			<div className='flex relative sm:-right-10 text-bkg w-full justify-end text-start py-2'>
 				<div className='bg-red px-4 sm:px-8 py-4 sm:-skew-x-[30deg] w-full sm:w-4/5'>
 					<div className='flex justify-between items-center sm:skew-x-[30deg]'>
-						<div>
-							{address.split('\n').map((line, index) => (
-								<p key={index}>{line}</p>
-							))}
+						<div className={`flex flex-col`}>
+							<span>{locationName}</span>
+							<span>{address}</span>
 						</div>
 						{/* Use Link but point to an external URL, opening a new tab */}
 						<Link
