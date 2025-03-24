@@ -94,7 +94,9 @@ export default function SelectHeaderImages({
 					className='flex items-center w-full'>
 					<SelectImageDropdown
 						availableUploads={availableUploads}
-						initialSelectedImage={`/api/media/images/${image.url?.split('/').pop()}`}
+						initialSelectedImage={
+							image.url?.split('/').pop() ? `/api/media/images/${image.url.split('/').pop()}` : ''
+						}
 						onSelectedImageChange={(selectedUrl) => {
 							const updated = [...headerImages];
 							updated[index] = { ...updated[index], url: selectedUrl };
