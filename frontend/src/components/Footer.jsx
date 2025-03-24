@@ -56,7 +56,7 @@ function Footer() {
 			</div>
 
 			{/* Social Media Links */}
-			<div className={`bg-darkred flex space-x-4 py-1 justify-center items-center`}>
+			<div className={`bg-darkred flex space-x-4 py-2 justify-center items-center`}>
 				{socialLinks.map((link, index) => {
 					const IconComponent = iconSets[link.reactIcon] || null;
 					return (
@@ -65,7 +65,7 @@ function Footer() {
 							to={link.url}
 							target='_blank'
 							rel='noopener noreferrer'>
-							{IconComponent ? <IconComponent size={24} /> : <span>{link.platform}</span>}
+							{IconComponent ? <IconComponent size={30} /> : <span>{link.platform}</span>}
 						</Link>
 					);
 				})}

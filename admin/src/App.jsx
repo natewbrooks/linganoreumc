@@ -19,7 +19,7 @@ function App() {
 
 			{/* Edit Home Page */}
 			<Route
-				path='/edit/home-page/'
+				path='/edit/pages/home/'
 				element={<Home />}
 			/>
 

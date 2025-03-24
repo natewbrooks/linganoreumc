@@ -25,14 +25,17 @@ function Navigation() {
 					to={'/'}
 					title={'General'}
 				/>
+			</div>
+
+			<NavLabel title={'Pages'} />
+			<div className={`flex flex-col space-y-1 relative -left-3 text-end`}>
 				<NavLink
-					to={'/edit/home-page/'}
-					title={'Home Page'}
+					to={'/edit/pages/home/'}
+					title={'Home'}
 				/>{' '}
 			</div>
 
 			<NavLabel title={'Maintenance'} />
-
 			<div className={`flex flex-col space-y-1 relative -left-3 text-end`}>
 				{links.map((link, index) => (
 					<NavLink
