@@ -8,6 +8,7 @@ import BodyTextInput from '../ui/BodyTextInput';
 function EventForm({ mode = 'create', initialData = null }) {
 	const navigate = useNavigate();
 	const {
+		events,
 		createEvent,
 		updateEvent,
 		createEventDate,
@@ -61,11 +62,20 @@ function EventForm({ mode = 'create', initialData = null }) {
 		}
 
 		try {
+			const titleExists = events.some(
+				(event) => event.title.toLowerCase() === title.trim().toLowerCase()
+			);
+
+			if (mode === 'create' && titleExists) {
+				alert('An event with this title already exists. Please choose a different title.');
+				return;
+			}
+
 			let eventID;
 
 			// Sort the dateTimeData before submission
 			const sortedDateTimeData = [...dateTimeData]
-				.sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort dates
+				.sort((a, b) => new Date(a.date) - new Date(b.date))
 				.map((dateObj) => ({
 					...dateObj,
 					times: [...dateObj.times].sort((a, b) => {

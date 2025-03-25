@@ -28,9 +28,11 @@ function Events() {
 		const previous = [];
 
 		const matchesSearch = (event) => {
-			const search = searchTerm.toLowerCase();
+			const search = searchTerm.trim().toLowerCase();
+			if (!search) return true;
+
 			return (
-				event.name?.toLowerCase().includes(search) ||
+				event.title?.toLowerCase().includes(search) ||
 				event.description?.toLowerCase().includes(search)
 			);
 		};
@@ -60,21 +62,9 @@ function Events() {
 		<div className='flex flex-col my-8 overflow-hidden'>
 			<div className={`font-dm text-md w-full text-center text-xl`}>EVENTS</div>
 
-			<div className={`flex flex-col space-y-8`}>
-				<div className={`flex flex-col w-full  px-4 sm:px-20`}>
-					<div className={`flex w-full justify-center my-4 items-center px-4 sm:px-40 `}>
-						{/* <EventLabel text={`FEATURED EVENTS (${featured.length})`} /> */}
-						<div className={`bg-tp w-[300px] px-2 -skew-x-[30deg]`}>
-							<input
-								type='text'
-								placeholder='Search events...'
-								className='px-2 font-dm w-full skew-x-[30deg]'
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
-							/>
-						</div>
-					</div>
-					<div className={`grid grid-cols-2 sm:grid-cols-4 gap-2 p-4 w-full h-fit`}>
+			<div className={`flex flex-col space-y-8  `}>
+				<div className={`flex flex-col items-center w-full  px-4 sm:px-20`}>
+					<div className={`grid grid-cols-2 sm:grid-cols-4 gap-2 p-4 w-full h-fit max-w-[1200px]`}>
 						{featured.length > 0 ? (
 							featured.map((event) => (
 								<>
@@ -90,7 +80,18 @@ function Events() {
 					</div>
 				</div>
 
-				<div className={`flex flex-col space-y-12 px-4 sm:pl-40 w-full`}>
+				<div
+					className={`flex flex-col justify-center space-y-12 pl-4 sm:pl-40 xl:pl-80 2xl:pl-180 w-full`}>
+					{/* <EventLabel text={`FEATURED EVENTS (${featured.length})`} /> */}
+					<div className={`bg-tp w-[300px] px-2 -skew-x-[30deg]`}>
+						<input
+							type='text'
+							placeholder='Search events...'
+							className='px-2 font-dm w-full skew-x-[30deg] outline-none'
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+					</div>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`UPCOMING EVENTS (${upcoming.length})`} />
 						<div className={`flex flex-col space-y-4 sm:space-y-2 w-full`}>
@@ -108,7 +109,7 @@ function Events() {
 					</div>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`PREVIOUS EVENTS (${previous.length})`} />
-						<div className={`flex flex-col space-y-4 sm:space-y-2 w-full`}>
+						<div className={`flex flex-col space-y-1 w-full`}>
 							{previous.length > 0 ? (
 								previous.map((event) => (
 									<EventItem

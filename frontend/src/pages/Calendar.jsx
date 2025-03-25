@@ -100,7 +100,7 @@ function Calendar() {
 				</div>
 			</div>
 
-			<div className={`px-4 md:px-20 lg:px-40 xl:px-80`}>
+			<div className={`px-4 md:px-20 lg:px-40 xl:px-80 2xl:px-120`}>
 				<div className={`block sm:hidden`}>
 					<CalendarList
 						month={month}

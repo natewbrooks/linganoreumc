@@ -66,7 +66,7 @@ export default function SelectImageDropdown({
 					<ImageWithDimensions
 						src={selectedImage}
 						alt='Selected'
-						imgClassName='w-full h-full object-contain'
+						imgClassName='w-full h-full object-cover'
 					/>
 				) : (
 					<div className='ml-2 w-full items-center text-black/50'>Select image...</div>
@@ -173,20 +173,20 @@ export default function SelectImageDropdown({
 								return (
 									<div
 										key={idx}
-										className='border-2 border-red p-1 cursor-pointer hover:opacity-75'
-										onClick={() => {
-											setSelectedImage(filePath);
-											onSelectedImageChange && onSelectedImageChange(filePath);
-											setEnabled(false);
-										}}>
+										className='border-2 border-red p-1 '>
 										<div className='relative'>
 											<img
 												src={filePath}
 												alt={`upload-${idx}`}
-												className='object-contain h-24 w-full'
+												className='object-cover h-24 w-full cursor-pointer hover:opacity-75'
+												onClick={() => {
+													setSelectedImage(filePath);
+													onSelectedImageChange && onSelectedImageChange(filePath);
+													setEnabled(false);
+												}}
 											/>
 											<FaPlus
-												className='absolute top-0 right-0 rotate-45 text-red'
+												className='absolute top-0 right-0 rotate-45 text-bkg outline-2 outline-red bg-red cursor-pointer hover:opacity-75 hover:scale-[102%] active:scale-[99%]'
 												onClick={(e) => {
 													e.stopPropagation();
 													handleDeleteImage && handleDeleteImage(filename);

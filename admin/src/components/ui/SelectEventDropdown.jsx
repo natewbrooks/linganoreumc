@@ -46,7 +46,11 @@ function SelectEventDropdown({
 			(eventType === 'featured' && ev.isFeatured) ||
 			(eventType === 'archived' && ev.isArchived) ||
 			!eventType; // if no eventType, show all
-		const matchesSearch = ev.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+		const search = searchTerm.trim().toLowerCase();
+		const matchesSearch =
+			ev.title.toLowerCase().includes(search) || ev.id.toString().includes(search); // Allow search by ID
+
 		return matchesType && matchesSearch;
 	});
 
@@ -114,8 +118,9 @@ function SelectEventDropdown({
 							<div
 								key={ev.id}
 								onClick={() => handleSelect(ev.id)}
-								className='bg-red text-bkg p-1 w-full font-dm cursor-pointer hover:bg-red/80'>
-								{ev.title}
+								className='bg-red text-bkg px-2 flex space-x-4 w-full font-dm cursor-pointer items-center hover:bg-red/80'>
+								<span className={`text-xs`}>id: {ev.id}</span>
+								<span>{ev.title}</span>
 							</div>
 						))
 					) : (

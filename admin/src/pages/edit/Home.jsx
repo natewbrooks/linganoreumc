@@ -52,6 +52,9 @@ function HomePageSettingsAdmin() {
 				upcomingEventsTitle: homepageSettings.upcomingEvents?.text?.title || '',
 				upcomingEventsSubtext: homepageSettings.upcomingEvents?.text?.subtext || '',
 				upcomingEventsSeeMore: homepageSettings.upcomingEvents?.text?.seeMore || '',
+				upcomingEvents:
+					homepageSettings.upcomingEvents?.events?.map((evt) => ({ eventID: evt.eventID })) ||
+					Array(4).fill({ eventID: '' }),
 			});
 		}
 	}, [homepageSettings]);
@@ -78,6 +81,14 @@ function HomePageSettingsAdmin() {
 			const updated = [...prev[section]];
 			updated[index] = { ...updated[index], [field]: value };
 			return { ...prev, [section]: updated };
+		});
+	};
+
+	const handleUpcomingEventChange = (index, newID) => {
+		setSettings((prev) => {
+			const updatedEventIDs = [...prev.upcomingEvents];
+			updatedEventIDs[index] = { eventID: newID }; // Ensure correct format
+			return { ...prev, upcomingEvents: updatedEventIDs };
 		});
 	};
 
@@ -125,6 +136,7 @@ function HomePageSettingsAdmin() {
 					subtext: settings.upcomingEventsSubtext,
 					seeMore: settings.upcomingEventsSeeMore,
 				},
+				events: settings.upcomingEvents.filter((evt) => evt.eventID !== ''),
 			},
 		};
 		updateHomepageSettings(updatedSettings);
@@ -207,7 +219,9 @@ function HomePageSettingsAdmin() {
 						upcomingEventsTitle={settings.upcomingEventsTitle}
 						upcomingEventsSubtext={settings.upcomingEventsSubtext}
 						upcomingEventsSeeMore={settings.upcomingEventsSeeMore}
+						selectedEvents={settings.upcomingEvents} // Pass selected event objects
 						onChange={handleChange}
+						onChangeEventID={handleUpcomingEventChange} // Update selected event
 					/>
 				</div>
 

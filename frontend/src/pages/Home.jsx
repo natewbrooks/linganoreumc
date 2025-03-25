@@ -5,9 +5,10 @@ import Header from '../components/home/Header';
 import Motto from '../components/home/Motto';
 import LivestreamEmbed from '../components/home/LivestreamEmbed';
 import JoinUs from '../components/home/JoinUs';
+import UpcomingEvents from '../components/home/UpcomingEvents';
 
 function Home() {
-	const { events } = useEvents();
+	const { events, eventDates } = useEvents();
 	const { settings } = useSettings();
 
 	const generalSettings = settings.general || {};
@@ -28,7 +29,6 @@ function Home() {
 
 	// Displayed Sermons & Events
 	const displayedSermons = homeSettings.displayedSermons?.associatedRecurringEvents || [];
-	const upcomingEvents = homeSettings.upcomingEvents?.events || [];
 
 	// Join Us Settings
 	const joinUsSettings = {
@@ -42,6 +42,52 @@ function Home() {
 
 	// General Settings Social Media Links
 	const socialMediaLinks = generalSettings.socialMediaLinks || [];
+
+	// Helper function to find the closest available date (future or most recent past)
+	const getUpcomingEventDate = (eventID) => {
+		const now = new Date();
+
+		// Get all dates for this event
+		const eventDateList = eventDates.filter((date) => date.eventID === eventID);
+
+		// Separate past and future dates
+		const futureDates = eventDateList
+			.filter((date) => new Date(date.date) >= now)
+			.sort((a, b) => new Date(a.date) - new Date(b.date)); // Closest future date first
+
+		const pastDates = eventDateList
+			.filter((date) => new Date(date.date) < now)
+			.sort((a, b) => new Date(b.date) - new Date(a.date)); // Most recent past date first
+
+		// Prefer the closest upcoming date, otherwise fallback to the most recent past date
+		return futureDates.length > 0
+			? futureDates[0].date
+			: pastDates.length > 0
+			? pastDates[0].date
+			: null;
+	};
+
+	// --- UPCOMING EVENTS LOGIC ---
+	const upcomingEventsFromSettings = homeSettings.upcomingEvents?.events || [];
+
+	// Get next chronological events by merging events with their closest upcoming date
+	const eventsWithDates = events
+		.map((event) => ({
+			event,
+			date: getUpcomingEventDate(event.id),
+		}))
+		.filter((entry) => entry.date !== null) // Ensure only events with an upcoming date
+		.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by earliest upcoming date
+
+	// Get the preset events from settings
+	const presetEvents = upcomingEventsFromSettings
+		.map(({ eventID }) => eventsWithDates.find((entry) => entry.event.id === eventID))
+		.filter((entry) => entry); // Remove nulls (if an eventID doesn't match any event)
+
+	// Fill remaining spots with chronological events
+	const upcomingEvents = [...presetEvents, ...eventsWithDates]
+		.filter((entry, index, self) => self.findIndex((e) => e.event.id === entry.event.id) === index) // Remove duplicates
+		.slice(0, 4); // Limit to 4 events
 
 	return (
 		<div className='w-full flex flex-col overflow-hidden'>
@@ -82,23 +128,11 @@ function Home() {
 				</div>
 
 				{/* Upcoming Events */}
-				<div className='flex flex-col px-4 py-6'>
-					<h2 className='text-2xl font-bold'>
-						{homeSettings.upcomingEvents?.text?.title || 'Upcoming Events'}
-					</h2>
-					<p className='text-gray-600'>{homeSettings.upcomingEvents?.text?.subtext || ''}</p>
-					{upcomingEvents.length > 0 ? (
-						upcomingEvents.map((event, index) => (
-							<div
-								key={event.eventID || index}
-								className='border p-2 my-2'>
-								{events.find((e) => e.id === event.eventID)?.title || 'Unknown Event'}
-							</div>
-						))
-					) : (
-						<p className='text-darkred italic'>No upcoming events.</p>
-					)}
-				</div>
+				<UpcomingEvents
+					title={homeSettings.upcomingEvents?.text?.title || 'Upcoming Events'}
+					subtext={homeSettings.upcomingEvents?.text?.subtext || ''}
+					events={upcomingEvents}
+				/>
 
 				{/* Displayed Sermons */}
 				<div className='flex flex-col px-4 py-6'>

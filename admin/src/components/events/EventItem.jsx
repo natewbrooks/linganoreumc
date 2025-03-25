@@ -52,8 +52,7 @@ function EventItem({ id, title, description }) {
 			to={`/edit/event/${id}`}
 			className='w-full cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
 			{/* Date/Time row */}
-			<div className='text-sm text-darkred bg-accent px-2 w-fit -skew-x-[30deg] relative -left-2 flex flex-wrap items-center space-x-2 pb-1'>
-				{/* <FaClock size={10} /> */}
+			<div className='text-sm text-darkred bg-accent px-2 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2 pb-1'>
 				{eventDates.map((dateObj, idx) => {
 					const times = timesMap[dateObj.id] || [];
 					if (!times.length) return null;
@@ -62,30 +61,26 @@ function EventItem({ id, title, description }) {
 					const timesString = times.map((t) => formatTime(t.time)).join(', ');
 
 					return (
-						<div
-							key={dateObj.id}
-							className={`skew-x-[30deg]`}>
-							{idx > 0 && <span className=''>|</span>}
-							<span>{`${date} @ ${timesString}`}</span>
-						</div>
+						<React.Fragment key={dateObj.id}>
+							<span className={`skew-x-[30deg]`}>
+								{idx > 0 && <span className='pr-2'>|</span>}
+								<span>{`${date} @ ${timesString}`}</span>
+							</span>
+						</React.Fragment>
 					);
 				})}
 			</div>
 
-			{/* Title/Description row */}
-			<div className='relative flex items-center text-black'>
-				<div className='flex flex-row w-full items-center bg-tp relative -skew-x-[30deg] overflow-hidden'>
-					<div
-						className={`font-dm p-1 py-2 text-bkg min-w-[64px] overflow-hidden text-center text-lg bg-darkred `}>
-						<p className='skew-x-[30deg]'>#{id}</p>
-					</div>
-					<div
-						className={`font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center text-lg bg-red px-4`}>
-						<p className='skew-x-[30deg]'>{title}</p>
-					</div>
-					<div className='p-2 font-dm items-center whitespace-nowrap text-darkred text-lg pl-4'>
-						<p className={`skew-x-[30deg]`}>{description}</p>
-					</div>
+			<div className='flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
+				<div
+					className={`font-dm p-1 py-2 text-bkg min-w-[64px] overflow-hidden text-center text-lg  relative bg-darkred px-4`}>
+					<p className='skew-x-[30deg]'>id: {id}</p>
+				</div>
+				<div className='font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center text-lg bg-red px-4'>
+					<p className='skew-x-[30deg]'>{title}</p>
+				</div>
+				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
+					<p className='skew-x-[30deg]'>{description}</p>
 				</div>
 			</div>
 		</Link>

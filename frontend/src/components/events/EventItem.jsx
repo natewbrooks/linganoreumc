@@ -30,8 +30,8 @@ function EventItem({ event, previous }) {
 	return (
 		<div className='flex flex-col w-full hover:scale-[102%] active:scale-[99%] cursor-pointer hover:opacity-50'>
 			<div
-				className={`flex flex-row w-fit sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
-					previous ? 'text-darkred' : 'text-darkred sm:bg-accent'
+				className={`flex flex-row w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
+					previous ? 'text-darkred' : 'text-darkred bg-accent'
 				}`}>
 				{!previous &&
 					eventDates
@@ -60,14 +60,14 @@ function EventItem({ event, previous }) {
 
 			<Link
 				to={`/event/${event.id}`}
-				className='flex flex-col sm:flex-row  items-center  bg-tp relative '>
+				className='flex flex-row  items-center  bg-tp relative -right-4 sm:right-0'>
 				<div
-					className={`font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center text-lg sm:-left-3 relative ${
+					className={`font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center -left-3 text-lg relative ${
 						previous ? 'bg-darkred' : 'bg-red'
-					} px-4 py-1 sm:-skew-x-[30deg]`}>
-					<p className='sm:skew-x-[30deg]'>{event.title}</p>
+					} px-4 py-1 -skew-x-[30deg]`}>
+					<p className='skew-x-[30deg]'>{event.title}</p>
 				</div>
-				<div className='p-2 font-dm items-center text-darkred text-lg'>
+				<div className='p-2 font-dm items-center text-darkred text-lg whitespace-nowrap'>
 					<p>{event.description}</p>
 				</div>
 			</Link>

@@ -69,6 +69,17 @@ export const createEvent = async (req, res) => {
 	}
 
 	try {
+		// Check if an event with the same title already exists (case-insensitive)
+		const [existingEvents] = await pool.query(
+			'SELECT COUNT(*) as count FROM Events WHERE LOWER(title) = LOWER(?)',
+			[title]
+		);
+
+		if (existingEvents[0].count > 0) {
+			return res.status(400).json({ error: 'An event with this title already exists' });
+		}
+
+		// Insert new event
 		const [result] = await pool.query(
 			'INSERT INTO Events (title, description, isRecurring, isFeatured) VALUES (?, ?, ?, ?)',
 			[title, description, isRecurring, isFeatured]
