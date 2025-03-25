@@ -22,7 +22,7 @@ function SocialMediaLinks({ socialLinks, onReorder, onChange, onRemove, onAdd })
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className='flex flex-col space-y-1 pl-8'>
+							className='flex flex-col pl-8'>
 							{socialLinks.map((link, index) => (
 								<Draggable
 									key={index}
@@ -33,7 +33,7 @@ function SocialMediaLinks({ socialLinks, onReorder, onChange, onRemove, onAdd })
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
-											className='flex items-center'>
+											className='flex items-center py-0.5'>
 											<SocialMediaItem
 												index={index}
 												platform={link.platform}

@@ -43,23 +43,31 @@ function Home() {
 	// General Settings Social Media Links
 	const socialMediaLinks = generalSettings.socialMediaLinks || [];
 
-	// Helper function to find the closest available date (future or most recent past)
-	const getUpcomingEventDate = (eventID) => {
+	// Helper function to find the closest available date (future if required)
+	const getUpcomingEventDate = (eventID, requireFutureOnly = false) => {
 		const now = new Date();
 
 		// Get all dates for this event
 		const eventDateList = eventDates.filter((date) => date.eventID === eventID);
 
-		// Separate past and future dates
+		// If we only want future dates (when settings do NOT override)
+		if (requireFutureOnly) {
+			const futureDates = eventDateList
+				.filter((date) => new Date(date.date) >= now)
+				.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+			return futureDates.length > 0 ? futureDates[0].date : null;
+		}
+
+		// Get closest future date or fallback to most recent past date
 		const futureDates = eventDateList
 			.filter((date) => new Date(date.date) >= now)
-			.sort((a, b) => new Date(a.date) - new Date(b.date)); // Closest future date first
+			.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 		const pastDates = eventDateList
 			.filter((date) => new Date(date.date) < now)
-			.sort((a, b) => new Date(b.date) - new Date(a.date)); // Most recent past date first
+			.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-		// Prefer the closest upcoming date, otherwise fallback to the most recent past date
 		return futureDates.length > 0
 			? futureDates[0].date
 			: pastDates.length > 0
@@ -69,23 +77,28 @@ function Home() {
 
 	// --- UPCOMING EVENTS LOGIC ---
 	const upcomingEventsFromSettings = homeSettings.upcomingEvents?.events || [];
+	const isOverridden = upcomingEventsFromSettings.length > 0;
 
-	// Get next chronological events by merging events with their closest upcoming date
-	const eventsWithDates = events
+	// Get preset events from settings (shown regardless of date)
+	const presetEvents = upcomingEventsFromSettings
+		.map(({ eventID }) => {
+			const event = events.find((e) => e.id === eventID);
+			if (!event) return null;
+			return { event, date: getUpcomingEventDate(event.id, false) };
+		})
+		.filter((entry) => entry !== null); // Remove nulls
+
+	// Get future chronological events (only future events if settings do NOT override)
+	const futureEvents = events
 		.map((event) => ({
 			event,
-			date: getUpcomingEventDate(event.id),
+			date: getUpcomingEventDate(event.id, true), // Require only future dates
 		}))
 		.filter((entry) => entry.date !== null) // Ensure only events with an upcoming date
 		.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by earliest upcoming date
 
-	// Get the preset events from settings
-	const presetEvents = upcomingEventsFromSettings
-		.map(({ eventID }) => eventsWithDates.find((entry) => entry.event.id === eventID))
-		.filter((entry) => entry); // Remove nulls (if an eventID doesn't match any event)
-
-	// Fill remaining spots with chronological events
-	const upcomingEvents = [...presetEvents, ...eventsWithDates]
+	// Merge preset events with future events
+	const upcomingEvents = [...presetEvents, ...futureEvents]
 		.filter((entry, index, self) => self.findIndex((e) => e.event.id === entry.event.id) === index) // Remove duplicates
 		.slice(0, 4); // Limit to 4 events
 

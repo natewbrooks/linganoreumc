@@ -23,6 +23,10 @@ function HomePageSettingsAdmin() {
 	// Load from context into local state
 	useEffect(() => {
 		if (homepageSettings) {
+			const defaultEvents = Array(4).fill({ eventID: '' }); // Ensure 4 slots
+			const overriddenEvents = homepageSettings.upcomingEvents?.events || [];
+			const upcomingEvents = [...overriddenEvents, ...defaultEvents].slice(0, 4); // Always keep 4 slots
+
 			setSettings({
 				// HEADER
 				headerImages: homepageSettings.header?.images || [],
@@ -52,9 +56,7 @@ function HomePageSettingsAdmin() {
 				upcomingEventsTitle: homepageSettings.upcomingEvents?.text?.title || '',
 				upcomingEventsSubtext: homepageSettings.upcomingEvents?.text?.subtext || '',
 				upcomingEventsSeeMore: homepageSettings.upcomingEvents?.text?.seeMore || '',
-				upcomingEvents:
-					homepageSettings.upcomingEvents?.events?.map((evt) => ({ eventID: evt.eventID })) ||
-					Array(4).fill({ eventID: '' }),
+				upcomingEvents,
 			});
 		}
 	}, [homepageSettings]);
@@ -86,10 +88,26 @@ function HomePageSettingsAdmin() {
 
 	const handleUpcomingEventChange = (index, newID) => {
 		setSettings((prev) => {
-			const updatedEventIDs = [...prev.upcomingEvents];
-			updatedEventIDs[index] = { eventID: newID }; // Ensure correct format
-			return { ...prev, upcomingEvents: updatedEventIDs };
+			const updatedEvents = [...prev.upcomingEvents];
+			updatedEvents[index] = { eventID: newID };
+			return { ...prev, upcomingEvents: updatedEvents };
 		});
+	};
+
+	// Handle reordering of overridden events
+	const handleReorderUpcomingEvents = (newOrder) => {
+		setSettings((prev) => ({
+			...prev,
+			upcomingEvents: newOrder,
+		}));
+	};
+
+	// Handle reordering of "Join Us" events
+	const handleReorderJoinUsEvents = (newOrder) => {
+		setSettings((prev) => ({
+			...prev,
+			joinUsEvents: newOrder,
+		}));
 	};
 
 	// Save
@@ -136,7 +154,7 @@ function HomePageSettingsAdmin() {
 					subtext: settings.upcomingEventsSubtext,
 					seeMore: settings.upcomingEventsSeeMore,
 				},
-				events: settings.upcomingEvents.filter((evt) => evt.eventID !== ''),
+				events: settings.upcomingEvents,
 			},
 		};
 		updateHomepageSettings(updatedSettings);
@@ -192,6 +210,7 @@ function HomePageSettingsAdmin() {
 						onChangeEventID={(idx, newVal) =>
 							handleArrayFieldChange('joinUsEvents', idx, 'eventID', newVal)
 						}
+						onReorder={handleReorderJoinUsEvents}
 					/>
 				</div>
 
@@ -219,9 +238,10 @@ function HomePageSettingsAdmin() {
 						upcomingEventsTitle={settings.upcomingEventsTitle}
 						upcomingEventsSubtext={settings.upcomingEventsSubtext}
 						upcomingEventsSeeMore={settings.upcomingEventsSeeMore}
-						selectedEvents={settings.upcomingEvents} // Pass selected event objects
-						onChange={handleChange}
-						onChangeEventID={handleUpcomingEventChange} // Update selected event
+						selectedEvents={settings.upcomingEvents}
+						onChange={(field, value) => setSettings((prev) => ({ ...prev, [field]: value }))}
+						onChangeEventID={handleUpcomingEventChange}
+						onReorder={handleReorderUpcomingEvents}
 					/>
 				</div>
 
