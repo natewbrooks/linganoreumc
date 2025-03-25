@@ -61,7 +61,7 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					);
 				})}
 				<div
-					className='invisible lg:visible absolute h-[300px] w-[280px] top-0 right-10 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-20'
+					className='invisible lg:visible absolute h-[300px] w-[280px] top-0 right-10 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
 					style={{ backgroundImage: `url(${BKG})` }}
 				/>
 			</div>
