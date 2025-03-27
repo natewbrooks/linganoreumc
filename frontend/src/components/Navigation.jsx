@@ -22,7 +22,7 @@ function Navigation() {
 						/>
 					</div>
 				</div>
-				<div className={`flex items-center font-dm text-xl text-black space-x-10`}>
+				<div className={`flex items-center font-dm text-xl text-black space-x-10 outline-none`}>
 					<Link
 						to={`/`}
 						className={`text-bkg`}>

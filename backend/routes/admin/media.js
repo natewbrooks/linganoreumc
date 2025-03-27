@@ -22,7 +22,7 @@ router.post(
 	'/images/header/',
 	createMulterUploader(headerImagesPath).single('image'),
 	(req, res, next) => {
-		console.log('Uploaded header file:', req.file); // Debug log
+		console.log('Uploaded header file:', req.file);
 		next();
 	},
 	uploadHeaderImage

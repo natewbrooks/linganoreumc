@@ -8,7 +8,7 @@ import { EventsProvider } from './contexts/EventsContext.jsx';
 import { HomePageSettingsProvider } from './contexts/HomepageSettingsContext.jsx';
 import { GeneralSettingsProvider } from './contexts/GeneralSettingsContext.jsx';
 
-// Essentially the layout pages
+// Essentially the page layout
 createRoot(document.getElementById('root')).render(
 	<BrowserRouter basename='/admin/'>
 		<EventsProvider>
@@ -16,7 +16,6 @@ createRoot(document.getElementById('root')).render(
 				<HomePageSettingsProvider>
 					<div className={`flex flex-col my-8`}>
 						<Header />
-
 						<div className={`flex flex-row `}>
 							<Navigation />
 							<div className={`pl-32 flex w-full h-full  mt-8`}>

@@ -43,7 +43,7 @@ function Home() {
 	// General Settings Social Media Links
 	const socialMediaLinks = generalSettings.socialMediaLinks || [];
 
-	// Helper function to find the closest available date (future if required)
+	// Helper function to find the closest available date
 	const getUpcomingEventDate = (eventID, requireFutureOnly = false) => {
 		const now = new Date();
 
