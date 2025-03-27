@@ -73,16 +73,16 @@ function Footer() {
 
 			{/* Contact Information */}
 			<div className={`bg-black flex justify-between py-2 px-4`}>
-				<div className={`flex flex-col text-sm sm:text-md`}>
+				<div className={`flex flex-col space-y-2 sm:space-y-0 text-xs sm:text-md`}>
 					<span>{contactInfo.name || 'Pastor Name'}</span>
-					<div className={`flex space-x-2`}>
+					<div className={`flex flex-col sm:flex-row sm:space-x-2`}>
 						<span>{contactInfo.phoneNumber || 'Phone Number'}</span>
-						<span>|</span>
+						<span className={`hidden sm:block`}>|</span>
 						<span>{contactInfo.email || 'Email'}</span>
 					</div>
 				</div>
-				<div className={`flex flex-col text-end text-sm sm:text-md`}>
-					<span>{contactInfo.locationName || 'Church Name'}</span>
+				<div className={`flex flex-col items-end justify-center text-end text-xs sm:text-md`}>
+					<span className={`whitespace-nowrap`}>{contactInfo.locationName || 'Church Name'}</span>
 					<span>{contactInfo.address || 'Church Address'}</span>
 				</div>
 			</div>

@@ -71,14 +71,14 @@ function EventItem({ id, title, description }) {
 				})}
 			</div>
 
-			<div className='flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
-				<div
-					className={`font-dm p-1 py-2 text-bkg min-w-[64px] overflow-hidden text-center text-lg  relative bg-darkred px-4`}>
-					<p className='skew-x-[30deg]'>id: {id}</p>
+			<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
+				<div className='font-dm py-2 text-bkg min-w-[64px] overflow-hidden text-center text-lg relative bg-darkred px-4'>
+					<p className='skew-x-[30deg] whitespace-nowrap'>id: {id}</p>
 				</div>
-				<div className='font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center text-lg bg-red px-4'>
+				<div className='font-dm py-2 text-bkg bg-red px-4 text-center text-lg overflow-visible whitespace-nowrap skew-x-0'>
 					<p className='skew-x-[30deg]'>{title}</p>
 				</div>
+
 				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
 					<p className='skew-x-[30deg]'>{description}</p>
 				</div>

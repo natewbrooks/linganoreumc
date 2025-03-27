@@ -61,106 +61,110 @@ function LivestreamEmbed({
 	};
 
 	return (
-		<div className={`w-full flex items-center justify-center space-x-10`}>
-			{/* ICONS/LINKS */}
-			<div className={`grid-cols-1 space-y-2`}>
-				{socialLinks.map((link, index) => {
-					const IconComponent = getIconComponent(link.reactIcon);
-					return (
-						<a
-							key={index}
-							href={link.url}
-							target='_blank'
-							rel='noopener noreferrer'
-							className={`flex items-center justify-center bg-red ${
-								index % 2 == 0 ? 'skew-x-[30deg]' : '-skew-x-[30deg]'
-							} text-bkg px-3 py-2 transition hover:bg-red/80`}>
-							<span className={`${index % 2 == 0 ? '-skew-x-[30deg]' : 'skew-x-[30deg]'}`}>
-								{IconComponent && <IconComponent size={42} />}
-							</span>
-						</a>
-					);
-				})}
+		<div className={`w-full flex items-stretch justify-center space-x-10 min-h-[360px]`}>
+			{/* LIVESTREAM OR OFFLINE BLOCK */}
+			<div className='flex flex-col justify-center items-center text-center h-full'>
+				<div className='flex flex-col -space-y-1 leading-2 mb-2'>
+					<span className='font-dm text-xl'>{isLive ? liveTitle : offlineTitle}</span>
+					<h1 className='font-dm text-2xl sm:text-4xl'>{isLive ? liveSubtext : offlineSubtext}</h1>
+				</div>
+				<div className='flex flex-col space-y-1 h-full justify-between'>
+					<div className='relative w-full sm:w-[640px] aspect-video'>
+						{/* LEFT SIDE ICONS */}
+						{/* LEFT SIDE ICONS */}
+						{socialLinks.length > 0 && (
+							<div className='absolute -left-28 top-0 bottom-0 flex flex-col h-full max-h-full z-10 py-12 space-y-1 w-20'>
+								{[...Array(4)].map((_, i) => {
+									const link = socialLinks[i];
+									if (!link)
+										return (
+											<div
+												key={`left-empty-${i}`}
+												className='h-1/4'
+											/>
+										);
+									const IconComponent = getIconComponent(link.reactIcon);
+									return (
+										<a
+											key={`left-${i}`}
+											href={link.url}
+											target='_blank'
+											rel='noopener noreferrer'
+											className={`h-1/4 flex items-center justify-center bg-red ${
+												i % 2 === 0 ? '-skew-x-[30deg]' : 'skew-x-[30deg]'
+											} text-bkg transition hover:bg-red/80`}>
+											<span
+												className={`w-full h-full flex items-center justify-center ${
+													i % 2 === 0 ? 'skew-x-[30deg]' : '-skew-x-[30deg]'
+												}`}>
+												{IconComponent && <IconComponent className='w-10 h-10 sm:w-12 sm:h-12' />}
+											</span>
+										</a>
+									);
+								})}
+							</div>
+						)}
+
+						{/* RIGHT SIDE ICONS */}
+						{socialLinks.length > 4 && (
+							<div className='absolute -right-28 top-0 bottom-0 flex flex-col h-full max-h-full z-10 py-12 space-y-1 w-20'>
+								{[...Array(4)].map((_, i) => {
+									const link = socialLinks[i + 4];
+									if (!link)
+										return (
+											<div
+												key={`right-empty-${i}`}
+												className='h-1/4'
+											/>
+										);
+									const IconComponent = getIconComponent(link.reactIcon);
+									return (
+										<a
+											key={`right-${i}`}
+											href={link.url}
+											target='_blank'
+											rel='noopener noreferrer'
+											className={`h-1/4 flex items-center justify-center bg-red ${
+												i % 2 === 0 ? 'skew-x-[30deg]' : '-skew-x-[30deg]'
+											} text-bkg transition hover:bg-red/80`}>
+											<span
+												className={`w-full h-full flex items-center justify-center ${
+													i % 2 === 0 ? '-skew-x-[30deg]' : 'skew-x-[30deg]'
+												}`}>
+												{IconComponent && <IconComponent className='w-10 h-10 sm:w-12 sm:h-12' />}
+											</span>
+										</a>
+									);
+								})}
+							</div>
+						)}
+
+						{/* VIDEO PLAYER */}
+						<YouTube
+							className='w-full h-full'
+							videoId={ytVideoID}
+							opts={opts}
+						/>
+					</div>
+
+					<div
+						className={`flex ${
+							isLive ? 'justify-between' : 'justify-end'
+						}  px-2 -translate-y-6 sm:translate-y-0`}>
+						{isLive && (
+							<div className='flex items-center space-x-2'>
+								<div className='bg-red rounded-full p-2'>{` `}</div>
+								<div className='font-dm text-xl'>LIVE NOW</div>
+							</div>
+						)}
+						<Link
+							to='/'
+							className='font-dm text-xl'>
+							{isLive ? liveSeeMore : offlineSeeMore}
+						</Link>
+					</div>
+				</div>
 			</div>
-			{isLive ? (
-				// The current livestream
-				<div className={`flex flex-col justify-center items-center text-center`}>
-					<div className={`flex flex-col -space-y-1 leading-2 mb-2`}>
-						<span className={`font-dm text-xl`}>{liveTitle}</span>
-						<h1 className={`font-dm text-2xl sm:text-4xl`}>{liveSubtext}</h1>
-					</div>
-					<div className={`flex flex-col space-y-1`}>
-						<YouTube
-							style={{ width: `100vw` }}
-							className={`aspect-square justify-center items-center`}
-							videoId={ytVideoID}
-							opts={opts}
-						/>
-						<div className={`flex justify-between px-2 -translate-y-6 sm:translate-y-0`}>
-							<div className={`flex items-center space-x-2`}>
-								<div className={`bg-red rounded-full p-2`}>{` `}</div>
-								<div className={`font-dm text-xl`}>LIVE NOW</div>
-							</div>
-							<Link
-								to={'/'}
-								className={`font-dm text-xl`}>
-								{liveSeeMore}
-							</Link>
-						</div>
-					</div>
-				</div>
-			) : (
-				// A previous video
-				<div className={`flex flex-col justify-center items-center text-center`}>
-					<div className={`flex flex-col -space-y-1 leading-2 mb-2`}>
-						<span className={`font-dm text-xl`}>{offlineTitle}</span>
-						<h1 className={`font-dm text-2xl sm:text-4xl`}>{offlineSubtext}</h1>
-					</div>
-					<div className={`flex flex-col space-y-1`}>
-						<YouTube
-							className={`w-screen sm:w-full justify-center items-center`}
-							videoId={ytVideoID}
-							opts={opts}
-						/>
-						<div className={`flex justify-between px-2 -translate-y-6 xs:translate-y-0`}>
-							<div className={`flex items-center space-x-2`}>
-								<div className={`font-dm text-xl`}>{` `}</div>
-							</div>
-							<Link
-								to={'/'}
-								className={`font-dm text-xl `}>
-								{offlineSeeMore}
-							</Link>
-						</div>
-					</div>
-				</div>
-			)}
-			{/* <div className={`grid-cols-1 space-y-2 `}>
-				<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
-					<FaFacebook
-						className={`skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red skew-x-[30deg] px-3 py-2`}>
-					<FaYoutube
-						className={`-skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red -skew-x-[30deg] px-3 py-2`}>
-					<SiZoom
-						className={`skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-				<div className={`bg-red skew-x-[30deg] px-3 py-2`}>
-					<FaYoutube
-						className={`-skew-x-[30deg] text-bkg`}
-						size={50}
-					/>
-				</div>
-			</div> */}
 		</div>
 	);
 }

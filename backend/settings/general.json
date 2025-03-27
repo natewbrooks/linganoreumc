@@ -26,6 +26,16 @@
       "platform": "Facebook",
       "url": "https://www.facebook.com/ExampleChurch",
       "reactIcon": "FaFacebookF"
+    },
+    {
+      "platform": "Ad",
+      "url": "what.com",
+      "reactIcon": "FaAd"
+    },
+    {
+      "platform": "who",
+      "url": "",
+      "reactIcon": "FaAffiliatetheme"
     }
   ]
 }
