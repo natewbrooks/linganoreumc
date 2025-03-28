@@ -66,26 +66,31 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 				/>
 			</div>
 
-			<div className='flex relative sm:-right-10 text-bkg w-full justify-end text-start py-2'>
-				<div className='bg-red px-4 sm:px-8 py-4 sm:-skew-x-[30deg] w-full sm:w-9/10 xl:w-3/4'>
-					<div className='flex justify-between items-center skew-x-[30deg]  max-w-[600px] xl:max-w-[750px] 2xl:max-w-[950px]'>
-						<Link
-							to={googleMapsLink}
-							target='_blank'
-							rel='noopener noreferrer'
-							className={`flex flex-col -skew-x-[30deg] sm:skew-x-0 whitespace-nowrap`}>
-							<span>{locationName}</span>
-							<span>{address}</span>
-						</Link>
-						{/* Use Link but point to an external URL, opening a new tab */}
-						{/* <Link
-							
-							className='w-[80px]  relative text-center'>
-							OPEN IN MAPS
-						</Link> */}
-					</div>
-				</div>
+			<div
+				className={`absolute sm:-right-35 md:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 z-10 bg-red text-bkg py-5 group`}>
+				<Link
+					to={googleMapsLink}
+					target='_blank'
+					rel='noopener noreferrer'
+					className={`outline-none flex flex-col skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
+					<span>{locationName}</span>
+					<span>{address}</span>
+				</Link>
 			</div>
+
+			{/* <div className='flex relative sm:-right-10 text-bkg w-full justify-end text-start py-2'>
+				<div className='bg-red px-4 sm:px-8 py-4 sm:-skew-x-[30deg] w-full '>
+					<Link
+						to={googleMapsLink}
+						target='_blank'
+						rel='noopener noreferrer'
+						className={`flex flex-col -skew-x-[30deg] sm:skew-x-0 whitespace-nowrap`}>
+						<span>{locationName}</span>
+						<span>{address}</span>
+					</Link>
+					<div className='flex justify-between items-center skew-x-[30deg]  max-w-[600px] xl:max-w-[750px] 2xl:max-w-[950px]'></div>
+				</div>
+			</div> */}
 		</div>
 	);
 }

@@ -19,7 +19,7 @@ function Home() {
 		(homeSettings.header?.images || []).find((img) => img.active)?.url || null;
 
 	// Motto Banner
-	const mottoTitle = homeSettings.mottoBanner?.text?.title || 'Welcome!';
+	const mottoTitle = homeSettings.mottoBanner?.text?.title || 'LINGANORE UNITED METHODIST CHURCH';
 	const mottoSubtext = homeSettings.mottoBanner?.text?.subtext || '';
 
 	// Livestream Details

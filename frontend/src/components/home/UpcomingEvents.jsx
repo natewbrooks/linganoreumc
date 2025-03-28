@@ -27,10 +27,12 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 				</div>
 
 				<div
-					className={`absolute -left-30 -bottom-16 -skew-x-[30deg]  w-full z-10 bg-red py-5`}>{`s `}</div>
+					className={`absolute -left-30 -bottom-17 -skew-x-[30deg]  w-full z-10 bg-red py-6`}>{`s `}</div>
 				<div className='flex px-40  w-full text-bkg justify-between font-dm '>
 					{displayEvents.map(({ event, date, placeholder }, index) => (
-						<div className={`relative w-[300px] flex justify-center cursor-pointer group  `}>
+						<Link
+							to={`/event/${event.id}`}
+							className={`relative w-[300px] flex justify-center cursor-pointer group  `}>
 							<div
 								key={event.id || index}
 								className={`absolute z-10 p-2 text-center leading-4 ${
@@ -54,14 +56,14 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 										style={{ width: '250px', height: '150px' }}></img>
 								)}
 							</div>
-						</div>
+						</Link>
 					))}
 				</div>
 			</div>
 			<Link
 				to={'/events/'}
-				className={`w-fit pl-8 absolute -bottom-4 bg-red py-3 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[99%] `}>
-				<div className={`skew-x-[30deg] text-xl group-hover:opacity-50 `}>VIEW ALL EVENTS</div>
+				className={`w-fit pl-8 absolute -bottom-4 bg-red py-2 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[99%] `}>
+				<div className={`skew-x-[30deg] text-lg group-hover:opacity-50 `}>VIEW ALL EVENTS</div>
 			</Link>
 		</div>
 	);

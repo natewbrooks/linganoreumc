@@ -30,12 +30,27 @@
     {
       "platform": "Ad",
       "url": "what.com",
-      "reactIcon": "FaAd"
+      "reactIcon": "FaAws"
     },
     {
       "platform": "who",
       "url": "",
-      "reactIcon": "FaAffiliatetheme"
+      "reactIcon": "FaOdnoklassniki"
+    },
+    {
+      "platform": "apple",
+      "url": "",
+      "reactIcon": "FaAppleAlt"
+    },
+    {
+      "platform": "amazon",
+      "url": "",
+      "reactIcon": "FaAmazon"
+    },
+    {
+      "platform": "balance",
+      "url": "",
+      "reactIcon": "FaBalanceScaleLeft"
     }
   ]
 }
