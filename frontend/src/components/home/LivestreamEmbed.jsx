@@ -71,7 +71,6 @@ function LivestreamEmbed({
 				<div className='flex flex-col space-y-1 h-full justify-between'>
 					<div className='relative w-full sm:w-[640px] aspect-video'>
 						{/* LEFT SIDE ICONS */}
-						{/* LEFT SIDE ICONS */}
 						{socialLinks.length > 0 && (
 							<div className='absolute -left-28 top-0 bottom-0 flex flex-col h-full max-h-full z-10 py-12 space-y-1 w-20'>
 								{[...Array(4)].map((_, i) => {
@@ -85,9 +84,9 @@ function LivestreamEmbed({
 										);
 									const IconComponent = getIconComponent(link.reactIcon);
 									return (
-										<a
+										<Link
 											key={`left-${i}`}
-											href={link.url}
+											to={link.url}
 											target='_blank'
 											rel='noopener noreferrer'
 											className={`h-1/4 flex items-center justify-center bg-red ${
@@ -99,7 +98,7 @@ function LivestreamEmbed({
 												}`}>
 												{IconComponent && <IconComponent className='w-10 h-10 sm:w-12 sm:h-12' />}
 											</span>
-										</a>
+										</Link>
 									);
 								})}
 							</div>
@@ -119,9 +118,9 @@ function LivestreamEmbed({
 										);
 									const IconComponent = getIconComponent(link.reactIcon);
 									return (
-										<a
+										<Link
 											key={`right-${i}`}
-											href={link.url}
+											to={link.url}
 											target='_blank'
 											rel='noopener noreferrer'
 											className={`h-1/4 flex items-center justify-center bg-red ${
@@ -133,7 +132,7 @@ function LivestreamEmbed({
 												}`}>
 												{IconComponent && <IconComponent className='w-10 h-10 sm:w-12 sm:h-12' />}
 											</span>
-										</a>
+										</Link>
 									);
 								})}
 							</div>
@@ -150,7 +149,7 @@ function LivestreamEmbed({
 					<div
 						className={`flex ${
 							isLive ? 'justify-between' : 'justify-end'
-						}  px-2 -translate-y-6 sm:translate-y-0`}>
+						}  -translate-y-6 sm:translate-y-0`}>
 						{isLive && (
 							<div className='flex items-center space-x-2'>
 								<div className='bg-red rounded-full p-2'>{` `}</div>
@@ -158,8 +157,8 @@ function LivestreamEmbed({
 							</div>
 						)}
 						<Link
-							to='/'
-							className='font-dm text-xl'>
+							to='/sermons'
+							className='font-dm text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
 							{isLive ? liveSeeMore : offlineSeeMore}
 						</Link>
 					</div>
