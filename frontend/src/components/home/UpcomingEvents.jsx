@@ -42,19 +42,22 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 								<p className='text-md'>{date ? new Date(date).toLocaleDateString() : 'Date TBD'}</p>
 							</div>
 							<div
-								className={`${
+								className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 									!placeholder
-										? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%] '
+										? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%]'
 										: ''
-								} absolute  skew-x-[5deg] right-0 top-[60px] `}>
-								{placeholder ? (
-									<div className={`bg-tp w-[250px] h-[150px]`}></div>
-								) : (
-									<img
-										src={BKG}
-										className={`bg-cover bg-center`}
-										style={{ width: '250px', height: '150px' }}></img>
-								)}
+								}`}>
+								<div className='w-[250px] h-[150px] overflow-hidden'>
+									{placeholder ? (
+										<div className={`bg-tp w-full h-full`}></div>
+									) : (
+										<img
+											src={BKG}
+											className='w-full h-full object-cover object-center skew-x-[-5deg]'
+											alt='Event'
+										/>
+									)}
+								</div>
 							</div>
 						</Link>
 					))}
