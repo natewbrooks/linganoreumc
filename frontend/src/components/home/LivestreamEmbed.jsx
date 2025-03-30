@@ -15,11 +15,12 @@ function LivestreamEmbed({
 	ytChannelID,
 	ytAPIKey,
 	socialLinks,
-	size,
 }) {
 	const [isLive, setIsLive] = useState(false);
 	const [ytVideoID, setYTVideoID] = useState('');
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+	// Fetch livestream status
 	function fetchYoutubeData() {
 		fetch(
 			`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${ytChannelID}&eventType=live&type=video&key=${ytAPIKey}`,
@@ -31,8 +32,7 @@ function LivestreamEmbed({
 		)
 			.then(async (res) => {
 				const response = await res.json();
-
-				if (response.items && response.items.length > 1) {
+				if (response.items && response.items.length > 0) {
 					const streamInfo = response.items[0];
 					setIsLive(true);
 					setYTVideoID(streamInfo.id.videoId);
@@ -47,8 +47,22 @@ function LivestreamEmbed({
 		fetchYoutubeData();
 	}, []);
 
+	// Handle window resize
+	useEffect(() => {
+		const handleResize = () => setWindowWidth(window.innerWidth);
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	// Dynamic size based on screen width
+	const videoWidth = Math.min(windowWidth - 0, 640); // 0px padding buffer
+	const videoHeight = videoWidth * (9 / 16);
+
 	const opts = {
+		width: videoWidth,
+		height: videoHeight,
 		playerVars: {
+			autoplay: 0,
 			allowFullscreen: 1,
 		},
 	};
@@ -61,18 +75,19 @@ function LivestreamEmbed({
 	};
 
 	return (
-		<div className={`w-full flex items-stretch justify-center space-x-10 min-h-[360px]`}>
-			{/* LIVESTREAM OR OFFLINE BLOCK */}
+		<div className='w-full flex items-stretch justify-center min-h-[360px]'>
 			<div className='flex flex-col justify-center items-center text-center h-full'>
 				<div className='flex flex-col -space-y-1 leading-2 mb-2'>
 					<span className='font-dm text-xl'>{isLive ? liveTitle : offlineTitle}</span>
 					<h1 className='font-dm text-2xl sm:text-4xl'>{isLive ? liveSubtext : offlineSubtext}</h1>
 				</div>
+
 				<div className='flex flex-col space-y-1 h-full justify-between'>
-					<div className='relative w-full sm:w-[640px] aspect-video'>
-						{/* LEFT SIDE ICONS */}
+					{/* Video + Social Icons Wrapper */}
+					<div className='relative w-full sm:w-[640px] mx-auto'>
+						{/* LEFT ICONS */}
 						{socialLinks.length > 0 && (
-							<div className='absolute -left-28 top-0 bottom-0 flex flex-col h-full max-h-full z-10 py-12 space-y-1 w-20'>
+							<div className='absolute -left-28 top-0 bottom-0 hidden md:flex flex-col h-full z-10 py-12 space-y-1 w-20'>
 								{[...Array(4)].map((_, i) => {
 									const link = socialLinks[i];
 									if (!link)
@@ -104,9 +119,9 @@ function LivestreamEmbed({
 							</div>
 						)}
 
-						{/* RIGHT SIDE ICONS */}
+						{/* RIGHT ICONS */}
 						{socialLinks.length > 4 && (
-							<div className='absolute -right-28 top-0 bottom-0 flex flex-col h-full max-h-full z-10 py-12 space-y-1 w-20'>
+							<div className='absolute -right-28 top-0 bottom-0 hidden md:flex flex-col h-full z-10 py-12 space-y-1 w-20'>
 								{[...Array(4)].map((_, i) => {
 									const link = socialLinks[i + 4];
 									if (!link)
@@ -138,27 +153,45 @@ function LivestreamEmbed({
 							</div>
 						)}
 
-						{/* VIDEO PLAYER */}
+						{/* YOUTUBE VIDEO */}
 						<YouTube
-							className='w-full h-full'
 							videoId={ytVideoID}
 							opts={opts}
 						/>
 					</div>
 
+					{/* Live status / Link */}
 					<div
-						className={`flex ${
-							isLive ? 'justify-between' : 'justify-end'
-						}  -translate-y-6 sm:translate-y-0`}>
+						className={`flex w-full px-2 sm:px-0 ${
+							isLive ? 'justify-between' : 'sm:justify-end justify-between'
+						}`}>
 						{isLive && (
-							<div className='flex items-center space-x-2'>
+							<div className='hidden sm:flex items-center sm:space-x-2'>
 								<div className='bg-red rounded-full p-2'>{` `}</div>
 								<div className='font-dm text-xl'>LIVE NOW</div>
 							</div>
 						)}
+						{/* MOBILE LINK ICONS */}
+						<div className='flex sm:hidden flex-wrap gap-2'>
+							{socialLinks.map((link, i) => {
+								const IconComponent = getIconComponent(link.reactIcon);
+								if (!IconComponent) return null;
+								return (
+									<Link
+										key={`inline-${i}`}
+										to={link.url}
+										target='_blank'
+										rel='noopener noreferrer'
+										className='skew-x-[30deg] w-8 h-6 flex items-center justify-center bg-red text-bkg transition hover:bg-red/80'>
+										<IconComponent className='w-full h-full p-1 -skew-x-[30deg]' />
+									</Link>
+								);
+							})}
+						</div>
+
 						<Link
 							to='/sermons'
-							className='font-dm text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
+							className='font-dm text-md sm:text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
 							{isLive ? liveSeeMore : offlineSeeMore}
 						</Link>
 					</div>

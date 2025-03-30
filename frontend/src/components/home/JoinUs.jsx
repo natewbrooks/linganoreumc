@@ -61,13 +61,13 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					);
 				})}
 				<div
-					className='invisible lg:visible absolute h-[300px] w-[280px] top-0 right-10 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
+					className='invisible md:visible absolute h-[300px] w-[280px] top-0 right-20 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
 					style={{ backgroundImage: `url(${BKG})` }}
 				/>
 			</div>
 
 			<div
-				className={`absolute sm:-right-35 md:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 z-10 bg-red text-bkg py-5 group`}>
+				className={`absolute sm:-right-20 md:-right-60 lg:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'

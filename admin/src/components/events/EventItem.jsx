@@ -52,7 +52,7 @@ function EventItem({ id, title, description }) {
 			to={`/edit/event/${id}`}
 			className='w-full cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
 			{/* Date/Time row */}
-			<div className='text-sm text-darkred bg-accent px-2 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2 pb-1'>
+			<div className='text-sm text-darkred bg-accent px-2 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2'>
 				{eventDates.map((dateObj, idx) => {
 					const times = timesMap[dateObj.id] || [];
 					if (!times.length) return null;

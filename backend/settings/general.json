@@ -1,6 +1,6 @@
 {
   "announcementBanner": {
-    "enabled": true,
+    "enabled": false,
     "title": "INCLEMENT WEATHER ALERT",
     "subtext": "Due to weather conditions, we will be canceling today’s sermons. Stay safe and god bless!"
   },
@@ -28,29 +28,29 @@
       "reactIcon": "FaFacebookF"
     },
     {
-      "platform": "Ad",
-      "url": "what.com",
-      "reactIcon": "FaAws"
+      "platform": "Instagram",
+      "url": "",
+      "reactIcon": "FaInstagram"
     },
     {
-      "platform": "who",
+      "platform": "",
       "url": "",
-      "reactIcon": "FaOdnoklassniki"
+      "reactIcon": ""
     },
     {
-      "platform": "apple",
+      "platform": "",
       "url": "",
-      "reactIcon": "FaAppleAlt"
+      "reactIcon": ""
     },
     {
-      "platform": "amazon",
+      "platform": "",
       "url": "",
-      "reactIcon": "FaAmazon"
+      "reactIcon": ""
     },
     {
-      "platform": "balance",
+      "platform": "",
       "url": "",
-      "reactIcon": "FaBalanceScaleLeft"
+      "reactIcon": ""
     }
   ]
 }

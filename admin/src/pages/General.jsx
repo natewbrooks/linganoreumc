@@ -53,6 +53,16 @@ function GeneralSettingsAdmin() {
 		}));
 	};
 
+	const handleChange = (section, field, value) => {
+		setSettings((prev) => ({
+			...prev,
+			[section]: {
+				...prev[section],
+				[field]: value,
+			},
+		}));
+	};
+
 	// Save settings
 	const saveSettings = () => {
 		if (!settings) return;
