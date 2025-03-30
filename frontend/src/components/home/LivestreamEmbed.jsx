@@ -182,7 +182,7 @@ function LivestreamEmbed({
 										to={link.url}
 										target='_blank'
 										rel='noopener noreferrer'
-										className='skew-x-[30deg] w-8 h-6 flex items-center justify-center bg-red text-bkg transition hover:bg-red/80'>
+										className='skew-x-[30deg] w-10 h-8 flex items-center justify-center bg-red text-bkg transition hover:bg-red/80'>
 										<IconComponent className='w-full h-full p-1 -skew-x-[30deg]' />
 									</Link>
 								);
@@ -191,7 +191,7 @@ function LivestreamEmbed({
 
 						<Link
 							to='/sermons'
-							className='font-dm text-md sm:text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
+							className='font-dm text-lg sm:text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
 							{isLive ? liveSeeMore : offlineSeeMore}
 						</Link>
 					</div>

@@ -7,6 +7,7 @@ import './global.css';
 import App from './App.jsx';
 import Footer from './components/Footer.jsx';
 import Navigation from './components/Navigation.jsx';
+import MobileNavigation from './components/MobileNavigation.jsx';
 import AnnouncementBanner from './components/home/AnnouncementBanner.jsx';
 
 const Layout = () => {
@@ -14,22 +15,32 @@ const Layout = () => {
 
 	return (
 		<div className='relative flex flex-col'>
-			<div className={`sticky top-0 z-20 flex flex-col`}>
+			<div className={`sticky top-0 z-20 flex flex-col transform-3d`}>
 				{settings.general?.announcementBanner?.enabled ? (
 					<>
 						<AnnouncementBanner
 							title={settings.general.announcementBanner.title}
 							subtext={settings.general.announcementBanner.subtext}
 						/>
-						<div className={`-translate-y-1`}>
-							<Navigation />
+						<div className={``}>
+							<div className={`hidden md:block`}>
+								<Navigation />
+							</div>
+							<div className={`block md:hidden`}>
+								<MobileNavigation />
+							</div>
 						</div>
 					</>
 				) : (
 					<div className={`sticky top-0 z-30`}>
-						<>
-							<Navigation />
-						</>
+						<div>
+							<div className={`hidden md:block`}>
+								<Navigation />
+							</div>
+							<div className={`block md:hidden`}>
+								<MobileNavigation />
+							</div>
+						</div>
 					</div>
 				)}
 			</div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEvents } from '../../contexts/EventsContext';
 import BKG from '../../assets/linganore-bright-pic-upscale.webp';
 import { Link } from 'react-router-dom';
+import { SiGooglemaps } from 'react-icons/si';
 
 function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 	const { events, fetchEventTimesByEventId, formatTime } = useEvents();
@@ -61,13 +62,13 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					);
 				})}
 				<div
-					className='invisible md:visible absolute h-[300px] w-[280px] top-0 right-20 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
+					className='invisible lg:visible absolute h-[300px] w-[280px] top-0 right-10 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
 					style={{ backgroundImage: `url(${BKG})` }}
 				/>
 			</div>
 
 			<div
-				className={`absolute sm:-right-20 md:-right-60 lg:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
+				className={`hidden sm:block absolute sm:-right-20 md:-right-60 lg:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'
@@ -75,6 +76,20 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					className={`outline-none flex flex-col skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
 					<span>{locationName}</span>
 					<span>{address}</span>
+				</Link>
+			</div>
+
+			<div className={`flex sm:hidden w-full text-start  px-4 bg-red text-bkg py-3 group`}>
+				<Link
+					to={googleMapsLink}
+					target='_blank'
+					rel='noopener noreferrer'
+					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
+					<SiGooglemaps size={32} />
+					<div className={`flex flex-col`}>
+						<span>{locationName}</span>
+						<span>{address}</span>
+					</div>
 				</Link>
 			</div>
 

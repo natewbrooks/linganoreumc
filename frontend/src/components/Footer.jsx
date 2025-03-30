@@ -81,7 +81,7 @@ function Footer() {
 						<span>{contactInfo.email || 'Email'}</span>
 					</div>
 				</div>
-				<div className={`flex flex-col items-end justify-center text-end text-xs sm:text-md`}>
+				<div className={`flex flex-col items-end justify-end text-end text-xs sm:text-md`}>
 					<span className={`whitespace-nowrap`}>{contactInfo.locationName || 'Church Name'}</span>
 					<span>{contactInfo.address || 'Church Address'}</span>
 				</div>

@@ -103,7 +103,7 @@ function Home() {
 		.slice(0, 4); // Limit to 4 events
 
 	return (
-		<div className='w-full flex flex-col overflow-hidden'>
+		<div className='w-full flex flex-col pb-20 overflow-hidden'>
 			{/* Header */}
 			<Header activeHeaderImage={activeHeaderImage} />
 
@@ -147,8 +147,7 @@ function Home() {
 					events={upcomingEvents}
 				/>
 
-				{/* Displayed Sermons */}
-				<div className='flex flex-col px-4 py-6'>
+				{/* <div className='flex flex-col px-4 py-6'>
 					<h2 className='text-2xl font-bold'>
 						{homeSettings.displayedSermons?.text?.title || 'Sermons'}
 					</h2>
@@ -164,7 +163,7 @@ function Home() {
 					) : (
 						<p className='text-darkred'>No displayed sermons.</p>
 					)}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);
