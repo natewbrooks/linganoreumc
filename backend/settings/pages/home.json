@@ -3,11 +3,11 @@
     "images": [
       {
         "url": "/api/media/images/linganore-bright-pic-upscale.webp",
-        "active": false
+        "active": true
       },
       {
         "url": "/api/media/images/night-jhenmoran.png",
-        "active": true
+        "active": false
       },
       {
         "url": "/api/media/images/DkuilsYX4AAiEFk.jfif",

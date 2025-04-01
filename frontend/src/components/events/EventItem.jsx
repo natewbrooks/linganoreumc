@@ -28,7 +28,7 @@ function EventItem({ event, previous }) {
 	}, [eventDates, eventTimes, event.id]);
 
 	return (
-		<div className='flex flex-col w-full hover:scale-[102%] active:scale-[99%] cursor-pointer hover:opacity-50'>
+		<div className='flex flex-col w-full hover:scale-[102%] active:scale-[100%] cursor-pointer hover:opacity-50'>
 			<div
 				className={`flex flex-row w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
 					previous ? 'text-darkred' : 'text-darkred bg-accent'

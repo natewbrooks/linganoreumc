@@ -191,7 +191,7 @@ function LivestreamEmbed({
 
 						<Link
 							to='/sermons'
-							className='font-dm text-lg sm:text-xl hover:opacity-50 hover:scale-[102%] active:scale-[99%]'>
+							className='font-dm text-lg sm:text-xl hover:opacity-50 hover:scale-[102%] active:scale-[100%]'>
 							{isLive ? liveSeeMore : offlineSeeMore}
 						</Link>
 					</div>

@@ -28,7 +28,7 @@ function Navigation() {
 							className={`group`}>
 							<Logo
 								width={250}
-								className={`group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%] skew-x-[30deg] translate-x-1 -translate-y-1`}
+								className={`group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%] skew-x-[30deg] translate-x-1 -translate-y-1`}
 							/>
 						</Link>
 					</div>

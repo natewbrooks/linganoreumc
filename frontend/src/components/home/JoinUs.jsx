@@ -47,7 +47,11 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 						<div
 							key={eventID}
 							className='flex text-lg justify-between w-full'>
-							<div className={`w-fit`}>{event.title}</div>
+							<Link
+								to={`/event/${event.id}`}
+								className={`w-fit hover:opacity-50 hover:scale-[102%] active:scale-[100%]`}>
+								{event.title}
+							</Link>
 							<div className='w-fit'>
 								{eventTimes.length > 0
 									? eventTimes.map((t, index) => (
@@ -68,14 +72,19 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 			</div>
 
 			<div
-				className={`hidden sm:block absolute sm:-right-20 md:-right-60 lg:-right-80 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
+				className={`hidden sm:block absolute sm:-right-20 md:-right-60 lg:-right-80 2xl:-right-200 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'
 					rel='noopener noreferrer'
-					className={`outline-none flex flex-col skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
-					<span>{locationName}</span>
-					<span>{address}</span>
+					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50 `}>
+					<SiGooglemaps size={32} />
+					<div className={`flex flex-col group`}>
+						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>
+							{locationName}
+						</span>
+						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>{address}</span>
+					</div>
 				</Link>
 			</div>
 
@@ -86,9 +95,11 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					rel='noopener noreferrer'
 					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
 					<SiGooglemaps size={32} />
-					<div className={`flex flex-col`}>
-						<span>{locationName}</span>
-						<span>{address}</span>
+					<div className={`flex flex-col group`}>
+						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>
+							{locationName}
+						</span>
+						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>{address}</span>
 					</div>
 				</Link>
 			</div>

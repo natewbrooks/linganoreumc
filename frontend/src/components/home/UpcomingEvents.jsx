@@ -49,7 +49,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 								<div
 									className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 										!placeholder
-											? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%]'
+											? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
 											: ''
 									}`}>
 									<div className='h-[150px] overflow-hidden'>
@@ -93,7 +93,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									<div
 										className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 											!placeholder
-												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%]'
+												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
 												: ''
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
@@ -134,7 +134,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									<div
 										className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 											!placeholder
-												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[99%]'
+												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
 												: ''
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
@@ -157,7 +157,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 			</div>
 			<Link
 				to={'/events/'}
-				className={`w-fit pl-8 absolute bottom-0 sm:-bottom-4 bg-red py-2 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[99%] `}>
+				className={`w-fit pl-8 absolute bottom-0 sm:-bottom-4 bg-red py-2 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[100%] `}>
 				<div className={`skew-x-[30deg] text-lg group-hover:opacity-50 `}>VIEW ALL EVENTS</div>
 			</Link>
 		</div>

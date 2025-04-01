@@ -11,7 +11,7 @@ function FeaturedEventItem({ event }) {
 	return (
 		<Link
 			to={`/event/${event.id}`}
-			className={`flex flex-col w-full h-[180px] skew-x-[10deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[99%] ${
+			className={`flex flex-col w-full h-[180px] skew-x-[10deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] ${
 				hasBackground ? 'bg-cover bg-center' : 'bg-tp'
 			}`}
 			style={hasBackground ? { backgroundImage: `url(${BKG})` } : {}}>

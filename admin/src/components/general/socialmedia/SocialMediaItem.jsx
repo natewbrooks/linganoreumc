@@ -28,7 +28,7 @@ function SocialMediaItem({ index, platform, url, icon, onChange, onRemove }) {
 				onXClick={() => onRemove(index)}
 			/>
 			{/* <button
-				className='text-red cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[99%]'
+				className='text-red cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[100%]'
 				onClick={() => onRemove(index)}>
 				<FaTrash />
 			</button> */}

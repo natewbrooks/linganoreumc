@@ -186,7 +186,7 @@ export default function SelectImageDropdown({
 												}}
 											/>
 											<FaPlus
-												className='absolute top-0 right-0 rotate-45 text-bkg outline-2 outline-red bg-red cursor-pointer hover:opacity-75 hover:scale-[102%] active:scale-[99%]'
+												className='absolute top-0 right-0 rotate-45 text-bkg outline-2 outline-red bg-red cursor-pointer hover:opacity-75 hover:scale-[102%] active:scale-[100%]'
 												onClick={(e) => {
 													e.stopPropagation();
 													handleDeleteImage && handleDeleteImage(filename);

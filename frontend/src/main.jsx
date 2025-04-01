@@ -14,7 +14,7 @@ const Layout = () => {
 	const { settings } = useSettings();
 
 	return (
-		<div className='relative flex flex-col'>
+		<div className='relative flex flex-col overflow-hidden'>
 			<div className={`sticky top-0 z-20 flex flex-col transform-3d`}>
 				{settings.general?.announcementBanner?.enabled ? (
 					<>

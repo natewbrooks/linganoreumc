@@ -60,10 +60,9 @@ function Events() {
 
 	return (
 		<div className='flex flex-col my-8 overflow-hidden'>
-			<div className={`font-dm text-md w-full text-center text-xl`}>EVENTS</div>
-
 			<div className={`flex flex-col space-y-8  `}>
 				<div className={`flex flex-col items-center w-full  px-4 sm:px-20`}>
+					<div className={`font-dm text-md w-full max-w-[1200px]`}>EVENTS</div>
 					<div className={`grid grid-cols-2 sm:grid-cols-4 gap-2 p-4 w-full h-fit max-w-[1200px]`}>
 						{featured.length > 0 ? (
 							featured.map((event) => (
