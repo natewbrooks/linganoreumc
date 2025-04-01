@@ -1,6 +1,6 @@
 {
   "announcementBanner": {
-    "enabled": false,
+    "enabled": true,
     "title": "INCLEMENT WEATHER ALERT",
     "subtext": "Due to weather conditions, we will be canceling today’s sermons. Stay safe and god bless!"
   },

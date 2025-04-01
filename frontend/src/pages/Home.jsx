@@ -43,29 +43,38 @@ function Home() {
 	// General Settings Social Media Links
 	const socialMediaLinks = generalSettings.socialMediaLinks || [];
 
-	// Helper function to find the closest available date
 	const getUpcomingEventDate = (eventID, requireFutureOnly = false) => {
-		const now = new Date();
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
 
-		// Get all dates for this event
 		const eventDateList = eventDates.filter((date) => date.eventID === eventID);
 
-		// If we only want future dates (when settings do NOT override)
 		if (requireFutureOnly) {
 			const futureDates = eventDateList
-				.filter((date) => new Date(date.date) >= now)
+				.filter((date) => {
+					const eventDate = new Date(date.date);
+					eventDate.setHours(0, 0, 0, 0);
+					return eventDate >= today;
+				})
 				.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 			return futureDates.length > 0 ? futureDates[0].date : null;
 		}
 
-		// Get closest future date or fallback to most recent past date
 		const futureDates = eventDateList
-			.filter((date) => new Date(date.date) >= now)
+			.filter((date) => {
+				const eventDate = new Date(date.date);
+				eventDate.setHours(0, 0, 0, 0);
+				return eventDate >= today;
+			})
 			.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 		const pastDates = eventDateList
-			.filter((date) => new Date(date.date) < now)
+			.filter((date) => {
+				const eventDate = new Date(date.date);
+				eventDate.setHours(0, 0, 0, 0);
+				return eventDate < today;
+			})
 			.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 		return futureDates.length > 0

@@ -72,7 +72,7 @@ function Footer() {
 			</div>
 
 			{/* Contact Information */}
-			<div className={`bg-black flex justify-between py-2 px-4`}>
+			<div className={`bg-black flex justify-between space-x-2 py-2 px-4`}>
 				<div className={`flex flex-col space-y-2 sm:space-y-0 text-xs sm:text-md`}>
 					<span>{contactInfo.name || 'Pastor Name'}</span>
 					<div className={`flex flex-col sm:flex-row sm:space-x-2`}>

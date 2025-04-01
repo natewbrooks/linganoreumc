@@ -32,17 +32,20 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
 								to={`/event/${event.id}`}
-								className={`relative w-[300px] flex justify-center cursor-pointer group  `}>
+								key={event.id || index}
+								className='relative w-[300px] flex justify-center cursor-pointer group'>
 								<div
-									key={event.id || index}
-									className={`absolute z-10 p-2 text-center leading-4 whitespace-nowrap ${
-										placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
+									className={`absolute z-10 p-2 text-center leading-4 w-[220px] ${
+										placeholder ? 'pointer-events-none' : 'group-hover:opacity-50'
 									}`}>
-									<h3 className='text-lg '>{event.title.toUpperCase() || 'Unknown Event'}</h3>
-									<p className='text-md'>
-										{date ? new Date(date).toLocaleDateString() : 'Date TBD'}
+									<h3 className='text-lg truncate overflow-hidden whitespace-nowrap'>
+										{event.title?.toUpperCase() || 'UNKNOWN EVENT'}
+									</h3>
+									<p className='text-md truncate overflow-hidden whitespace-nowrap'>
+										{date ? new Date(date).toLocaleDateString() : 'DATE TBD'}
 									</p>
 								</div>
+
 								<div
 									className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 										!placeholder
@@ -51,7 +54,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									}`}>
 									<div className='h-[150px] overflow-hidden'>
 										{placeholder ? (
-											<div className={`bg-tp w-full h-full`}></div>
+											<div className='bg-tp w-full h-full'></div>
 										) : (
 											<img
 												src={BKG}
@@ -74,14 +77,16 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 							{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
 								<Link
 									to={`/event/${event.id}`}
-									className={`relative flex justify-center cursor-pointer group  `}>
+									className={`relative flex justify-center cursor-pointer group `}>
 									<div
 										key={event.id || index}
-										className={`absolute z-10 p-2 text-center leading-4 ${
+										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
 											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
 										}`}>
-										<h3 className='text-lg '>{event.title.toUpperCase() || 'Unknown Event'}</h3>
-										<p className='text-md'>
+										<h3 className='text-lg truncate overflow-hidden whitespace-nowrap'>
+											{event.title.toUpperCase() || 'Unknown Event'}
+										</h3>
+										<p className='text-md truncate overflow-hidden whitespace-nowrap'>
 											{date ? new Date(date).toLocaleDateString() : 'Date TBD'}
 										</p>
 									</div>
@@ -116,11 +121,13 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									className={`relative flex justify-center cursor-pointer group  `}>
 									<div
 										key={event.id || index}
-										className={`absolute z-10 p-2 text-center leading-4 whitespace-nowrap ${
+										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
 											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
 										}`}>
-										<h3 className='text-lg '>{event.title.toUpperCase() || 'Unknown Event'}</h3>
-										<p className='text-md'>
+										<h3 className='text-lg truncate overflow-hidden whitespace-nowrap'>
+											{event.title.toUpperCase() || 'Unknown Event'}
+										</h3>
+										<p className='text-md truncate overflow-hidden whitespace-nowrap'>
 											{date ? new Date(date).toLocaleDateString() : 'Date TBD'}
 										</p>
 									</div>
