@@ -111,16 +111,15 @@ export const updateEvent = async (req, res) => {
 			[title, description, isRecurring, isFeatured, id]
 		);
 
-		console.log(JSON.stringify(result));
 		if (result.affectedRows == 0) {
 			return res.status(404).json({ error: 'Event not found' });
 		}
 
-		res.status(201).json({
+		res.status(200).json({
 			message: 'Event updated successfully',
 			id,
 		});
 	} catch (err) {
-		res.json({ error: err.message });
+		res.status(500).json({ error: err.message });
 	}
 };

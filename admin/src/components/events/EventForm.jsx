@@ -4,6 +4,7 @@ import { useEvents } from '../../contexts/EventsContext';
 import DateTimeFields from './DateTimeFields';
 import TextInput from '../ui/TextInput';
 import BodyTextInput from '../ui/BodyTextInput';
+import SelectEventImages from './SelectEventImages';
 
 function EventForm({ mode = 'create', initialData = null }) {
 	const navigate = useNavigate();
@@ -26,29 +27,30 @@ function EventForm({ mode = 'create', initialData = null }) {
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [isFeatured, setIsFeatured] = useState(false);
 	const [dateTimeData, setDateTimeData] = useState([]);
+	const [eventID, setEventID] = useState(null);
+	const [eventImages, setEventImages] = useState([]);
 
-	// Load initial data when in edit mode
 	useEffect(() => {
 		if (mode === 'edit' && initialData) {
 			setTitle(initialData.title || '');
 			setDescription(initialData.description || '');
 			setIsRecurring(initialData.isRecurring || false);
 			setIsFeatured(initialData.isFeatured || false);
+			setEventID(initialData.id || null);
 
-			// Fetch event dates and times from context
-			fetchEventDatesById(initialData.id).then((dates) => {
-				Promise.all(
-					dates.map(async (dateObj) => {
-						const times = await fetchEventTimesByDateId(dateObj.id);
-						return {
-							date: dateObj.date,
-							times: times.map((t) => t.time),
-							eventDateID: dateObj.id,
-						};
-					})
-				).then(setDateTimeData);
-			});
-		} else {
+			if (initialData.eventDateData) {
+				const converted = initialData.eventDateData.map((dateEntry) => ({
+					eventDateID: dateEntry.eventDateID,
+					date: dateEntry.date,
+					isCancelled: dateEntry.isCancelled || false,
+					times: (dateEntry.times || []).map((t) => (typeof t === 'string' ? t : t.time)),
+				}));
+				setDateTimeData(converted);
+			} else {
+				setDateTimeData([{ date: '', times: [''] }]);
+			}
+		}
+		if (mode === 'create') {
 			setDateTimeData([{ date: '', times: [''] }]);
 		}
 	}, [mode, initialData, fetchEventDatesById, fetchEventTimesByDateId]);
@@ -71,13 +73,12 @@ function EventForm({ mode = 'create', initialData = null }) {
 				return;
 			}
 
-			let eventID;
-
-			// Sort the dateTimeData before submission
 			const sortedDateTimeData = [...dateTimeData]
+				.filter((d) => !!d.date)
 				.sort((a, b) => new Date(a.date) - new Date(b.date))
 				.map((dateObj) => ({
 					...dateObj,
+					isCancelled: !!dateObj.isCancelled,
 					times: [...dateObj.times].sort((a, b) => {
 						const timeA = new Date(`1970-01-01T${a}:00`).getTime();
 						const timeB = new Date(`1970-01-01T${b}:00`).getTime();
@@ -85,8 +86,9 @@ function EventForm({ mode = 'create', initialData = null }) {
 					}),
 				}));
 
-			// Set sorted data in state to reflect changes before submission
 			setDateTimeData(sortedDateTimeData);
+
+			let finalEventID = eventID;
 
 			if (mode === 'create') {
 				const event = await createEvent({ title, description, isRecurring, isFeatured });
@@ -94,29 +96,27 @@ function EventForm({ mode = 'create', initialData = null }) {
 					alert('Failed to create event.');
 					return;
 				}
-				eventID = event.eventID;
+				finalEventID = event.eventID;
+				setEventID(finalEventID);
 			} else {
-				await updateEvent(initialData.id, { title, description, isRecurring, isFeatured });
-				eventID = initialData.id;
+				await updateEvent(eventID, { title, description, isRecurring, isFeatured });
 			}
 
-			// Process event dates and times
-			for (const { date, times, eventDateID } of sortedDateTimeData) {
+			for (const { date, times, isCancelled = false, eventDateID } of sortedDateTimeData) {
 				let finalDateID = eventDateID;
 
 				if (!eventDateID) {
-					const newDate = await createEventDate(eventID, date);
+					const newDate = await createEventDate(finalEventID, date, isCancelled);
 					if (!newDate || !newDate.eventDateID) {
 						console.error('Failed to create new event date');
 						continue;
 					}
 					finalDateID = newDate.eventDateID;
 				} else {
-					await updateEventDate(eventDateID, date);
+					await updateEventDate(eventDateID, date, isCancelled);
 					await deleteEventTimes(eventDateID);
 				}
 
-				// Add times for this date
 				for (const time of times) {
 					await createEventTime(finalDateID, time);
 				}
@@ -136,7 +136,6 @@ function EventForm({ mode = 'create', initialData = null }) {
 			<form
 				className='flex flex-col font-dm px-6'
 				onSubmit={handleSubmit}>
-				{/* Basic Event Info */}
 				<div className='flex flex-col '>
 					<span className='font-newb text-md'>Details</span>
 					<div className='flex flex-col space-y-2 px-4 py-3'>
@@ -174,18 +173,30 @@ function EventForm({ mode = 'create', initialData = null }) {
 					</div>
 				</div>
 
-				{/* Dates & Times */}
 				<div className='flex flex-col'>
 					<span className='font-newb text-md'>Dates & Times</span>
 					<div className='flex flex-col space-y-4 px-4 py-3'>
 						<DateTimeFields
 							dateTimeData={dateTimeData}
 							setDateTimeData={setDateTimeData}
+							deleteEventDate={deleteEventDate}
 						/>
 					</div>
 				</div>
 
-				{/* Buttons */}
+				{eventID && (
+					<div className='flex flex-col mt-6'>
+						<span className='font-newb text-md'>Event Images</span>
+						<div className='flex flex-col space-y-4 px-4 py-3'>
+							<SelectEventImages
+								eventID={eventID}
+								eventImages={eventImages}
+								onChangeEventImages={setEventImages}
+							/>
+						</div>
+					</div>
+				)}
+
 				<div className='flex w-full justify-end space-x-4'>
 					<button
 						type='reset'

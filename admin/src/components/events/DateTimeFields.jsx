@@ -2,24 +2,29 @@ import React from 'react';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import TextInput from '../ui/TextInput';
 
-/**
- *   dateTimeData: [
- *     { date: 'YYYY-MM-DD', times: ['HH:MM', ...] },
- *     ...
- *   ]
- */
-function DateTimeFields({ dateTimeData, setDateTimeData }) {
-	// Add a new empty date with one empty time
+function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 	const addDateField = () => {
-		setDateTimeData([...dateTimeData, { date: '', times: [''] }]);
+		setDateTimeData([...dateTimeData, { date: '', times: [''], isCancelled: false }]);
 	};
 
-	// Remove an entire date (and its times)
-	const removeDateField = (index) => {
-		setDateTimeData(dateTimeData.filter((_, i) => i !== index));
+	const removeDateField = async (index) => {
+		const entry = dateTimeData[index];
+
+		if (entry.eventDateID) {
+			try {
+				await deleteEventDate(entry.eventDateID);
+				console.log(`Deleted eventDateID: ${entry.eventDateID}`);
+			} catch (err) {
+				console.error('Failed to delete event date:', err);
+				return; // Don't update state if deletion fails
+			}
+		}
+
+		const updated = [...dateTimeData];
+		updated.splice(index, 1);
+		setDateTimeData(updated);
 	};
 
-	// Convert an ISO string (e.g. 2025-03-27T00:00:00.000Z) to YYYY-MM-DD
 	const toYYYYMMDD = (isoString) => {
 		const d = new Date(isoString);
 		const year = d.getFullYear();
@@ -28,40 +33,40 @@ function DateTimeFields({ dateTimeData, setDateTimeData }) {
 		return `${year}-${month}-${day}`;
 	};
 
-	// Update the date string for a particular index
 	const handleDateChange = (index, newValue) => {
 		const updated = [...dateTimeData];
-		updated[index].date = newValue; // Store the new date (already YYYY-MM-DD from the date input)
+		updated[index].date = newValue;
 		setDateTimeData(updated);
-		console.log(dateTimeData);
 	};
 
-	// Add a new empty time to a particular date
 	const addTimeField = (dateIndex) => {
 		const updated = [...dateTimeData];
 		updated[dateIndex].times.push('');
 		setDateTimeData(updated);
 	};
 
-	// Remove a time from a particular date
 	const removeTimeField = (dateIndex, timeIndex) => {
 		const updated = [...dateTimeData];
 		updated[dateIndex].times = updated[dateIndex].times.filter((_, i) => i !== timeIndex);
 		setDateTimeData(updated);
 	};
 
-	// Update the time string for a date/time index
 	const handleTimeChange = (dateIndex, timeIndex, newValue) => {
 		const updated = [...dateTimeData];
 		updated[dateIndex].times[timeIndex] = newValue;
 		setDateTimeData(updated);
 	};
 
+	const handleCancelToggle = (index) => {
+		const updated = [...dateTimeData];
+		updated[index].isCancelled = !updated[index].isCancelled;
+		console.log(`Toggled isCancelled for date #${index + 1}:`, updated[index].isCancelled);
+		setDateTimeData(updated);
+	};
+
 	return (
 		<div className='flex flex-col'>
 			{dateTimeData.map((entry, dateIndex) => {
-				// If this date is in ISO format or otherwise longer than 'YYYY-MM-DD',
-				// convert it to just 'YYYY-MM-DD'
 				const safeDateValue =
 					entry.date && entry.date.length > 10 ? toYYYYMMDD(entry.date) : entry.date;
 
@@ -71,7 +76,6 @@ function DateTimeFields({ dateTimeData, setDateTimeData }) {
 						className='flex flex-col space-y-1 mb-4'>
 						<div className={`flex flex-col`}>
 							<span className={`text-sm`}>Date #{dateIndex + 1}</span>
-							{/* Date row */}
 							<div className='relative flex w-full items-center'>
 								<input
 									className='w-full bg-tp px-2 py-1 outline-none border-l-4 border-red'
@@ -80,7 +84,16 @@ function DateTimeFields({ dateTimeData, setDateTimeData }) {
 									onChange={(e) => handleDateChange(dateIndex, e.target.value)}
 								/>
 
-								{/* If it's the first date, show a plus icon; otherwise a trash icon.*/}
+								<div className='flex items-center space-x-2 mt-1 text-xs pl-1'>
+									<input
+										type='checkbox'
+										checked={!!entry.isCancelled}
+										onChange={() => handleCancelToggle(dateIndex)}
+										className='accent-red'
+									/>
+									<label className='text-[12px]'>Canceled?</label>
+								</div>
+
 								{dateIndex === 0 ? (
 									<div
 										className='absolute -right-8 bg-red rounded-full p-1 w-fit cursor-pointer'
@@ -103,7 +116,6 @@ function DateTimeFields({ dateTimeData, setDateTimeData }) {
 							</div>
 						</div>
 
-						{/* Time Fields Under This Date */}
 						<div className='pl-4 flex flex-col '>
 							{entry.times.map((timeValue, timeIndex) => (
 								<div

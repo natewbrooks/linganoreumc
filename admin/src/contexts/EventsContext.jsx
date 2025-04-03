@@ -117,17 +117,17 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
-	const createEventDate = async (eventID, date) => {
+	const createEventDate = async (eventID, date, isCancelled = false) => {
 		if (!eventID || !date) {
 			console.error('createEventDate: Missing eventID or date');
-			return null; // Return null if validation fails
+			return null;
 		}
 
 		try {
 			const res = await fetch('/api/admin/events/dates/new/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ eventID, date }),
+				body: JSON.stringify({ eventID, date, isCancelled }),
 			});
 
 			if (!res.ok) {
@@ -143,12 +143,13 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
-	const updateEventDate = async (eventDateID, date) => {
+	const updateEventDate = async (eventDateID, date, isCancelled = false) => {
 		try {
+			console.log('Sending update to API:', { eventDateID, date, isCancelled });
 			const res = await fetch(`/api/admin/events/dates/update/${eventDateID}/`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ date }),
+				body: JSON.stringify({ date, isCancelled }),
 			});
 			if (!res.ok) throw new Error('Failed to update event date');
 		} catch (err) {

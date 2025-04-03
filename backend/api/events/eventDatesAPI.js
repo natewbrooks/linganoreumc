@@ -1,6 +1,6 @@
 import pool from '../../database.js';
 
-// Public: View all EventDates
+// GET: All event dates
 export const getAllEventDates = async (req, res) => {
 	try {
 		const [rows] = await pool.query('SELECT * FROM EventDates');
@@ -10,7 +10,7 @@ export const getAllEventDates = async (req, res) => {
 	}
 };
 
-// Public: View all EventDates for an event via the eventID
+// GET: All dates for a specific event
 export const getEventDates = async (req, res) => {
 	const { eventID } = req.params;
 	try {
@@ -21,7 +21,7 @@ export const getEventDates = async (req, res) => {
 	}
 };
 
-// Public: View a specific EventDate via its id
+// GET: Single date by ID
 export const getEventDate = async (req, res) => {
 	const { id } = req.params;
 	try {
@@ -29,69 +29,76 @@ export const getEventDate = async (req, res) => {
 		if (rows.length === 0) {
 			return res.status(404).json({ error: 'Event Date not found' });
 		}
-		res.json(rows[0]); // Return the single event date object
+		res.json(rows[0]);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
 };
 
-// Admin: Create an EventDate and associate it with an eventID
+// POST: Create new EventDate
 export const createEventDate = async (req, res) => {
-	const { eventID, date } = req.body;
+	const { eventID, date, isCancelled = false } = req.body;
 
 	if (!eventID || !date) {
 		return res.status(400).json({ error: 'EventID and date are required' });
 	}
 
 	try {
-		const [result] = await pool.query('INSERT INTO EventDates (eventID, date) VALUES (?, ?)', [
-			eventID,
-			date,
-		]);
+		console.log('Creating EventDate:', { eventID, date, isCancelled });
+
+		const [result] = await pool.query(
+			'INSERT INTO EventDates (eventID, date, isCancelled) VALUES (?, ?, ?)',
+			[eventID, date, isCancelled ? 1 : 0]
+		);
 
 		const eventDateID = result.insertId;
-
 		res.status(201).json({
 			message: 'Event Date created successfully',
-			eventDateID: eventDateID,
+			eventDateID,
 		});
 	} catch (err) {
+		console.error('Create EventDate error:', err);
 		res.status(500).json({ error: err.message });
 	}
 };
 
-// Admin: Update an EventDate via it's id
+// PUT: Update an existing EventDate
 export const updateEventDate = async (req, res) => {
-	const { eventDateID } = req.params; // Get the event date id from URL parameters
-	const { date } = req.body; // Update date and optionally times
+	const { eventDateID } = req.params;
+	const { date, isCancelled = false } = req.body;
+
+	if (!eventDateID || !date) {
+		return res.status(400).json({ error: 'eventDateID and date are required' });
+	}
 
 	try {
-		// Fetch the event date for the given event
-		const [eventDateResult] = await pool.query('SELECT id FROM EventDates WHERE id = ?', [
-			eventDateID,
-		]);
+		console.log('Updating EventDate:', { eventDateID, date, isCancelled });
 
-		if (eventDateResult.length === 0) {
+		const [check] = await pool.query('SELECT id FROM EventDates WHERE id = ?', [eventDateID]);
+		if (check.length === 0) {
 			return res.status(404).json({ error: 'Event date not found' });
 		}
-		// Update the date for the EventDate
-		const [updatedEventDate] = await pool.query('UPDATE EventDates SET `date` = ? WHERE id = ?', [
-			date,
-			eventDateResult[0].id,
-		]);
 
-		if (updatedEventDate.affectedRows == 0) {
-			return res.status(404).json({ error: 'Event date update failed' });
+		const [updated] = await pool.query(
+			'UPDATE EventDates SET date = ?, isCancelled = ? WHERE id = ?',
+			[date, isCancelled ? 1 : 0, eventDateID]
+		);
+
+		if (updated.affectedRows === 0) {
+			return res.status(500).json({ error: 'Event date update failed' });
 		}
 
-		res.status(201).json({ message: 'Event date updated successfully', eventDateID });
+		res.status(200).json({
+			message: 'Event date updated successfully',
+			eventDateID,
+		});
 	} catch (err) {
-		console.error(err);
+		console.error('Update EventDate error:', err);
 		res.status(500).json({ error: err.message });
 	}
 };
 
-// Admin: Delete an EventDate with its eventDateID
+// DELETE: Delete EventDate by ID
 export const deleteEventDate = async (req, res) => {
 	const { eventDateID } = req.params;
 
@@ -103,13 +110,9 @@ export const deleteEventDate = async (req, res) => {
 		const [result] = await pool.query('DELETE FROM EventDates WHERE id = ?', [eventDateID]);
 
 		if (result.affectedRows > 0) {
-			res.status(200).json({
-				message: 'Event Date deleted successfully',
-			});
+			res.status(200).json({ message: 'Event Date deleted successfully' });
 		} else {
-			res.status(404).json({
-				message: 'Event Date not found',
-			});
+			res.status(404).json({ error: 'Event Date not found' });
 		}
 	} catch (err) {
 		res.status(500).json({ error: err.message });

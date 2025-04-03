@@ -85,6 +85,7 @@ function EditEvent() {
 						return {
 							eventDateID: dateObj.id,
 							date: dateObj.date,
+							isCancelled: !!dateObj.isCancelled,
 							times: timesForThisDate.map((t) => ({
 								eventTimeID: t.id,
 								time: t.time,

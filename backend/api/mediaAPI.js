@@ -1,3 +1,5 @@
+import pool from '../database.js';
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,6 +10,7 @@ const __dirname = path.dirname(__filename);
 // Base directories
 const imagesDir = path.join(__dirname, '..', 'media', 'images');
 const headerImagesDir = path.join(imagesDir, 'header');
+const eventImagesDir = path.join(imagesDir, 'events');
 
 // Helper: Recursively get all file paths
 function getAllFilesRecursively(dir) {
@@ -67,6 +70,35 @@ export const getAllHeaderImages = (req, res) => {
 	}
 };
 
+// GET /api/media/images/events/
+export const getAllEventsImages = (req, res) => {
+	try {
+		const eventImageFiles = getAllFilesRecursively(eventImagesDir);
+		const paths = eventImageFiles.map(
+			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+		);
+		res.json(paths);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
+
+// GET /api/media/images/events/eventID
+export const getAllEventImages = (req, res) => {
+	try {
+		const eventID = req.params.eventID;
+		const eventPath = path.join(eventImagesDir, eventID);
+
+		const eventImageFiles = getAllFilesRecursively(eventPath);
+		const paths = eventImageFiles.map(
+			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+		);
+		res.json(paths);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
+
 // GET /api/media/images/:filename
 export const getImage = (req, res) => {
 	const { filename } = req.params;
@@ -106,4 +138,32 @@ export const uploadHeaderImage = (req, res) => {
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
 
 	res.json({ filePath: '/api/media/images/header/' + sanitized });
+};
+
+// POST /api/admin/media/images/events/:eventID
+export const uploadEventImage = async (req, res) => {
+	if (!req.file) {
+		return res.status(400).json({ error: 'No file uploaded.' });
+	}
+
+	const eventID = req.params.eventID;
+	if (!eventID) {
+		return res.status(400).json({ error: 'Missing eventID in route params.' });
+	}
+
+	try {
+		const sanitized = req.file.originalname.replace(/\s+/g, '-');
+		const filePath = `/api/media/images/events/${eventID}/${sanitized}`;
+
+		// Insert image into EventPhotos table
+		await pool.execute(
+			'INSERT INTO EventPhotos (eventID, photoURL, isThumbnail) VALUES (?, ?, ?)',
+			[eventID, filePath, false]
+		);
+
+		res.status(200).json({ filePath });
+	} catch (err) {
+		console.error('Error uploading event image:', err);
+		res.status(500).json({ error: 'Failed to save image to database.' });
+	}
 };
