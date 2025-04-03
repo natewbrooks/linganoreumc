@@ -69,8 +69,31 @@ export const HomePageSettingsProvider = ({ children }) => {
 			.catch((err) => console.error('Error updating homepage settings:', err));
 	};
 
+	const uploadHeaderImage = async (file) => {
+		if (!file) return null;
+
+		const formData = new FormData();
+		formData.append('image', file);
+
+		try {
+			const res = await fetch('/api/admin/media/images/header/', {
+				method: 'POST',
+				body: formData,
+			});
+			const data = await res.json();
+			if (res.ok && data?.filePath) {
+				return data.filePath;
+			}
+			throw new Error('Upload failed');
+		} catch (err) {
+			console.error('Error uploading header image:', err);
+			return null;
+		}
+	};
+
 	return (
-		<HomePageSettingsContext.Provider value={{ homepageSettings, loading, updateHomepageSettings }}>
+		<HomePageSettingsContext.Provider
+			value={{ homepageSettings, loading, updateHomepageSettings, uploadHeaderImage }}>
 			{children}
 		</HomePageSettingsContext.Provider>
 	);

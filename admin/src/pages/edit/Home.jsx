@@ -11,15 +11,6 @@ function HomePageSettingsAdmin() {
 	const { homepageSettings, loading, updateHomepageSettings } = useHomePageSettings();
 	const [settings, setSettings] = useState(null);
 
-	const [availableUploads, setAvailableUploads] = useState([]);
-
-	useEffect(() => {
-		fetch('/api/media/images/header/')
-			.then((res) => res.json())
-			.then((data) => setAvailableUploads(data || []))
-			.catch((err) => console.error('Error fetching uploads:', err));
-	}, []);
-
 	// Load from context into local state
 	useEffect(() => {
 		if (homepageSettings) {
@@ -94,7 +85,6 @@ function HomePageSettingsAdmin() {
 		});
 	};
 
-	// Handle reordering of overridden events
 	const handleReorderUpcomingEvents = (newOrder) => {
 		setSettings((prev) => ({
 			...prev,
@@ -102,7 +92,6 @@ function HomePageSettingsAdmin() {
 		}));
 	};
 
-	// Handle reordering of "Join Us" events
 	const handleReorderJoinUsEvents = (newOrder) => {
 		setSettings((prev) => ({
 			...prev,
@@ -179,9 +168,6 @@ function HomePageSettingsAdmin() {
 							onChangeHeaderImages={(newArray) =>
 								setSettings((prev) => ({ ...prev, headerImages: newArray }))
 							}
-							availableUploads={availableUploads}
-							setAvailableUploads={setAvailableUploads}
-							uploadEndpoint='/api/admin/media/images/header/'
 						/>
 					</div>
 				</div>

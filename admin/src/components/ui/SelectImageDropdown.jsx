@@ -3,6 +3,7 @@ import { FaCheck, FaMinus, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import ImageWithDimensions from './ImageWithDimensions';
 
 export default function SelectImageDropdown({
+	label,
 	availableUploads,
 	initialSelectedImage = '',
 	onSelectedImageChange,
@@ -13,6 +14,7 @@ export default function SelectImageDropdown({
 	disableRemove,
 	onSelectActive,
 	folderFilter,
+	toggleableActive = false,
 }) {
 	const [enabled, setEnabled] = useState(false);
 	const [selectedImage, setSelectedImage] = useState(initialSelectedImage);
@@ -75,7 +77,7 @@ export default function SelectImageDropdown({
 
 			{/* Control icons */}
 			<div className='flex flex-row absolute -top-0 -right-0 space-x-1 outline-4 bg-bkg outline-bkg'>
-				{active ? (
+				{toggleableActive && active ? (
 					<>
 						<div className='bg-green-500 p-1 cursor-default'>
 							<FaCheck
@@ -98,16 +100,18 @@ export default function SelectImageDropdown({
 					</>
 				) : (
 					<>
-						<div className='bg-gray-500 p-1 cursor-pointer hover:opacity-50'>
-							<FaMinus
-								size={12}
-								onClick={(e) => {
-									e.stopPropagation();
-									onSelectActive && onSelectActive();
-								}}
-								className='text-bkg'
-							/>
-						</div>
+						{toggleableActive && (
+							<div className='bg-gray-500 p-1 cursor-pointer hover:opacity-50'>
+								<FaMinus
+									size={12}
+									onClick={(e) => {
+										e.stopPropagation();
+										onSelectActive && onSelectActive();
+									}}
+									className='text-bkg'
+								/>
+							</div>
+						)}
 						{!disableRemove && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
@@ -138,9 +142,7 @@ export default function SelectImageDropdown({
 				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
 					<div className='flex flex-col items-center space-y-2 py-2'>
 						<div className='flex flex-row w-full justify-between'>
-							<span className='font-dm text-sm text-black'>
-								{folderFilter ? 'Header Images' : 'Uploaded Images'}
-							</span>
+							<span className='font-dm text-sm text-black'>{label}</span>
 							<button
 								className='font-dm cursor-pointer'
 								onClick={() => {

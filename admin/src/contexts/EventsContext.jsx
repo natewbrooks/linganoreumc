@@ -58,6 +58,36 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
+	const fetchEventImages = async (eventID) => {
+		try {
+			const res = await fetch(`/api/media/images/events/${eventID}`);
+			if (!res.ok) throw new Error('Failed to fetch event images');
+			return await res.json(); // array of image URLs
+		} catch (err) {
+			console.error('Error fetching event images:', err);
+			setError(err.message);
+			return [];
+		}
+	};
+
+	const uploadEventImage = async (eventID, file) => {
+		const formData = new FormData();
+		formData.append('image', file);
+
+		try {
+			const res = await fetch(`/api/admin/media/images/events/${eventID}`, {
+				method: 'POST',
+				body: formData,
+			});
+			if (!res.ok) throw new Error('Failed to upload event image');
+			return await res.json(); // returns { filePath }
+		} catch (err) {
+			console.error('Error uploading event image:', err);
+			setError(err.message);
+			return null;
+		}
+	};
+
 	const createEvent = async (eventData) => {
 		try {
 			const res = await fetch('/api/admin/events/new/', {
@@ -218,6 +248,8 @@ export const EventsProvider = ({ children }) => {
 				fetchEventById,
 				fetchEventDatesById,
 				fetchEventTimesByDateId,
+				fetchEventImages,
+				uploadEventImage,
 				createEvent,
 				updateEvent,
 				deleteEvent,
