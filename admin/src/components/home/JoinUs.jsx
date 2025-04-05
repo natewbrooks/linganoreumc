@@ -2,6 +2,7 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import SelectEventDropdown from '../../components/ui/SelectEventDropdown';
 import TextInput from '../../components/ui/TextInput';
+import SelectJoinUsImage from './SelectJoinUsImage';
 
 export default function JoinUs({
 	joinUsTitle,
@@ -25,21 +26,22 @@ export default function JoinUs({
 
 	return (
 		<div className='flex flex-col space-y-1 pl-8'>
-			<div className='flex flex-col'>
-				<TextInput
-					title='Title'
-					value={joinUsTitle}
-					onChange={(e) => onChange('joinUsTitle', e.target.value)}
-				/>
-				<TextInput
-					title='Subtext'
-					value={joinUsSubtext}
-					onChange={(e) => onChange('joinUsSubtext', e.target.value)}
-				/>
-				<TextInput
-					title='Sermon Image URL'
-					value={joinUsSermonImageURL}
-					onChange={(e) => onChange('joinUsSermonImageURL', e.target.value)}
+			<div className={`flex space-x-2`}>
+				<div className='flex flex-col w-full '>
+					<TextInput
+						title='Title'
+						value={joinUsTitle}
+						onChange={(e) => onChange('joinUsTitle', e.target.value)}
+					/>
+					<TextInput
+						title='Subtext'
+						value={joinUsSubtext}
+						onChange={(e) => onChange('joinUsSubtext', e.target.value)}
+					/>
+				</div>
+				<SelectJoinUsImage
+					joinUsSermonImageURL={joinUsSermonImageURL}
+					onChangeImage={(url) => onChange('joinUsSermonImageURL', url)}
 				/>
 			</div>
 

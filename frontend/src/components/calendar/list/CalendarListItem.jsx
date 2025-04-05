@@ -44,6 +44,7 @@ function CalendarListItem({ day, date, isCurrentMonth }) {
 					const timeDate = new Date(date);
 					timeDate.setHours(hours, minutes, 0, 0);
 
+					console.log('DATE: ' + d);
 					return {
 						...event,
 						time: t.time, // Store as string for display
@@ -60,7 +61,6 @@ function CalendarListItem({ day, date, isCurrentMonth }) {
 
 		setSortedEventEntries(eventEntries);
 	}, [date, events, eventDates, eventTimes]);
-
 	return (
 		<div
 			className={`${

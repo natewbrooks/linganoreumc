@@ -15,12 +15,20 @@
   --color-tp: rgba(0, 0, 0, .1);
   --font-dm: DM Serif Text, "serif";
   --font-newb: Newborough, "sans-serif";
-  --breakpoint-xs: 360px;
-  --breakpoint-sm: 800px;
-  --breakpoint-md: 1080px;
-  --breakpoint-lg: 1440px;
-  --breakpoint-xl: 1600px;
-  --breakpoint-2xl: 2400px;
+  --breakpoint-xs: 480px;
+  /* Small phones and old iPhones */
+  --breakpoint-sm: 640px;
+  /* Modern phones (iPhone 12 Mini, SE) */
+  --breakpoint-md: 768px;
+  /* Tablets (iPads in portrait) */
+  --breakpoint-lg: 1024px;
+  /* Tablets in landscape / small laptops */
+  --breakpoint-xl: 1280px;
+  /* Standard desktops */
+  --breakpoint-2xl: 1536px;
+  /* Large desktops / MacBook Pro 16” / Ultrawide */
+  --breakpoint-3xl: 1920px;
+  /* 1080p displays and up (optional) */
 }
 
 

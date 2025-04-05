@@ -15,6 +15,7 @@ export default function SelectImageDropdown({
 	onSelectActive,
 	folderFilter,
 	toggleableActive = false,
+	uploadError,
 }) {
 	const [enabled, setEnabled] = useState(false);
 	const [selectedImage, setSelectedImage] = useState(initialSelectedImage);
@@ -139,11 +140,12 @@ export default function SelectImageDropdown({
 
 			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
-					<div className='flex flex-col items-center space-y-2 py-2'>
+				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg-tp border-l-4 border-red pb-2  px-4'>
+					<div className='sticky top-0 z-10 border-b-4 border-darkred/10 flex-col items-center space-y-2 py-2  bg-bkg-tp'>
 						<div className='flex flex-row w-full justify-between'>
 							<span className='font-dm text-sm text-black'>{label}</span>
 							<button
+								type='button'
 								className='font-dm cursor-pointer'
 								onClick={() => {
 									fileInputRef.current && fileInputRef.current.click();
@@ -151,12 +153,13 @@ export default function SelectImageDropdown({
 								<p className='text-sm text-red'>Add Image</p>
 							</button>
 						</div>
+
 						<div className='flex space-x-2 w-full items-center'>
 							<input
 								type='text'
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='font-dm border-l-4 w-full text-black/50 border-red px-2 outline-none bg-transparent'
+								className='font-dm border-l-4 w-full placeholder:text-black/50 border-red px-2 outline-none bg-transparent'
 								placeholder='Search...'
 							/>
 							<FaSearch
@@ -164,10 +167,14 @@ export default function SelectImageDropdown({
 								className='text-black/50'
 							/>
 						</div>
+
+						{uploadError && (
+							<div className='text-xs text-start text-red font-dm italic'>ERROR: {uploadError}</div>
+						)}
 					</div>
 
 					{filteredUploads.length > 0 ? (
-						<div className='grid grid-cols-3 gap-1'>
+						<div className='grid grid-cols-3 gap-1 overflow-y-auto '>
 							{filteredUploads.map((item, idx) => {
 								const filename = getFilename(item);
 								const filePath = `/api/media/images/${filename}`;

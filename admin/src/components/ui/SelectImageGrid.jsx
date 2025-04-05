@@ -10,16 +10,20 @@ export default function SelectImageGrid({
 	uploadEndpoint,
 	customUploadFunction,
 	folderFilter = '/api/media/images/',
-	toggleableActive = false, // ✅ NEW PROP
+	toggleableActive = false,
 }) {
 	const [imageFile, setImageFile] = useState(null);
+	const [uploadError, setUploadError] = useState('');
 
 	useEffect(() => {
 		if (imageFile) handleUpload();
 	}, [imageFile]);
 
 	const handleFileSelect = (file) => {
-		if (file) setImageFile(file);
+		if (file) {
+			setUploadError('');
+			setImageFile(file);
+		}
 	};
 
 	const handleUpload = async () => {
@@ -69,6 +73,7 @@ export default function SelectImageGrid({
 			}
 		} catch (error) {
 			console.error(`Error uploading ${label.toLowerCase()}:`, error);
+			setUploadError(error.message); // show user-friendly error
 		}
 	};
 
@@ -136,6 +141,7 @@ export default function SelectImageGrid({
 						disableRemove={toggleableActive && images.length === 1}
 						onSelectActive={toggleableActive ? () => setActiveForIndex(index) : undefined}
 						folderFilter={folderFilter}
+						uploadError={uploadError}
 					/>
 				</div>
 			))}

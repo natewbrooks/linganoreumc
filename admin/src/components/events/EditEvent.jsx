@@ -2,128 +2,75 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import EventForm from './EventForm';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useEvents } from '../../contexts/EventsContext';
 
 function EditEvent() {
-	// {
-	//   id:           <eventID>,
-	//   title:        <title>,
-	//   description:  <description>,
-	//   isRecurring:  <isRecurringBool>,
-	//   eventDateData: [
-	//     {
-	//       eventDateID: <date.id>,
-	//       date:        <date.dateString>,
-	//       times: [
-	//         { eventTimeID: <time.id>, time: <timeString> },
-	//         ...
-	//       ]
-	//     },
-	//     ...
-	//   ]
-	// }
-
 	const { id } = useParams();
+	const { fetchEventById, fetchEventDatesById, fetchEventTimesByDateId, fetchEventImages } =
+		useEvents();
 
-	// This will hold the final merged object that matches EventForm's `initialData` shape
 	const [editData, setEditData] = useState(null);
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		let fetchedEvent = null; // Holds the single event (title, desc, isRecurring, etc.)
-		let fetchedEventDates = null; // Holds all event dates for that event
+		const loadEventData = async () => {
+			try {
+				const event = await fetchEventById(id);
+				if (!event) throw new Error('Failed to fetch event');
 
-		// Fetch the main event record by ID
-		fetch(`http://localhost:5000/api/events/${id}`)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Failed to fetch event details');
-				}
-				return response.json();
-			})
-			.then((eventData) => {
-				// Store the main event data
-				fetchedEvent = eventData;
-				// Then fetch all event dates for this event ID
-				return fetch(`http://localhost:5000/api/events/dates/${id}`);
-			})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Failed to fetch event date details');
-				}
-				return response.json();
-			})
-			.then((dateData) => {
-				// Store all the event dates
-				fetchedEventDates = dateData;
+				const dates = await fetchEventDatesById(id);
+				if (!Array.isArray(dates)) throw new Error('Failed to fetch event dates');
 
-				// Fetch times for each date in parallel
-				const eventTimesPromises = fetchedEventDates.map((dateObj) => {
-					// Use the date’s .id to fetch times
-					return fetch(`http://localhost:5000/api/events/times/${dateObj.id}`).then((res) =>
-						res.ok ? res.json() : []
-					);
-				});
+				const timesPerDate = await Promise.all(dates.map((d) => fetchEventTimesByDateId(d.id)));
 
-				return Promise.all(eventTimesPromises);
-			})
-			.then((allDatesTimes) => {
-				// allDatesTimes will be an array of arrays,
-				// each containing time objects for the corresponding date
+				const images = await fetchEventImages(id);
+				const formattedImages = images.map((url) => ({ url, active: false }));
 
-				// Construct the `editData` object that EventForm expects
 				const mergedData = {
-					// The event ID from the main record
-					id: fetchedEvent.id,
-					title: fetchedEvent.title,
-					description: fetchedEvent.description,
-					isRecurring: fetchedEvent.isRecurring,
-					isFeatured: fetchedEvent.isFeatured,
-
-					// Build eventDateData from fetchedEventDates & their times
-					eventDateData: fetchedEventDates.map((dateObj, index) => {
-						const timesForThisDate = allDatesTimes[index] || [];
-						return {
-							eventDateID: dateObj.id,
-							date: dateObj.date,
-							isCancelled: !!dateObj.isCancelled,
-							times: timesForThisDate.map((t) => ({
-								eventTimeID: t.id,
-								time: t.time,
-							})),
-						};
-					}),
+					id: event.id,
+					title: event.title,
+					description: event.description,
+					isRecurring: event.isRecurring,
+					isFeatured: event.isFeatured,
+					eventImages: formattedImages,
+					eventDateData: dates.map((d, i) => ({
+						eventDateID: d.id,
+						date: d.date,
+						isCancelled: !!d.isCancelled,
+						times: (timesPerDate[i] || []).map((t) => ({
+							eventTimeID: t.id,
+							time: t.time,
+						})),
+					})),
 				};
 
 				setEditData(mergedData);
-			})
-			.catch((err) => {
-				console.error('Error:', err);
+			} catch (err) {
+				console.error('Error loading event data:', err);
 				setError(err.message);
-			});
-	}, [id]);
+			}
+		};
 
-	if (error) {
-		return <div>Error: {error}</div>;
-	}
+		loadEventData();
+	}, [id, fetchEventById, fetchEventDatesById, fetchEventTimesByDateId, fetchEventImages]);
 
-	// Show a loading message until we have all the data merged
-	if (!editData) {
-		return <div>Loading event details...</div>;
-	}
+	if (error) return <div>Error: {error}</div>;
+	if (!editData) return <div>Loading event details...</div>;
 
 	return (
 		<div className='flex flex-col w-full'>
-			<div className={`flex space-x-1 items-center justify-between`}>
+			<div className='flex space-x-1 items-center justify-between'>
 				<h1 className='text-2xl font-dm mb-4'>Edit Event</h1>
 				<Link
-					to={'/events/'}
-					className={`font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 -skew-x-[30deg] `}>
-					<div className={`flex space-x-1 skew-x-[30deg] items-center`}>
+					to='/events/'
+					className='font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 -skew-x-[30deg]'>
+					<div className='flex space-x-1 skew-x-[30deg] items-center'>
 						<FaArrowLeft size={16} />
 						<div>Return</div>
 					</div>
 				</Link>
 			</div>
+
 			<EventForm
 				mode='edit'
 				initialData={editData}

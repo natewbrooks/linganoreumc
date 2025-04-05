@@ -18,10 +18,19 @@ function CalendarListItemEvent({ event, date, time, isPast }) {
 				key={time}
 				to={`/event/${event.id}`}
 				className={`flex items-center font-dm ${
-					isPast ? 'border-darkred bg-darkred/10' : 'border-red bg-red/10'
+					event.isCancelled
+						? 'bg-red text-bkg border-red'
+						: isPast
+						? 'border-darkred bg-darkred/10'
+						: 'border-red bg-red/10'
+				} 
 				} border-l-4 px-2 py-3 hover:opacity-50 justify-between`}>
-				<div className='mr-2 text-md whitespace-nowrap'>{formatTime(time)}</div>
-				<div className='text-md leading-3 text-end'>{event.title}</div>
+				<div className='mr-2 text-md whitespace-nowrap'>
+					{event.isCancelled ? 'EVENT CANCELLED' : formatTime(time)}
+				</div>
+				<div className={`${event.isCancelled ? 'line-through' : ''} text-md leading-3 text-end`}>
+					{event.title}
+				</div>
 			</Link>
 		</>
 	);

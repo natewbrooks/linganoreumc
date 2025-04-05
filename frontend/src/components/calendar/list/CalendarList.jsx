@@ -31,6 +31,7 @@ function CalendarList({ month, year }) {
 						time: t.time,
 						date: eventDate,
 						dateTime: fullDateTime,
+						isCancelled: dateObj.isCancelled,
 					};
 				});
 

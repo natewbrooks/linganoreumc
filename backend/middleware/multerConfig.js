@@ -35,7 +35,7 @@ export const createMulterUploader = (destinationFolder) => {
 			const existing = findFileRecursively(mediaRoot, sanitized);
 
 			if (existing) {
-				return cb(new Error('File with this name already exists.'));
+				return cb(new Error('File with this name already exists. Rename it and upload again.'));
 			}
 
 			cb(null, sanitized);

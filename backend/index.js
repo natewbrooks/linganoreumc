@@ -8,9 +8,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import publicEventsRouter from './routes/public/events.js';
+import publicSermonsRouter from './routes/public/sermons.js';
 import publicSettingsRouter from './routes/public/settings.js';
 import adminSettingsRouter from './routes/admin/settings.js';
 import adminEventsRoute from './routes/admin/events.js';
+import adminSermonsRouter from './routes/admin/sermons.js';
 import adminLoginRoute from './routes/admin/login.js';
 
 import publicMediaRouter from './routes/public/media.js';
@@ -38,6 +40,7 @@ const __dirname = path.dirname(__filename);
 
 // Public API Routes (No Authentication Needed)
 app.use('/api/events/', publicEventsRouter);
+app.use('/api/sermons/', publicSermonsRouter);
 app.use('/api/settings/', publicSettingsRouter);
 app.use('/api/media/', publicMediaRouter);
 
@@ -46,6 +49,7 @@ app.use('/api/admin/login/', adminLoginRoute);
 
 // Admin Protected Routes (JWT Required)
 app.use('/api/admin/events/', adminEventsRoute);
+app.use('/api/admin/sermons/', adminSermonsRouter);
 app.use('/api/admin/settings/', adminSettingsRouter);
 
 // Health check

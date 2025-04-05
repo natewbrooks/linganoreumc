@@ -48,6 +48,7 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 						...event,
 						time: t.time, // Store as string for display
 						timeDate: timeDate, // Store as Date for sorting
+						isCancelled: d.isCancelled,
 					};
 				});
 
@@ -65,7 +66,7 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 		<div
 			className={`${
 				isCurrentMonth ? 'bg-tp ' : 'bg-black/20'
-			} w-full flex flex-col font-dm text-lg h-[150px] pt-2 relative overflow-hidden overflow-y-auto`}>
+			} w-full flex flex-col font-dm text-lg h-[150px] relative overflow-hidden overflow-y-auto`}>
 			<div className='flex justify-between text-bkg  sticky z-10 top-0 '>
 				<div
 					className={`${

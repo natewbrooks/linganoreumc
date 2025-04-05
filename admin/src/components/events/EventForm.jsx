@@ -49,7 +49,12 @@ function EventForm({ mode = 'create', initialData = null }) {
 			} else {
 				setDateTimeData([{ date: '', times: [''] }]);
 			}
+
+			if (initialData.eventImages) {
+				setEventImages(initialData.eventImages);
+			}
 		}
+
 		if (mode === 'create') {
 			setDateTimeData([{ date: '', times: [''] }]);
 		}
@@ -134,13 +139,14 @@ function EventForm({ mode = 'create', initialData = null }) {
 	return (
 		<div className='w-full'>
 			<form
-				className='flex flex-col font-dm px-6'
+				className='flex flex-col font-dm px-6 min-h-[800px]'
 				onSubmit={handleSubmit}>
 				<div className='flex flex-col '>
 					<span className='font-newb text-md'>Details</span>
 					<div className='flex flex-col space-y-2 px-4 py-3'>
 						<TextInput
 							title='Title'
+							toggleHeader={true}
 							value={title}
 							type='text'
 							maxLength={40}

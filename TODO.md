@@ -10,14 +10,15 @@
 ### Admin Panel Changes
 
 - Make events have their own images (+ videos?) associated with them
-- Add sermon data type -- should be a sort of "clone" with slight changes from events data types
+- <s>Make events cancellable</s>
+- <s>Add sermon data type -- should be a sort of "clone" with slight changes from events data types</s>
 - JoinUs "Sermon Image URL" needs to be updated to be in the same format as the header images, but with the "ALL" filter
 - Make "Recurring Events" flag toggle the "WEEKDAY SELECT" component.
   - Save the weekdays selected as the days of the current week. Frontend will know to distinguish based on "IsRecurring" flag
 - Add ability to archive/delete (or both) events and sermons
 - Add ability to select several events/sermons and edit them (archive, delete)
 - Add JWT login authentication when hitting the /admin/ endpoint
-- Add database tables for sermons, and usernames
+- <s>Add database tables for sermons, and usernames</s>
   - Make sure to encrypt passwords of usernames with [bcrypt](https://www.npmjs.com/package/bcrypt)
 
 ### Connecting APIs
@@ -26,6 +27,8 @@
 - Add implementation with [VANCO PAYMENTS](https://www.vancopayments.com/)
 
 ### Nice to Haves
+
+- REFACTOR APIs + dynamic pages
 
 #### Admin Panel
 

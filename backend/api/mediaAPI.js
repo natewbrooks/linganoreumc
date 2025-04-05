@@ -12,6 +12,8 @@ const imagesDir = path.join(__dirname, '..', 'media', 'images');
 const headerImagesDir = path.join(imagesDir, 'header');
 const eventImagesDir = path.join(imagesDir, 'events');
 
+import { fetchVideoMetadata, fetchTranscript } from '../middleware/youtubeScraper.js';
+
 // Helper: Recursively get all file paths
 function getAllFilesRecursively(dir) {
 	let results = [];
@@ -89,12 +91,18 @@ export const getAllEventImages = (req, res) => {
 		const eventID = req.params.eventID;
 		const eventPath = path.join(eventImagesDir, eventID);
 
+		if (!fs.existsSync(eventPath)) {
+			return res.json([]); // No images yet, return empty list
+		}
+
 		const eventImageFiles = getAllFilesRecursively(eventPath);
 		const paths = eventImageFiles.map(
 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 		);
+
 		res.json(paths);
 	} catch (err) {
+		console.error(`Error fetching images for event ${req.params.eventID}:`, err);
 		res.status(500).json({ error: err.message });
 	}
 };
@@ -110,15 +118,38 @@ export const getImage = (req, res) => {
 };
 
 // DELETE /api/media/images/:filename
-export const deleteImage = (req, res) => {
+// deletes relevant EventPhoto from database if applicable
+export const deleteImage = async (req, res) => {
 	const { filename } = req.params;
+
 	const fileLocation = findFileRecursively(imagesDir, filename);
 	if (!fileLocation || !fs.existsSync(fileLocation)) {
 		return res.status(404).json({ error: 'Image not found.' });
 	}
-	fs.unlink(fileLocation, (err) => {
+
+	fs.unlink(fileLocation, async (err) => {
 		if (err) return res.status(500).json({ error: 'Failed to delete image.' });
-		res.json({ message: 'Image deleted successfully.' });
+
+		try {
+			// Check if path contains "events/{eventID}/filename"
+			const relativePath = path.relative(imagesDir, fileLocation).replace(/\\/g, '/'); // cross-platform
+			const match = relativePath.match(/^events\/(\d+)\/.+$/);
+
+			if (match) {
+				const eventID = match[1];
+				const photoURL = `/api/media/images/${relativePath}`;
+
+				await pool.execute('DELETE FROM EventPhotos WHERE eventID = ? AND photoURL = ?', [
+					eventID,
+					photoURL,
+				]);
+			}
+
+			res.json({ message: 'Image deleted successfully.' });
+		} catch (dbErr) {
+			console.error('Error deleting EventPhotos entry:', dbErr);
+			res.status(500).json({ error: 'Image deleted but failed to update database.' });
+		}
 	});
 };
 
@@ -165,5 +196,36 @@ export const uploadEventImage = async (req, res) => {
 	} catch (err) {
 		console.error('Error uploading event image:', err);
 		res.status(500).json({ error: 'Failed to save image to database.' });
+	}
+};
+
+export const scrapeYouTubeVideo = async (req, res) => {
+	console.log(req.body);
+	const { videoURL } = req.body;
+
+	if (!videoURL) {
+		return res.status(400).json({ error: 'YouTube video URL must be provided' });
+	}
+
+	try {
+		const metadata = await fetchVideoMetadata(videoURL);
+		const transcript = await fetchTranscript(videoURL);
+
+		if (!metadata.title) {
+			return res.status(400).json({
+				error: 'Failed to extract video metadata. Ensure the YouTube URL is valid and public.',
+			});
+		}
+
+		return res.status(200).json({
+			title: metadata.title,
+			description: metadata.description,
+			body: transcript,
+			videoURL,
+			publishDate: metadata.publishDate,
+		});
+	} catch (err) {
+		console.error('Error scraping video:', err);
+		res.status(500).json({ error: err.message });
 	}
 };

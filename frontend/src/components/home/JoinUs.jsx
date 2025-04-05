@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useEvents } from '../../contexts/EventsContext';
-import BKG from '../../assets/linganore-bright-pic-upscale.webp';
 import { Link } from 'react-router-dom';
 import { SiGooglemaps } from 'react-icons/si';
 
@@ -30,49 +29,51 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 	)}`;
 
 	return (
-		<div className='relative w-full flex flex-col space-y-4 items-center text-center font-dm'>
-			<div className={`-space-y-1 flex flex-col`}>
-				<span className='text-xl'>{title}</span>
-				<span className='text-4xl'>{subtext}</span>
-			</div>
+		<div className='relative w-full flex flex-col items-center xl:items-start lg:px-40 xl:px-80 space-y-4 font-dm'>
+			<div className={`flex flex-col items-center  space-y-8 w-fit`}>
+				<div className={`-space-y-1 flex flex-col w-fit text-center`}>
+					<span className='text-xl'>{title}</span>
+					<span className='text-4xl'>{subtext}</span>
+				</div>
 
-			<div className='flex flex-col w-full sm:max-w-[600px] xl:max-w-[800px]  px-4 '>
-				{eventIDs.map(({ eventID }) => {
-					const event = events.find((e) => e.id === eventID);
-					if (!event) return null;
+				<div className='flex flex-col space-x-20 w-full sm:min-w-[600px] md:max-w-[800px]  px-4 '>
+					{eventIDs.map(({ eventID }) => {
+						const event = events.find((e) => e.id === eventID);
+						if (!event) return null;
 
-					const eventTimes = timesMap[eventID] || [];
+						const eventTimes = timesMap[eventID] || [];
 
-					return (
-						<div
-							key={eventID}
-							className='flex text-lg justify-between w-full'>
-							<Link
-								to={`/event/${event.id}`}
-								className={`w-fit hover:opacity-50 hover:scale-[102%] active:scale-[100%]`}>
-								{event.title}
-							</Link>
-							<div className='w-fit'>
-								{eventTimes.length > 0
-									? eventTimes.map((t, index) => (
-											<span key={index}>
-												{index > 0 && ' | '}
-												{formatTime(t.time)}
-											</span>
-									  ))
-									: 'No times available'}
+						return (
+							<div
+								key={eventID}
+								className='flex text-lg justify-between w-full'>
+								<Link
+									to={`/event/${event.id}`}
+									className={` leading-4 w-fit hover:opacity-50 hover:scale-[102%] active:scale-[100%]`}>
+									{event.title}
+								</Link>
+								<div className='w-fit leading-4 whitespace-nowrap'>
+									{eventTimes.length > 0
+										? eventTimes.map((t, index) => (
+												<span key={index}>
+													{index > 0 && ' | '}
+													{formatTime(t.time)}
+												</span>
+										  ))
+										: 'No times available'}
+								</div>
 							</div>
-						</div>
-					);
-				})}
-				<div
-					className='invisible lg:visible absolute h-[300px] w-[280px] top-0 right-10 lg:right-20 xl:right-30 2xl:right-120 skew-x-[10deg] bg-cover bg-center z-10'
-					style={{ backgroundImage: `url(${BKG})` }}
-				/>
+						);
+					})}
+				</div>
 			</div>
+			<div
+				className='invisible xl:visible absolute h-[300px] w-[280px] top-4 right-20 xl:right-30 skew-x-[10deg] bg-cover bg-center z-10'
+				style={{ backgroundImage: `url(${picture})` }}
+			/>
 
 			<div
-				className={`hidden sm:block absolute sm:-right-20 md:-right-60 lg:-right-80 2xl:-right-200 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
+				className={`hidden sm:block absolute -right-20 lg:-right-40 xl:-right-60 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'

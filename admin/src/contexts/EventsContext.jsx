@@ -70,21 +70,26 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
-	const uploadEventImage = async (eventID, file) => {
-		const formData = new FormData();
-		formData.append('image', file);
-
+	const uploadEventImage = async (file, eventID) => {
 		try {
+			const formData = new FormData();
+			formData.append('image', file);
+
 			const res = await fetch(`/api/admin/media/images/events/${eventID}`, {
 				method: 'POST',
 				body: formData,
 			});
-			if (!res.ok) throw new Error('Failed to upload event image');
-			return await res.json(); // returns { filePath }
+
+			const data = await res.json();
+			if (!res.ok) {
+				const errorMessage = data?.error || 'Failed to upload event image';
+				throw new Error(errorMessage);
+			}
+
+			return data.filePath;
 		} catch (err) {
 			console.error('Error uploading event image:', err);
-			setError(err.message);
-			return null;
+			throw err;
 		}
 	};
 
