@@ -1,5 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Linganore;
 USE Linganore;
+SET time_zone = 'America/New_York';
 
 -- -----------------------------
 -- EVENTS
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Sermons (
     body TEXT,
     videoURL VARCHAR(2083),
     publishDate DATE,
-    lastEditDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    lastEditDate DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     isArchived BOOLEAN DEFAULT FALSE
 );
 

@@ -13,9 +13,11 @@ export const EventsProvider = ({ children }) => {
 		fetch('/api/events/all/')
 			.then((res) => res.json())
 			.then((data) => {
-				setEvents(data);
+				const filtered = data.filter((event) => !event.isArchived);
+				setEvents(filtered);
 				setLoading(false);
 			})
+
 			.catch((err) => setError(err.message));
 	}, []);
 

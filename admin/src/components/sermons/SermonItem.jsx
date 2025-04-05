@@ -5,12 +5,20 @@ import { formatShortDate, formatTime } from '../../helper/textFormat';
 function SermonItem({ sermon }) {
 	// Extract date and time parts
 	const dateObj = new Date(sermon.lastEditDate);
-	const dateOnly = dateObj.toISOString().split('T')[0];
-	const timeOnly = dateObj.toTimeString().split(' ')[0].slice(0, 5); // "HH:MM"
+	console.log(dateObj);
+	const localDate = dateObj.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		timeZone: 'America/New_York',
+	});
 
-	// Format them
-	const formattedDate = formatShortDate(dateOnly);
-	const formattedTime = formatTime(timeOnly);
+	const localTime = dateObj.toLocaleTimeString('en-US', {
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: true,
+		timeZone: 'America/New_York',
+	});
 
 	return (
 		<Link
@@ -19,7 +27,7 @@ function SermonItem({ sermon }) {
 			{/* Last Edit Date */}
 			<div className='text-xs text-darkred bg-accent px-2 py-0.5 w-fit -skew-x-[30deg] relative flex items-center space-x-2'>
 				<span className='skew-x-[30deg]'>
-					Last edited: {formattedDate} @ {formattedTime}
+					Last edited: {localDate} @ {localTime}
 				</span>
 			</div>
 

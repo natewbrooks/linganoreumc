@@ -9,17 +9,17 @@
 
 ### Admin Panel Changes
 
-- Make events have their own images (+ videos?) associated with them
-- <s>Make events cancellable</s>
-- <s>Add sermon data type -- should be a sort of "clone" with slight changes from events data types</s>
-- JoinUs "Sermon Image URL" needs to be updated to be in the same format as the header images, but with the "ALL" filter
 - Make "Recurring Events" flag toggle the "WEEKDAY SELECT" component.
   - Save the weekdays selected as the days of the current week. Frontend will know to distinguish based on "IsRecurring" flag
-- Add ability to archive/delete (or both) events and sermons
-- Add ability to select several events/sermons and edit them (archive, delete)
 - Add JWT login authentication when hitting the /admin/ endpoint
+- Make sure to encrypt passwords of usernames with [bcrypt](https://www.npmjs.com/package/bcrypt)
+- <s>Make events have their own images (+ videos?) associated with them</s>
+- <s>Make events cancellable</s>
+- <s>Add sermon data type -- should be a sort of "clone" with slight changes from events data types</s>
+- <s>JoinUs "Sermon Image URL" needs to be updated to be in the same format as the header images, but with the "ALL" filter</s>
+- <s>Add ability to archive/delete (or both) events and sermons</s>
+- <s>Add ability to select several events/sermons and edit them (archive, delete)</s>
 - <s>Add database tables for sermons, and usernames</s>
-  - Make sure to encrypt passwords of usernames with [bcrypt](https://www.npmjs.com/package/bcrypt)
 
 ### Connecting APIs
 
@@ -33,7 +33,7 @@
 #### Admin Panel
 
 - Add carousel option to headers (switches every X seconds)
-- Add ability to toggle sort events by date (so closest dates come up first)
-- Add hide previous/upcoming toggle to events and sermons
+- <s>Add ability to toggle sort events by date (so closest dates come up first)</s>
+- <s>Add hide previous/upcoming toggle to events and sermons</s>
 
 #### Frontend

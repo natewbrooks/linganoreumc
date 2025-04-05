@@ -36,7 +36,7 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					<span className='text-4xl'>{subtext}</span>
 				</div>
 
-				<div className='flex flex-col space-x-20 w-full sm:min-w-[600px] md:max-w-[800px]  px-4 '>
+				<div className='flex flex-col space-y-4 space-x-20 w-full sm:min-w-[600px] md:max-w-[800px]  px-4 '>
 					{eventIDs.map(({ eventID }) => {
 						const event = events.find((e) => e.id === eventID);
 						if (!event) return null;
