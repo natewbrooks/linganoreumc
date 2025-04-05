@@ -66,7 +66,7 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 		<div
 			className={`${
 				isCurrentMonth ? 'bg-tp ' : 'bg-black/20'
-			} w-full flex flex-col font-dm text-lg h-[150px] relative overflow-hidden overflow-y-auto`}>
+			} w-full flex flex-col font-dm text-lg h-[150px] aspect-square relative overflow-hidden overflow-y-auto`}>
 			<div className='flex justify-between text-bkg  sticky z-10 top-0 '>
 				<div
 					className={`${

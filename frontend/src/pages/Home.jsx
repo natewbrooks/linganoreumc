@@ -116,7 +116,7 @@ function Home() {
 			{/* Header */}
 			<Header activeHeaderImage={activeHeaderImage} />
 
-			<div className='flex flex-col space-y-46'>
+			<div className='flex flex-col space-y-72'>
 				{/* Motto Banner */}
 				<Motto
 					title={mottoTitle}
