@@ -110,11 +110,17 @@ export const EventsProvider = ({ children }) => {
 
 	const updateEvent = async (eventId, updatedData) => {
 		try {
-			await fetch(`/api/admin/events/update/${eventId}/`, {
+			const res = await fetch(`/api/admin/events/update/${eventId}/`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(updatedData),
 			});
+
+			if (!res.ok) throw new Error('Failed to update event');
+
+			setEvents((prevEvents) =>
+				prevEvents.map((event) => (event.id === eventId ? { ...event, ...updatedData } : event))
+			);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -123,13 +129,52 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEvent = async (eventId) => {
 		try {
-			await fetch(`/api/admin/events/delete/${eventId}/`, {
+			const res = await fetch(`/api/admin/events/delete/${eventId}/`, {
 				method: 'DELETE',
 			});
-			setEvents(events.filter((event) => event.id !== eventId));
+
+			if (!res.ok) throw new Error('Failed to delete event');
+
+			setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
+		}
+	};
+
+	const fetchRecurringEvents = async () => {
+		try {
+			const res = await fetch('/api/events/recurring/');
+			if (!res.ok) throw new Error('Failed to fetch recurring events');
+			return await res.json();
+		} catch (err) {
+			console.error(err);
+			setError(err.message);
+			return [];
+		}
+	};
+
+	const fetchFeaturedEvents = async () => {
+		try {
+			const res = await fetch('/api/events/featured/');
+			if (!res.ok) throw new Error('Failed to fetch featured events');
+			return await res.json();
+		} catch (err) {
+			console.error(err);
+			setError(err.message);
+			return [];
+		}
+	};
+
+	const fetchArchivedEvents = async () => {
+		try {
+			const res = await fetch('/api/admin/events/archived/');
+			if (!res.ok) throw new Error('Failed to fetch archived events');
+			return await res.json();
+		} catch (err) {
+			console.error(err);
+			setError(err.message);
+			return [];
 		}
 	};
 
@@ -254,6 +299,9 @@ export const EventsProvider = ({ children }) => {
 				fetchEventDatesById,
 				fetchEventTimesByDateId,
 				fetchEventImages,
+				fetchRecurringEvents,
+				fetchFeaturedEvents,
+				fetchArchivedEvents,
 				uploadEventImage,
 				createEvent,
 				updateEvent,

@@ -1,5 +1,10 @@
 import express from 'express';
-import { createEvent, getArchivedEvents, updateEvent } from '../../api/events/eventsAPI.js';
+import {
+	createEvent,
+	deleteEvent,
+	getArchivedEvents,
+	updateEvent,
+} from '../../api/events/eventsAPI.js';
 import {
 	createEventDate,
 	deleteEventDate,
@@ -19,6 +24,8 @@ router.post('/new/', createEvent);
 router.put('/update/:id/', updateEvent);
 // GET /api/admin/events/archived - List all archived events (private)
 router.get('/archived/', getArchivedEvents);
+// DELETE /api/admin/events/delete/:id - Delete event by its id (private)
+router.delete('/delete/:id/', deleteEvent);
 
 // POST /api/admin/events/dates/new/ - Create an event date (admin only)
 router.post('/dates/new/', createEventDate);

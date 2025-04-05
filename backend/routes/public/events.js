@@ -3,6 +3,7 @@ import {
 	getAllEvents,
 	getArchivedEvents,
 	getEvent,
+	getFeaturedEvents,
 	getRecurringEvents,
 } from '../../api/events/eventsAPI.js';
 import { getAllEventDates, getEventDates, getEventDate } from '../../api/events/eventDatesAPI.js';
@@ -16,6 +17,8 @@ router.get('/all/', getAllEvents);
 router.get('/:id/', getEvent);
 // GET /api/events/recurring - List all recurring events (public)
 router.get('/recurring/', getRecurringEvents);
+// GET /api/events/featured - List all featured events (public)
+router.get('/featured/', getFeaturedEvents);
 
 // GET /api/events/dates/all - List all event dates for a (public)
 router.get('/dates/all/', getAllEventDates);

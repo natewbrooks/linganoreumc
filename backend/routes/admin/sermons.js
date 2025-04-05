@@ -17,7 +17,7 @@ router.put('/update/:id/', updateSermon);
 // GET /api/sermons/archived/ - List all archived sermons (admin only)
 router.get('/archived/', getArchivedSermons);
 
-// GET /api/sermons/delete/ - Delete Sermon by id (admin only)
+// DELETE /api/sermons/delete/ - Delete Sermon by id (admin only)
 router.delete('/delete/:id/', deleteSermon);
 
 export default router;

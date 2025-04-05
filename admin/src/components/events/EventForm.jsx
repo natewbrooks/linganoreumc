@@ -129,7 +129,6 @@ function EventForm({ mode = 'create', initialData = null }) {
 
 			alert(mode === 'create' ? 'Event created successfully!' : 'Event updated successfully!');
 			navigate('/events/', { replace: true });
-			window.location.reload();
 		} catch (err) {
 			console.error(err);
 			alert('Error occurred while saving the event.');

@@ -1,4 +1,14 @@
 import pool from '../../database.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Use project root as base (not __dirname) to resolve relative to where Node.js is run
+const imagesDir = path.resolve(process.cwd(), 'media', 'images');
+const eventImagesDir = path.join(imagesDir, 'events');
 
 // Public: View all Events
 export const getAllEvents = async (req, res) => {
@@ -99,7 +109,9 @@ export const createEvent = async (req, res) => {
 // Admin: Update an Event via it's eventID
 export const updateEvent = async (req, res) => {
 	const { id } = req.params;
-	const { title, description, isRecurring, isFeatured } = req.body;
+	const { title, description, isRecurring, isFeatured, isArchived } = req.body;
+
+	console.log(isArchived);
 
 	if (!title || !description) {
 		return res.status(400).json({ error: 'Title and description are required' });
@@ -107,8 +119,8 @@ export const updateEvent = async (req, res) => {
 
 	try {
 		const [result] = await pool.query(
-			'UPDATE Events SET title = ?, description = ?, isRecurring = ?, isFeatured =? WHERE id = ?',
-			[title, description, isRecurring, isFeatured, id]
+			'UPDATE Events SET title = ?, description = ?, isRecurring = ?, isFeatured = ?, isArchived = ? WHERE id = ?',
+			[title, description, isRecurring, isFeatured, isArchived, id]
 		);
 
 		if (result.affectedRows == 0) {
@@ -121,5 +133,36 @@ export const updateEvent = async (req, res) => {
 		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
+	}
+};
+
+export const deleteEvent = async (req, res) => {
+	const { id: eventID } = req.params;
+
+	try {
+		// 1. Delete from Events table
+		const [result] = await pool.query('DELETE FROM Events WHERE id = ?', [eventID]);
+
+		if (result.affectedRows === 0) {
+			console.warn(`Event ${eventID} not found in DB`);
+			return res.status(404).json({ error: 'Event not found' });
+		}
+
+		// 2. Build and log event image folder path
+		const eventImagePath = path.join(eventImagesDir, String(eventID));
+		console.log('Resolved event image path:', eventImagePath);
+
+		// 3. Check existence and attempt to delete
+		if (fs.existsSync(eventImagePath)) {
+			fs.rmSync(eventImagePath, { recursive: true, force: true });
+			console.log(`Deleted folder: ${eventImagePath}`);
+		} else {
+			console.log(`No image folder exists for event ${eventID} at path: ${eventImagePath}`);
+		}
+
+		res.json({ message: `Event ${eventID} and associated images deleted.` });
+	} catch (err) {
+		console.error('Error deleting event or folder:', err);
+		res.status(500).json({ error: 'Failed to delete event.' });
 	}
 };

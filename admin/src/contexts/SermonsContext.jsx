@@ -77,33 +77,36 @@ export const SermonsProvider = ({ children }) => {
 		}
 	};
 
-	const updateSermon = async (id, sermonData) => {
+	const updateSermon = async (id, updatedData) => {
 		try {
 			const res = await fetch(`/api/admin/sermons/update/${id}/`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(sermonData),
+				body: JSON.stringify(updatedData),
 			});
-			const data = await res.json();
-			await getAllSermons();
-			return data;
+			if (!res.ok) throw new Error('Failed to update sermon');
+
+			const updatedSermon = { ...(await res.json()), ...updatedData };
+
+			setSermons((prevSermons) =>
+				prevSermons.map((sermon) => (sermon.id === id ? { ...sermon, ...updatedSermon } : sermon))
+			);
 		} catch (err) {
-			console.error('Error updating sermon:', err);
-			throw err;
+			console.error('updateSermon error:', err);
 		}
 	};
 
 	const deleteSermon = async (id) => {
 		try {
-			const res = await fetch(`/api/sermons/delete/${id}/`, {
+			const res = await fetch(`/api/admin/sermons/delete/${id}/`, {
 				method: 'DELETE',
 			});
-			const data = await res.json();
-			await getAllSermons();
-			return data;
+			if (!res.ok) throw new Error('Failed to delete sermon');
+
+			setSermons((prevSermons) => prevSermons.filter((sermon) => sermon.id !== id));
 		} catch (err) {
-			console.error('Error deleting sermon:', err);
-			throw err;
+			console.error(err);
+			setError(err.message);
 		}
 	};
 

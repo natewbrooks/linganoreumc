@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../contexts/EventsContext';
 import EventItem from './EventItem';
-import { FaPlus } from 'react-icons/fa';
+import { FaArchive, FaPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import SearchAndFilter from '../ui/SearchAndFilter';
+import { FaTrashCan } from 'react-icons/fa6';
 
 function ListEvents() {
-	const { events, loading, error, fetchEventDatesById } = useEvents();
+	const { events, deleteEvent, updateEvent, loading, error, fetchEventDatesById } = useEvents();
 	const [filter, setFilter] = useState('all');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [eventDatesMap, setEventDatesMap] = useState({});
 	const [datesLoaded, setDatesLoaded] = useState(false);
+	const [selectedEvents, setSelectedEvents] = useState([]);
+	const [deleting, setDeleting] = useState(false);
+	const [archiving, setArchiving] = useState(false);
 
 	const filterOptions = ['all', 'featured', 'recurring', 'upcoming', 'previous', 'archived'];
 	const now = new Date();
 
-	// Fetch event dates for each event
 	useEffect(() => {
 		const loadDates = async () => {
 			const map = {};
@@ -37,8 +40,55 @@ function ListEvents() {
 	if (loading || !datesLoaded) return <div>Loading events...</div>;
 	if (error) return <div>Error: {error}</div>;
 
+	const handleArchiveSelectedEvents = async () => {
+		if (selectedEvents.length === 0) return;
+		setArchiving(true);
+
+		const isUnarchiving = filter === 'archived';
+
+		for (const eventID of selectedEvents) {
+			const event = events.find((e) => e.id === eventID);
+			if (!event) continue;
+
+			await updateEvent(eventID, {
+				title: event.title,
+				description: event.description,
+				isRecurring: event.isRecurring,
+				isFeatured: event.isFeatured,
+				isArchived: !isUnarchiving,
+			});
+		}
+
+		setSelectedEvents([]);
+		setArchiving(false);
+	};
+
+	const handleDeleteSelectedEvents = async () => {
+		if (selectedEvents.length === 0 || deleting) return;
+
+		if (!window.confirm('Are you sure you want to permanently delete the selected events?')) return;
+
+		setDeleting(true);
+		try {
+			for (const eventID of selectedEvents) {
+				await deleteEvent(eventID);
+			}
+			alert(`Deleted ${selectedEvents.length} event(s).`);
+			setSelectedEvents([]);
+		} catch (err) {
+			console.error('Error deleting events:', err);
+		} finally {
+			setDeleting(false);
+		}
+	};
+
 	const filteredEvents = events
 		.filter((event) => {
+			const isArchived = event.isArchived;
+
+			if (filter !== 'archived' && isArchived) return false;
+			if (filter === 'archived' && !isArchived) return false;
+
 			const dates = eventDatesMap[event.id] || [];
 			const parsed = dates.map((d) => new Date(d.date));
 			const hasUpcoming = parsed.some((d) => d >= now);
@@ -47,10 +97,10 @@ function ListEvents() {
 			const matchesFilter =
 				filter === 'all' ||
 				(filter === 'recurring' && event.isRecurring) ||
-				(filter === 'archived' && event.isArchived) ||
 				(filter === 'featured' && event.isFeatured) ||
 				(filter === 'upcoming' && hasUpcoming) ||
-				(filter === 'previous' && !hasUpcoming && hasPast);
+				(filter === 'previous' && !hasUpcoming && hasPast) ||
+				filter === 'archived';
 
 			const matchesSearch =
 				event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,7 +115,7 @@ function ListEvents() {
 						.map((d) => new Date(d.date))
 						.filter((d) => d >= now)
 						.sort((a, b) => a - b);
-					return futureDates[0] || new Date(8640000000000000); // max date fallback
+					return futureDates[0] || new Date(8640000000000000);
 				};
 				return getSoonest(a) - getSoonest(b);
 			}
@@ -84,7 +134,7 @@ function ListEvents() {
 				</div>
 			</div>
 
-			{/* Filters + Add button */}
+			{/* Filters + Actions */}
 			<div className='flex flex-row justify-between'>
 				<SearchAndFilter
 					filter={filter}
@@ -94,10 +144,32 @@ function ListEvents() {
 					filterOptions={filterOptions}
 				/>
 
-				<div className='flex items-center'>
+				<div className='flex space-x-1 items-center h-[32px]'>
+					<div
+						onClick={handleDeleteSelectedEvents}
+						className={`${
+							selectedEvents.length > 0 && !deleting
+								? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
+								: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
+						} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
+						<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+							<FaTrashCan size={16} />
+						</div>
+					</div>
+					<div
+						onClick={handleArchiveSelectedEvents}
+						className={`${
+							selectedEvents.length > 0 && !archiving
+								? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
+								: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
+						} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
+						<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+							<FaArchive size={16} />
+						</div>
+					</div>
 					<Link
 						to='/new/event/'
-						className='font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 skew-x-[30deg]'>
+						className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
 						<div className='flex space-x-1 -skew-x-[30deg] items-center'>
 							<FaPlus size={16} />
 							<div>Add Event</div>
@@ -110,12 +182,28 @@ function ListEvents() {
 			<div className='my-2 flex flex-col space-y-4 px-8 min-h-[800px]'>
 				{filteredEvents.length > 0 ? (
 					filteredEvents.map((event) => (
-						<EventItem
+						<div
 							key={event.id}
-							id={event.id}
-							title={event.title}
-							description={event.description}
-						/>
+							className={`flex relative items-center justify-center`}>
+							<input
+								className={`absolute -left-8`}
+								type='checkbox'
+								checked={selectedEvents.includes(event.id)}
+								onChange={(e) => {
+									setSelectedEvents((prevSelected) =>
+										e.target.checked
+											? [...prevSelected, event.id]
+											: prevSelected.filter((id) => id !== event.id)
+									);
+								}}
+							/>
+
+							<EventItem
+								id={event.id}
+								title={event.title}
+								description={event.description}
+							/>
+						</div>
 					))
 				) : (
 					<div className='w-full flex justify-center items-center'>
