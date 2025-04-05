@@ -26,7 +26,7 @@ createRoot(document.getElementById('root')).render(
 									</div>
 								</div>
 								{/* used just for spacing, same width as navigation component */}
-								<div className={`hidden lg:flex w-[400px]`}></div>
+								{/* <div className={`hidden lg:flex w-[400px]`}></div> */}
 							</div>
 						</div>
 					</HomePageSettingsProvider>

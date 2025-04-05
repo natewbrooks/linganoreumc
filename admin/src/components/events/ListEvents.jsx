@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../contexts/EventsContext';
 import EventItem from './EventItem';
-import { FaArchive, FaPlus } from 'react-icons/fa';
+import { FaArchive, FaCheck, FaPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import SearchAndFilter from '../ui/SearchAndFilter';
 import { FaTrashCan } from 'react-icons/fa6';
+import SkewedSelectToggle from '../ui/SkewedSelectToggle';
+import Search from '../ui/Search';
+import Filter from '../ui/Filter';
 
 function ListEvents() {
 	const { events, deleteEvent, updateEvent, loading, error, fetchEventDatesById } = useEvents();
@@ -84,10 +86,8 @@ function ListEvents() {
 
 	const filteredEvents = events
 		.filter((event) => {
-			const isArchived = event.isArchived;
-
-			if (filter !== 'archived' && isArchived) return false;
-			if (filter === 'archived' && !isArchived) return false;
+			if (filter !== 'archived' && event.isArchived) return false;
+			if (filter === 'archived' && !event.isArchived) return false;
 
 			const dates = eventDatesMap[event.id] || [];
 			const parsed = dates.map((d) => new Date(d.date));
@@ -123,58 +123,75 @@ function ListEvents() {
 		});
 
 	return (
-		<div className='flex flex-col space-y-4'>
+		<div className='flex flex-col space-y-6'>
 			{/* Header */}
-			<div className='flex flex-row items-center justify-between'>
-				<div className='flex flex-col'>
-					<div className='font-dm text-2xl'>
-						{filter.charAt(0).toUpperCase() + filter.slice(1)} Events ({filteredEvents.length})
+			<div className='flex flex-col space-y-4'>
+				<div className='flex flex-row items-center justify-between'>
+					<div className='flex flex-col'>
+						<div className='font-dm text-2xl'>
+							{filter.charAt(0).toUpperCase() + filter.slice(1)} Events ({filteredEvents.length})
+						</div>
+						<div className='font-dm text-md'>Select an event to edit</div>
 					</div>
-					<div className='font-dm text-md'>Select an event to edit</div>
 				</div>
-			</div>
 
-			{/* Filters + Actions */}
-			<div className='flex flex-row justify-between'>
-				<SearchAndFilter
-					filter={filter}
-					setFilter={setFilter}
-					searchTerm={searchTerm}
-					setSearchTerm={setSearchTerm}
-					filterOptions={filterOptions}
-				/>
-
-				<div className='flex space-x-1 items-center h-[32px]'>
-					<div
-						onClick={handleDeleteSelectedEvents}
-						className={`${
-							selectedEvents.length > 0 && !deleting
-								? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
-								: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-						} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-						<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
-							<FaTrashCan size={16} />
+				<div className={`flex flex-col space-y-1`}>
+					<div className='flex flex-row justify-between'>
+						<Search
+							searchTerm={searchTerm}
+							setSearchTerm={setSearchTerm}
+						/>
+						<div className='flex space-x-1 items-center h-[32px]'>
+							<div
+								onClick={handleDeleteSelectedEvents}
+								className={`${
+									selectedEvents.length > 0 && !deleting
+										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
+										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
+								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+									<FaTrashCan size={16} />
+								</div>
+							</div>
+							<div
+								onClick={handleArchiveSelectedEvents}
+								className={`${
+									selectedEvents.length > 0 && !archiving
+										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
+										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
+								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+									<FaArchive size={16} />
+								</div>
+							</div>
+							<Link
+								to='/new/event/'
+								className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
+								<div className='flex space-x-1 -skew-x-[30deg] items-center'>
+									<FaPlus size={16} />
+									<div>Add Event</div>
+								</div>
+							</Link>
 						</div>
 					</div>
-					<div
-						onClick={handleArchiveSelectedEvents}
-						className={`${
-							selectedEvents.length > 0 && !archiving
-								? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
-								: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-						} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-						<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
-							<FaArchive size={16} />
-						</div>
-					</div>
-					<Link
-						to='/new/event/'
-						className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
-						<div className='flex space-x-1 -skew-x-[30deg] items-center'>
-							<FaPlus size={16} />
-							<div>Add Event</div>
-						</div>
-					</Link>
+
+					<Filter
+						filter={filter}
+						setFilter={setFilter}
+						filterOptions={filterOptions}
+					/>
+				</div>
+				<div
+					onClick={() => {
+						const allSelected = filteredEvents.every((event) => selectedEvents.includes(event.id));
+						setSelectedEvents(
+							allSelected
+								? [] // Deselect all
+								: filteredEvents.map((event) => event.id) // Select all filtered
+						);
+					}}
+					className={`font-dm text-darkred cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]`}>
+					{selectedEvents.length === filteredEvents.length ? 'Deselect' : 'Select'} all events
 				</div>
 			</div>
 
@@ -184,20 +201,12 @@ function ListEvents() {
 					filteredEvents.map((event) => (
 						<div
 							key={event.id}
-							className={`flex relative items-center justify-center`}>
-							<input
-								className={`absolute -left-8`}
-								type='checkbox'
-								checked={selectedEvents.includes(event.id)}
-								onChange={(e) => {
-									setSelectedEvents((prevSelected) =>
-										e.target.checked
-											? [...prevSelected, event.id]
-											: prevSelected.filter((id) => id !== event.id)
-									);
-								}}
+							className='flex relative items-center justify-center'>
+							<SkewedSelectToggle
+								id={event.id}
+								selectedList={selectedEvents}
+								setSelectedList={setSelectedEvents}
 							/>
-
 							<EventItem
 								id={event.id}
 								title={event.title}
