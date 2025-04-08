@@ -163,6 +163,9 @@ function HomePageSettingsAdmin() {
 				<div className='flex flex-col space-y-2'>
 					<h3 className='font-dm'>Header</h3>
 					<div className={`pl-8`}>
+						<div className={`font-dm text-sm`}>
+							* Checked image determines which header image is displayed.
+						</div>
 						<SelectHeaderImages
 							headerImages={settings.headerImages}
 							onChangeHeaderImages={(newArray) =>

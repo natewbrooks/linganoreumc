@@ -7,29 +7,40 @@ export default function SelectEventImages({
 	eventImages = [],
 	onChangeEventImages = () => {},
 }) {
-	const { fetchEventImages, uploadEventImage } = useEvents();
+	const { fetchEventImages, uploadEventImage, setThumbnailImage } = useEvents();
 	const [availableUploads, setAvailableUploads] = useState([]);
-
-	const folderFilter = `/api/media/images/events/${eventID}/`;
-	const mediaBasePath = `/api/media/images/events/${eventID}/`;
+	const [localImages, setLocalImages] = useState([]); // ✅ Local state
 
 	useEffect(() => {
 		if (!eventID) return;
-		fetchEventImages(eventID).then((result) => {
-			const formatted = result.map((url) => ({ filePath: url }));
-			setAvailableUploads(formatted);
+		fetchEventImages(eventID).then((results) => {
+			const formattedImages = results.map((img) => ({
+				url: img.url,
+				active: img.isThumbnail === true,
+			}));
+			setLocalImages(formattedImages); // ✅ Store locally
+			onChangeEventImages(formattedImages); // Optional if needed to sync
+			setAvailableUploads(results.map((img) => ({ filePath: img.url })));
 		});
 	}, [eventID]);
 
 	const handleEventImagesChange = (updatedImages) => {
-		const normalized = updatedImages.map((img) => {
-			const filename = img?.url?.split('/').pop();
-			return {
-				...img,
-				url: filename ? `${mediaBasePath}${filename}` : '',
-			};
-		});
-		onChangeEventImages(normalized);
+		setLocalImages(updatedImages); // ✅ Local update
+		onChangeEventImages(updatedImages); // ✅ Propagate upward
+	};
+
+	const handleToggleActive = async (index) => {
+		const updated = localImages.map((img, i) => ({
+			...img,
+			active: i === index,
+		}));
+		handleEventImagesChange(updated);
+
+		const thumbnailUrl = updated[index]?.url;
+		const filename = thumbnailUrl?.split('/').pop();
+		if (filename) {
+			await setThumbnailImage(eventID, filename);
+		}
 	};
 
 	const uploadHandler = async (file) => {
@@ -44,12 +55,16 @@ export default function SelectEventImages({
 	return (
 		<SelectImageGrid
 			label='Event Images'
-			images={eventImages}
+			description='Selected image determines the event thumbnail.'
+			images={localImages}
 			onChangeImages={handleEventImagesChange}
 			availableUploads={availableUploads}
 			setAvailableUploads={setAvailableUploads}
-			folderFilter={folderFilter}
+			folderFilter={`/api/media/images/events/${eventID}/`}
 			customUploadFunction={uploadHandler}
+			toggleableActive={true}
+			showDeleteButton={false}
+			onToggleActive={handleToggleActive}
 		/>
 	);
 }

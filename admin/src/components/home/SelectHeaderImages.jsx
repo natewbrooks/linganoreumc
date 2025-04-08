@@ -40,6 +40,7 @@ export default function SelectHeaderImages({ headerImages = [], onChangeHeaderIm
 	return (
 		<SelectImageGrid
 			label='Header Images'
+			description={`Selected image determines the active header.`}
 			images={headerImages}
 			onChangeImages={handleHeaderImagesChange}
 			availableUploads={availableUploads}

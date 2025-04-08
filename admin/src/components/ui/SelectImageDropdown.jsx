@@ -86,7 +86,7 @@ export default function SelectImageDropdown({
 								className='text-bkg'
 							/>
 						</div>
-						{!disableRemove && (
+						{(!selectedImage || !disableRemove) && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
 									size={12}
@@ -101,7 +101,7 @@ export default function SelectImageDropdown({
 					</>
 				) : (
 					<>
-						{toggleableActive && (
+						{toggleableActive && selectedImage && (
 							<div className='bg-gray-500 p-1 cursor-pointer hover:opacity-50'>
 								<FaMinus
 									size={12}
@@ -113,7 +113,7 @@ export default function SelectImageDropdown({
 								/>
 							</div>
 						)}
-						{!disableRemove && (
+						{(!selectedImage || !disableRemove) && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
 									size={12}
@@ -140,10 +140,11 @@ export default function SelectImageDropdown({
 
 			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg-tp border-l-4 border-red pb-2  px-4'>
-					<div className='sticky top-0 z-10 border-b-4 border-darkred/10 flex-col items-center space-y-2 py-2  bg-bkg-tp'>
+				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg border-l-4 border-red pb-2  px-4'>
+					<div className='sticky top-0 z-10 border-b-4 border-darkred/10 flex-col items-center space-y-2 py-2  bg-bkg'>
 						<div className='flex flex-row w-full justify-between'>
 							<span className='font-dm text-sm text-black'>{label}</span>
+
 							<button
 								type='button'
 								className='font-dm cursor-pointer'

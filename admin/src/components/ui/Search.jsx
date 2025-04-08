@@ -4,8 +4,7 @@ export default function Search({ searchTerm, setSearchTerm }) {
 	return (
 		<div className={`relative flex flex-col space-y-1 items-center justify-center h-full font-dm`}>
 			<div className={`flex h-full space-x-1 items-center justify-center `}>
-				<div
-					className={`flex space-x-1 items-center  border-l-4 border-red bg-bkg-tp skew-x-[30deg]`}>
+				<div className={`flex space-x-1 items-center  bg-bkg-tp skew-x-[30deg]`}>
 					<input
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}

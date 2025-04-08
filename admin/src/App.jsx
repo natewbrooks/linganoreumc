@@ -8,12 +8,22 @@ import CreateEvent from './components/events/CreateEvent.jsx';
 import Sermons from './pages/Sermons.jsx';
 import CreateSermon from './components/sermons/CreateSermon.jsx';
 import EditSermon from './components/sermons/EditSermon.jsx';
+import Login from './pages/Login.jsx';
+import NotFound from './pages/NotFound.jsx';
+import Users from './pages/manage/Users.jsx';
+import Account from './pages/manage/Account.jsx';
 
 // Handles routing
 function App() {
 	return (
 		<Routes>
-			{/* Admin Landing Page */}
+			<Route
+				path='/login/'
+				element={<Login />}
+			/>
+
+			{/* All of these routes are protected */}
+
 			{/* website.com/admin/ */}
 			<Route
 				path='/'
@@ -57,6 +67,21 @@ function App() {
 			<Route
 				path='/edit/sermon/:id/'
 				element={<EditSermon />}
+			/>
+
+			<Route
+				path='/manage/users'
+				element={<Users />}
+			/>
+
+			<Route
+				path='/manage/account'
+				element={<Account />}
+			/>
+
+			<Route
+				path='*'
+				element={<NotFound />}
 			/>
 		</Routes>
 	);

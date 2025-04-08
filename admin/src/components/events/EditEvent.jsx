@@ -24,7 +24,12 @@ function EditEvent() {
 				const timesPerDate = await Promise.all(dates.map((d) => fetchEventTimesByDateId(d.id)));
 
 				const images = await fetchEventImages(id);
-				const formattedImages = images.map((url) => ({ url, active: false }));
+				const formattedImages = Array.isArray(images)
+					? images.map((img) => ({
+							url: typeof img.url === 'string' ? img.url : String(img.url),
+							active: img.isThumbnail === true,
+					  }))
+					: [];
 
 				const mergedData = {
 					id: event.id,

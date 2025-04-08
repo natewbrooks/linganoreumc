@@ -62,19 +62,21 @@ function ListSermons() {
 		setArchiving(false);
 	};
 
-	const filteredSermons = sermons.filter((sermon) => {
-		// Explicitly exclude archived sermons unless the filter is 'archived'
-		if (filter !== 'archived' && sermon.isArchived) return false;
+	const filteredSermons = Array.isArray(sermons)
+		? sermons.filter((sermon) => {
+				// Explicitly exclude archived sermons unless the filter is 'archived'
+				if (filter !== 'archived' && sermon.isArchived) return false;
 
-		const matchesFilter =
-			filter === 'all' || (filter === 'archived' && sermon.isArchived) || filter === 'recent'; // recent includes all unarchived, already filtered above
+				const matchesFilter =
+					filter === 'all' || (filter === 'archived' && sermon.isArchived) || filter === 'recent'; // recent includes all unarchived, already filtered above
 
-		const matchesSearch =
-			sermon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			sermon.description.toLowerCase().includes(searchTerm.toLowerCase());
+				const matchesSearch =
+					sermon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					sermon.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-		return matchesFilter && matchesSearch;
-	});
+				return matchesFilter && matchesSearch;
+		  })
+		: [];
 
 	return (
 		<div className='flex flex-col space-y-6'>
@@ -147,7 +149,7 @@ function ListSermons() {
 								: filteredSermons.map((sermon) => sermon.id) // Select all filtered
 						);
 					}}
-					className={`font-dm text-darkred cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]`}>
+					className={`font-dm text-darkred cursor-pointer hover:opacity-50`}>
 					{selectedSermons.length === filteredSermons.length ? 'Deselect' : 'Select'} all sermons
 				</div>
 			</div>
@@ -183,7 +185,9 @@ function ListSermons() {
 					))
 				) : (
 					<div className='w-full flex justify-center items-center'>
-						<span className='italic font-dm text-darkred'>No {filter} sermons.</span>
+						<span className='italic font-dm text-darkred'>
+							No {filter === 'all' ? '' : filter} sermons.
+						</span>
 					</div>
 				)}
 			</div>

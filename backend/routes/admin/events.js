@@ -15,6 +15,7 @@ import {
 	deleteEventTimes,
 	updateEventTime,
 } from '../../api/events/eventTimesAPI.js';
+import { setEventPhotoThumbnail } from '../../api/mediaAPI.js';
 
 const router = express.Router();
 
@@ -40,5 +41,9 @@ router.post('/times/new/', createEventTime);
 router.put('/times/update/:eventTimeID/', updateEventTime);
 // DELETE /api/admin/events/times/delete/:eventDateID - Delete all times for an EventDate via EventDateID
 router.delete('/times/delete/:eventDateID/', deleteEventTimes);
+
+//PUT  /api/admin/events/:eventID/thumbnail
+// Set an EventPhoto as thumbnail - needs to happen here for json
+router.put('/:eventID/thumbnail', setEventPhotoThumbnail);
 
 export default router;

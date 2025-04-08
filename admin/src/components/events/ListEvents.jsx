@@ -190,7 +190,7 @@ function ListEvents() {
 								: filteredEvents.map((event) => event.id) // Select all filtered
 						);
 					}}
-					className={`font-dm text-darkred cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]`}>
+					className={`font-dm text-darkred cursor-pointer hover:opacity-50 select-none`}>
 					{selectedEvents.length === filteredEvents.length ? 'Deselect' : 'Select'} all events
 				</div>
 			</div>

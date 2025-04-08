@@ -60,9 +60,18 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventImages = async (eventID) => {
 		try {
+			if (!eventID) throw new Error('Missing eventID');
 			const res = await fetch(`/api/media/images/events/${eventID}`);
 			if (!res.ok) throw new Error('Failed to fetch event images');
-			return await res.json(); // array of image URLs
+			const data = await res.json();
+
+			// Sanitize structure
+			return Array.isArray(data)
+				? data.map((img) => ({
+						url: img.photoURL || img.url,
+						isThumbnail: img.isThumbnail === 1 || img.isThumbnail === true,
+				  }))
+				: [];
 		} catch (err) {
 			console.error('Error fetching event images:', err);
 			setError(err.message);
@@ -289,6 +298,32 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
+	async function setThumbnailImage(eventID, filename) {
+		try {
+			const res = await fetch(`/api/admin/events/${eventID}/thumbnail`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ filename }),
+			});
+			if (!res.ok) throw new Error('Failed to set thumbnail');
+		} catch (err) {
+			console.error('Error setting thumbnail:', err);
+		}
+	}
+
+	const deleteEventImage = async (filename) => {
+		try {
+			const res = await fetch(`/api/admin/media/images/${filename}`, {
+				method: 'DELETE',
+			});
+			if (!res.ok) throw new Error('Failed to delete image');
+			return true;
+		} catch (err) {
+			console.error('Error deleting image:', err);
+			return false;
+		}
+	};
+
 	return (
 		<EventsContext.Provider
 			value={{
@@ -313,6 +348,7 @@ export const EventsProvider = ({ children }) => {
 				createEventTime,
 				updateEventTime,
 				deleteEventTimes,
+				setThumbnailImage,
 			}}>
 			{children}
 		</EventsContext.Provider>

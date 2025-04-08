@@ -82,6 +82,23 @@ export const EventsProvider = ({ children }) => {
 		return matchingTimes;
 	};
 
+	const fetchEventImages = async (eventID) => {
+		try {
+			const res = await fetch(`/api/media/images/events/${eventID}`);
+			if (!res.ok) throw new Error('Failed to fetch event images');
+			const data = await res.json();
+
+			return data.map((img) => ({
+				url: img.photoURL || img.url,
+				isThumbnail: img.isThumbnail === 1 || img.isThumbnail === true,
+			}));
+		} catch (err) {
+			console.error('Error fetching event images:', err);
+			setError(err.message);
+			return [];
+		}
+	};
+
 	function formatDate(dateStr) {
 		const [year, month, day] = dateStr.split('-').map(Number);
 		return `${month}/${day}/${String(year).slice(-2)}`;
@@ -109,6 +126,7 @@ export const EventsProvider = ({ children }) => {
 				fetchEventDatesById,
 				fetchEventTimesByDateId,
 				fetchEventTimesByEventId,
+				fetchEventImages,
 				formatDate,
 				formatTime,
 			}}>

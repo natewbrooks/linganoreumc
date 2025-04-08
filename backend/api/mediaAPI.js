@@ -73,34 +73,55 @@ export const getAllHeaderImages = (req, res) => {
 };
 
 // GET /api/media/images/events/
-export const getAllEventsImages = (req, res) => {
+// export const getAllEventsImages = (req, res) => {
+// 	try {
+// 		const eventImageFiles = getAllFilesRecursively(eventImagesDir);
+// 		const paths = eventImageFiles.map(
+// 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+// 		);
+// 		res.json(paths);
+// 	} catch (err) {
+// 		res.status(500).json({ error: err.message });
+// 	}
+// };
+export const getAllEventsImages = async (req, res) => {
 	try {
-		const eventImageFiles = getAllFilesRecursively(eventImagesDir);
-		const paths = eventImageFiles.map(
-			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-		);
-		res.json(paths);
+		const [rows] = await pool.execute('SELECT * FROM EventPhotos');
+		res.status(200).json(rows);
 	} catch (err) {
+		console.error('Error fetching all event images from EventPhotos table:', err);
 		res.status(500).json({ error: err.message });
 	}
 };
 
-// GET /api/media/images/events/eventID
-export const getAllEventImages = (req, res) => {
+// GET /api/media/images/events/:eventID
+// export const getAllEventImages = (req, res) => {
+// 	try {
+// 		const eventID = req.params.eventID;
+// 		const eventPath = path.join(eventImagesDir, eventID);
+
+// 		if (!fs.existsSync(eventPath)) {
+// 			return res.json([]); // No images yet, return empty list
+// 		}
+
+// 		const eventImageFiles = getAllFilesRecursively(eventPath);
+// 		const paths = eventImageFiles.map(
+// 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+// 		);
+
+// 		res.json(paths);
+// 	} catch (err) {
+// 		console.error(`Error fetching images for event ${req.params.eventID}:`, err);
+// 		res.status(500).json({ error: err.message });
+// 	}
+// };
+export const getAllEventImages = async (req, res) => {
 	try {
-		const eventID = req.params.eventID;
-		const eventPath = path.join(eventImagesDir, eventID);
+		const { eventID } = req.params;
 
-		if (!fs.existsSync(eventPath)) {
-			return res.json([]); // No images yet, return empty list
-		}
+		const [rows] = await pool.execute('SELECT * FROM EventPhotos WHERE eventID = ?', [eventID]);
 
-		const eventImageFiles = getAllFilesRecursively(eventPath);
-		const paths = eventImageFiles.map(
-			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-		);
-
-		res.json(paths);
+		res.status(200).json(rows);
 	} catch (err) {
 		console.error(`Error fetching images for event ${req.params.eventID}:`, err);
 		res.status(500).json({ error: err.message });
@@ -227,5 +248,33 @@ export const scrapeYouTubeVideo = async (req, res) => {
 	} catch (err) {
 		console.error('Error scraping video:', err);
 		res.status(500).json({ error: err.message });
+	}
+};
+
+export const setEventPhotoThumbnail = async (req, res) => {
+	const { eventID } = req.params;
+	const { filename } = req.body;
+
+	if (!filename) return res.status(400).json({ error: 'Missing filename' });
+
+	console.log('Setting eventID: ', eventID, ' thumbnail to: ', filename);
+
+	// Rebuild photoURL from known path structure
+	const photoURL = `/api/media/images/events/${eventID}/${filename}`;
+
+	try {
+		// Unset all current thumbnails for the event
+		await pool.execute('UPDATE EventPhotos SET isThumbnail = false WHERE eventID = ?', [eventID]);
+
+		// Set the selected image as the new thumbnail
+		await pool.execute(
+			'UPDATE EventPhotos SET isThumbnail = true WHERE eventID = ? AND photoURL = ?',
+			[eventID, photoURL]
+		);
+
+		res.status(200).json({ success: true });
+	} catch (err) {
+		console.error('Failed to update thumbnail:', err);
+		res.status(500).json({ error: 'Server error' });
 	}
 };

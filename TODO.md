@@ -6,13 +6,14 @@
   - Each event has a carousel (like [my website](https://www.natewbrooks.com)) at the bottom under the information to view all images/videos
 - Make Recurring Events work on [Calendar](frontend/src/pages/Calendar.jsx)
 - RESPONSIVE MOBILE!!
+- Add responsive navigation on admin panel
 
 ### Admin Panel Changes
 
 - Make "Recurring Events" flag toggle the "WEEKDAY SELECT" component.
   - Save the weekdays selected as the days of the current week. Frontend will know to distinguish based on "IsRecurring" flag
-- Add JWT login authentication when hitting the /admin/ endpoint
-- Make sure to encrypt passwords of usernames with [bcrypt](https://www.npmjs.com/package/bcrypt)
+- <s>Add JWT login authentication when hitting the /admin/ endpoint</s>
+- <s>Make sure to encrypt passwords of usernames with [bcrypt](https://www.npmjs.com/package/bcrypt)</s>
 - <s>Make events have their own images (+ videos?) associated with them</s>
 - <s>Make events cancellable</s>
 - <s>Add sermon data type -- should be a sort of "clone" with slight changes from events data types</s>

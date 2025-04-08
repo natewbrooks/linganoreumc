@@ -11,6 +11,8 @@ export default function SelectImageGrid({
 	customUploadFunction,
 	folderFilter = '/api/media/images/',
 	toggleableActive = false,
+	showDeleteButton = true,
+	onToggleActive,
 }) {
 	const [imageFile, setImageFile] = useState(null);
 	const [uploadError, setUploadError] = useState('');
@@ -85,11 +87,15 @@ export default function SelectImageGrid({
 	};
 
 	const setActiveForIndex = (index) => {
-		const updated = images.map((img, i) => ({
-			...img,
-			active: i === index,
-		}));
-		onChangeImages(updated);
+		if (onToggleActive) {
+			onToggleActive(index);
+		} else {
+			const updated = images.map((img, i) => ({
+				...img,
+				active: i === index,
+			}));
+			onChangeImages(updated);
+		}
 	};
 
 	const handleDeleteImage = async (filename) => {
@@ -98,17 +104,17 @@ export default function SelectImageGrid({
 				method: 'DELETE',
 			});
 			if (!response.ok) throw new Error('Failed to delete image');
+
+			const cleanName = filename.split('/').pop();
+
 			setAvailableUploads((prev) =>
 				prev.filter((item) => {
 					const path = typeof item === 'string' ? item : item.filePath;
-					return path.split('/').pop() !== filename;
+					return path.split('/').pop() !== cleanName;
 				})
 			);
-			const updated = images.map((img) => {
-				const imgFilename = img?.url?.split('/').pop();
-				if (imgFilename === filename) return { ...img, url: '' };
-				return img;
-			});
+
+			const updated = images.filter((img) => img?.url?.split('/').pop() !== cleanName); // ✅ filter, not map
 			onChangeImages(updated);
 		} catch (error) {
 			console.error('Error deleting image:', error);
@@ -125,7 +131,7 @@ export default function SelectImageGrid({
 						label={label}
 						availableUploads={availableUploads}
 						images={images}
-						toggleableActive={toggleableActive} // ✅ pass it down
+						toggleableActive={toggleableActive}
 						initialSelectedImage={
 							image.url?.split('/').pop() ? `/api/media/images/${image.url.split('/').pop()}` : ''
 						}
@@ -138,7 +144,7 @@ export default function SelectImageGrid({
 						onFileSelect={handleFileSelect}
 						handleDeleteImage={handleDeleteImage}
 						active={!!image.active}
-						disableRemove={toggleableActive && images.length === 1}
+						disableRemove={(toggleableActive && images.length === 1) || !showDeleteButton}
 						onSelectActive={toggleableActive ? () => setActiveForIndex(index) : undefined}
 						folderFilter={folderFilter}
 						uploadError={uploadError}

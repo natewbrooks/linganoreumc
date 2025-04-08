@@ -1,20 +1,15 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import ParallelogramBG from '../ParallelogramBG';
 
-function NavLink({ to, title }) {
+function NavLink({ link }) {
 	const location = useLocation();
-	const isActive = location.pathname === to;
+	const isActive = location.pathname === link.to;
 
 	return (
 		<Link
-			to={to}
-			className={``}>
-			<ParallelogramBG
-				text={title}
-				textSize={18}
-				width={200}
-			/>
+			to={link.to}
+			className={`font-dm text-bkg text-2xl ${isActive ? 'bg-blue-500' : ''}`}>
+			{link.title}
 		</Link>
 	);
 }

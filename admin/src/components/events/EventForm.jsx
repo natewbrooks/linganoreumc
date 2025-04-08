@@ -129,6 +129,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 
 			alert(mode === 'create' ? 'Event created successfully!' : 'Event updated successfully!');
 			navigate('/events/', { replace: true });
+			window.location.reload();
 		} catch (err) {
 			console.error(err);
 			alert('Error occurred while saving the event.');
@@ -141,7 +142,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 				className='flex flex-col font-dm px-6 min-h-[800px]'
 				onSubmit={handleSubmit}>
 				<div className='flex flex-col '>
-					<span className='font-newb text-md'>Details</span>
+					<span className='font-dm text-md'>Details</span>
 					<div className='flex flex-col space-y-2 px-4 py-3'>
 						<TextInput
 							title='Title'
@@ -179,7 +180,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 				</div>
 
 				<div className='flex flex-col'>
-					<span className='font-newb text-md'>Dates & Times</span>
+					<span className='font-dm text-md'>Dates & Times</span>
 					<div className='flex flex-col space-y-4 px-4 py-3'>
 						<DateTimeFields
 							dateTimeData={dateTimeData}
@@ -191,7 +192,11 @@ function EventForm({ mode = 'create', initialData = null }) {
 
 				{eventID && (
 					<div className='flex flex-col mt-6'>
-						<span className='font-newb text-md'>Event Images</span>
+						<span className='font-dm text-md'>Event Images</span>
+						<span className='font-dm text-sm text-black'>
+							Selected image determines the event thumbnail
+						</span>
+
 						<div className='flex flex-col space-y-4 px-4 py-3'>
 							<SelectEventImages
 								eventID={eventID}
@@ -205,13 +210,13 @@ function EventForm({ mode = 'create', initialData = null }) {
 				<div className='flex w-full justify-end space-x-4'>
 					<button
 						type='reset'
-						className='bg-tp py-1 px-2 outline-none cursor-pointer'
+						className='bg-tp py-1 px-2 outline-none cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'
 						onClick={() => setDateTimeData([{ date: '', times: [''] }])}>
 						Reset Fields
 					</button>
 					<button
 						type='submit'
-						className='bg-red text-bkg py-1 px-2 outline-none cursor-pointer'>
+						className='bg-red text-bkg py-1 px-2 outline-none cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'>
 						{mode === 'create' ? 'Create Event' : 'Update Event'}
 					</button>
 				</div>
