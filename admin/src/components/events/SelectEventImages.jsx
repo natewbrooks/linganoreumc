@@ -7,9 +7,9 @@ export default function SelectEventImages({
 	eventImages = [],
 	onChangeEventImages = () => {},
 }) {
-	const { fetchEventImages, uploadEventImage, setThumbnailImage } = useEvents();
+	const { fetchEventImages, uploadEventImage } = useEvents();
 	const [availableUploads, setAvailableUploads] = useState([]);
-	const [localImages, setLocalImages] = useState([]); // ✅ Local state
+	const [localImages, setLocalImages] = useState([]);
 
 	useEffect(() => {
 		if (!eventID) return;
@@ -18,15 +18,15 @@ export default function SelectEventImages({
 				url: img.url,
 				active: img.isThumbnail === true,
 			}));
-			setLocalImages(formattedImages); // ✅ Store locally
-			onChangeEventImages(formattedImages); // Optional if needed to sync
+			setLocalImages(formattedImages);
+			onChangeEventImages(formattedImages);
 			setAvailableUploads(results.map((img) => ({ filePath: img.url })));
 		});
 	}, [eventID]);
 
 	const handleEventImagesChange = (updatedImages) => {
-		setLocalImages(updatedImages); // ✅ Local update
-		onChangeEventImages(updatedImages); // ✅ Propagate upward
+		setLocalImages(updatedImages);
+		onChangeEventImages(updatedImages);
 	};
 
 	const handleToggleActive = async (index) => {
@@ -35,12 +35,6 @@ export default function SelectEventImages({
 			active: i === index,
 		}));
 		handleEventImagesChange(updated);
-
-		const thumbnailUrl = updated[index]?.url;
-		const filename = thumbnailUrl?.split('/').pop();
-		if (filename) {
-			await setThumbnailImage(eventID, filename);
-		}
 	};
 
 	const uploadHandler = async (file) => {

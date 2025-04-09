@@ -20,6 +20,7 @@ export default function SelectImageDropdown({
 	const [enabled, setEnabled] = useState(false);
 	const [selectedImage, setSelectedImage] = useState(initialSelectedImage);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [imageLoadFailed, setImageLoadFailed] = useState(false); // ✅
 	const dropdownRef = useRef(null);
 	const fileInputRef = useRef(null);
 
@@ -70,6 +71,8 @@ export default function SelectImageDropdown({
 						src={selectedImage}
 						alt='Selected'
 						imgClassName='w-full h-full object-cover'
+						onError={() => setImageLoadFailed(true)} // ✅
+						onLoad={() => setImageLoadFailed(false)} // ✅
 					/>
 				) : (
 					<div className='ml-2 w-full items-center text-black/50'>Select image...</div>
@@ -86,7 +89,7 @@ export default function SelectImageDropdown({
 								className='text-bkg'
 							/>
 						</div>
-						{(!selectedImage || !disableRemove) && (
+						{(!selectedImage || imageLoadFailed || !disableRemove) && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
 									size={12}
@@ -113,7 +116,7 @@ export default function SelectImageDropdown({
 								/>
 							</div>
 						)}
-						{(!selectedImage || !disableRemove) && (
+						{(!selectedImage || imageLoadFailed || !disableRemove) && (
 							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
 								<FaTrash
 									size={12}

@@ -20,6 +20,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 		deleteEventTimes,
 		fetchEventDatesById,
 		fetchEventTimesByDateId,
+		setThumbnailImage,
 	} = useEvents();
 
 	const [title, setTitle] = useState('');
@@ -65,6 +66,15 @@ function EventForm({ mode = 'create', initialData = null }) {
 
 		if (!title || !description || dateTimeData.some((d) => !d.date)) {
 			alert('Please fill in title, description, and all date fields.');
+			return;
+		}
+
+		const hasAtLeastOneTime = dateTimeData.some(
+			(d) => Array.isArray(d.times) && d.times.some((t) => t && t.trim() !== '')
+		);
+
+		if (!hasAtLeastOneTime) {
+			alert('At least one time must be set for this event.');
 			return;
 		}
 
@@ -124,6 +134,25 @@ function EventForm({ mode = 'create', initialData = null }) {
 
 				for (const time of times) {
 					await createEventTime(finalDateID, time);
+				}
+			}
+
+			// Automatically set the image as thumbnail if theres only one
+			// Save thumbnail
+			if (eventImages && eventImages.length > 0) {
+				let selectedImage = null;
+
+				if (eventImages.length === 1) {
+					selectedImage = eventImages[0];
+				} else {
+					selectedImage = eventImages.find((img) => img.active);
+				}
+
+				if (selectedImage?.url) {
+					const filename = selectedImage.url.split('/').pop();
+					if (filename) {
+						await setThumbnailImage(finalEventID, filename);
+					}
 				}
 			}
 

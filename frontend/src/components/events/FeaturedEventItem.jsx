@@ -16,7 +16,11 @@ function FeaturedEventItem({ event }) {
 			console.log('Fetched images:', images);
 
 			const thumbnail = images.find((img) => img.isThumbnail);
-			setThumbnailUrl(thumbnail ? `http://localhost:5000${thumbnail.url}` : null);
+			setThumbnailUrl(
+				thumbnail
+					? `http://localhost:5000/api/media/images/${thumbnail.url.split('/').pop()}`
+					: null
+			);
 		};
 
 		loadThumbnail();
