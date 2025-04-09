@@ -26,13 +26,13 @@ function App() {
 
 			{/* website.com/admin/ */}
 			<Route
-				path='/'
+				path='/settings/general/'
 				element={<General />}
 			/>
 
 			{/* Edit Home Page */}
 			<Route
-				path='/edit/pages/home/'
+				path='/settings/home/'
 				element={<Home />}
 			/>
 
@@ -44,12 +44,12 @@ function App() {
 
 			{/* Edit a specific event */}
 			<Route
-				path='/edit/event/:id/'
+				path='/events/:id/'
 				element={<EditEvent />}
 			/>
 
 			<Route
-				path='/new/event/'
+				path='/events/new/'
 				element={<CreateEvent />}
 			/>
 
@@ -60,12 +60,12 @@ function App() {
 			/>
 
 			<Route
-				path='/new/sermon/'
+				path='/sermons/new/'
 				element={<CreateSermon />}
 			/>
 
 			<Route
-				path='/edit/sermon/:id/'
+				path='/sermons/:id/'
 				element={<EditSermon />}
 			/>
 

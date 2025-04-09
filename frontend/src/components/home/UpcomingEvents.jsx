@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import BKG from '../../assets/linganore-bright-pic-upscale.webp';
 import { Link } from 'react-router-dom';
+import { useEvents } from '../../contexts/EventsContext';
 
 export default function UpcomingEvents({ title, subtext, events = [] }) {
 	const [displayEvents, setDisplayEvents] = useState([]);
+	const [thumbnailMap, setThumbnailMap] = useState({});
+	const { fetchEventImages } = useEvents();
 
 	useEffect(() => {
 		const placeholdersNeeded = 4 - events.length;
@@ -18,6 +21,32 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 		setDisplayEvents([...events, ...placeholderEvents]);
 	}, [events]);
 
+	useEffect(() => {
+		const loadThumbnails = async () => {
+			const map = {};
+
+			for (const { event, placeholder } of events) {
+				if (placeholder) continue;
+
+				try {
+					const images = await fetchEventImages(event.id);
+					const thumbnail = images.find((img) => img.isThumbnail);
+					if (thumbnail) {
+						map[event.id] = `/api/media/images/${thumbnail.url.split('/').pop()}`;
+					}
+				} catch (err) {
+					console.error(`Failed to fetch thumbnail for event ${event.id}`, err);
+				}
+			}
+
+			setThumbnailMap(map);
+		};
+
+		if (events.length > 0) {
+			loadThumbnails();
+		}
+	}, [events, fetchEventImages]);
+
 	return (
 		<div className={`relative min-h-[600px] md:min-h-[0px] md:h-[300px]`}>
 			<div className='flex flex-col font-dm px-4 md:px-30 mb-4'>
@@ -27,7 +56,8 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 			<div className='flex flex-col relative'>
 				<div className={`hidden md:block`}>
 					<div
-						className={`absolute -left-30 -bottom-16 -skew-x-[30deg]  w-full z-10 bg-red py-8`}>{` `}</div>
+						className={`absolute -left-30 -bottom-16 -skew-x-[30deg]  w-full z-10 bg-red py-8`}
+					/>
 					<div className='flex space-x-2 px-40  w-full text-bkg justify-between font-dm '>
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
@@ -57,7 +87,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 											<div className='bg-tp w-full h-full'></div>
 										) : (
 											<img
-												src={BKG}
+												src={thumbnailMap[event.id] || BKG}
 												className='w-full h-full object-cover object-center'
 												alt='Event'
 											/>
@@ -70,16 +100,16 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 				</div>
 
 				<div className={`block md:hidden`}>
-					<div className={`absolute top-0 right-0 w-full z-10 bg-red py-8`}>{` `}</div>
+					<div className={`absolute top-0 right-0 w-full z-10 bg-red py-8`} />
 
 					<div className={`flex flex-col`}>
 						<div className='grid grid-cols-2 gap-x-2 px-4 text-bkg justify-between font-dm '>
 							{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
 								<Link
 									to={`/event/${event.id}`}
+									key={event.id || index}
 									className={`relative flex justify-center cursor-pointer group `}>
 									<div
-										key={event.id || index}
 										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
 											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
 										}`}>
@@ -98,10 +128,10 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
 											{placeholder ? (
-												<div className={`bg-tp w-full h-full`}></div>
+												<div className='bg-tp w-full h-full'></div>
 											) : (
 												<img
-													src={BKG}
+													src={thumbnailMap[event.id] || BKG}
 													className='w-full h-full object-cover object-center'
 													alt='Event'
 												/>
@@ -112,15 +142,15 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 							))}
 						</div>
 
-						<div className={`absolute top-60 w-full z-10 bg-red py-8`}>{` `}</div>
+						<div className={`absolute top-60 w-full z-10 bg-red py-8`} />
 
 						<div className='relative top-60 grid grid-cols-2 gap-x-2 px-4 text-bkg justify-between font-dm '>
 							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => (
 								<Link
 									to={`/event/${event.id}`}
+									key={event.id || index}
 									className={`relative flex justify-center cursor-pointer group  `}>
 									<div
-										key={event.id || index}
 										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
 											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
 										}`}>
@@ -139,10 +169,10 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
 											{placeholder ? (
-												<div className={`bg-tp w-full h-full`}></div>
+												<div className='bg-tp w-full h-full'></div>
 											) : (
 												<img
-													src={BKG}
+													src={thumbnailMap[event.id] || BKG}
 													className='w-full h-full object-cover object-center'
 													alt='Event'
 												/>
@@ -155,6 +185,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 					</div>
 				</div>
 			</div>
+
 			<Link
 				to={'/events/'}
 				className={`w-fit pl-8 absolute bottom-0 sm:-bottom-4 bg-red py-2 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[100%] `}>

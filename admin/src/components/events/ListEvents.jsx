@@ -165,7 +165,7 @@ function ListEvents() {
 								</div>
 							</div>
 							<Link
-								to='/new/event/'
+								to='/events/new/'
 								className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
 								<div className='flex space-x-1 -skew-x-[30deg] items-center'>
 									<FaPlus size={16} />

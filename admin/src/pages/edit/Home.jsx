@@ -156,7 +156,7 @@ function HomePageSettingsAdmin() {
 
 	return (
 		<div className='flex flex-col'>
-			<h2 className='font-dm text-2xl'>Edit Homepage</h2>
+			<h2 className='font-dm text-2xl'>Home Page Settings</h2>
 
 			<div className='flex flex-col space-y-8 pt-4'>
 				{/* SELECT HEADER IMAGES */}

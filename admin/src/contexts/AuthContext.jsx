@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
 		// If logged in and on login page, delay redirect
 		if (isAuthenticated && onLoginPage) {
-			navigate('/');
+			navigate('/settings/general/');
 		}
 	}, [isAuthenticated, loading, location.pathname, navigate]);
 

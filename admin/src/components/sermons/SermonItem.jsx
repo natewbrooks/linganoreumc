@@ -23,7 +23,7 @@ function SermonItem({ sermon }) {
 
 	return (
 		<Link
-			to={`/edit/sermon/${sermon.id}`}
+			to={`/sermons/${sermon.id}`}
 			className='font-dm w-full outline-0 cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[100%]'>
 			{/* Top Info Panel */}
 			<div className='text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] flex items-center space-x-4'>

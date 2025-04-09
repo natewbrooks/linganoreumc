@@ -32,7 +32,7 @@ function FeaturedEventItem({ event }) {
 		<Link
 			to={`/event/${event.id}`}
 			className={`flex flex-col w-full h-[180px] skew-x-[10deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] ${
-				hasBackground ? 'bg-cover bg-center' : 'bg-tp'
+				hasBackground ? 'bg-cover object-center object-cover bg-center' : 'bg-tp'
 			}`}
 			style={hasBackground ? { backgroundImage: `url(${thumbnailUrl})` } : {}}>
 			{!hasBackground ? (

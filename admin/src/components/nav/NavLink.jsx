@@ -8,7 +8,7 @@ function NavLink({ link }) {
 	return (
 		<Link
 			to={link.to}
-			className={`font-dm text-bkg text-2xl ${isActive ? 'bg-blue-500' : ''}`}>
+			className={`font-dm text-bkg ${isActive ? 'underline underline-offset-4' : ''}`}>
 			{link.title}
 		</Link>
 	);
