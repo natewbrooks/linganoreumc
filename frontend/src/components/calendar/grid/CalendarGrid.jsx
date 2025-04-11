@@ -15,7 +15,7 @@ function CalendarGrid({ month, year }) {
 
 	// Days from previous month to show before the 1st
 	const prevMonthDays = firstDayOfMonth.getDay(); // Sunday = 0, Monday = 1, etc.
-	const nextMonthDays = 42 - (prevMonthDays + lastDayOfMonth.getDate()); // Total 42 days (6 weeks)
+	const nextMonthDays = 35 - (prevMonthDays + lastDayOfMonth.getDate()); // Total 42 days (6 weeks)
 
 	// Get previous month’s info
 	const prevMonth = month === 0 ? 11 : month - 1;

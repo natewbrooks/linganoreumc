@@ -207,11 +207,7 @@ function ListEvents() {
 								selectedList={selectedEvents}
 								setSelectedList={setSelectedEvents}
 							/>
-							<EventItem
-								id={event.id}
-								title={event.title}
-								description={event.description}
-							/>
+							<EventItem event={event} />
 						</div>
 					))
 				) : (

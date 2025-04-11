@@ -66,33 +66,32 @@ export const getArchivedEvents = async (req, res) => {
 
 // Admin: Create a new Event
 export const createEvent = async (req, res) => {
-	const { title, description, isRecurring, isFeatured } = req.body;
+	const { title, description, isRecurring, isFeatured, isDraft } = req.body;
 
-	if (
-		!title ||
-		!description ||
-		isRecurring === undefined ||
-		isRecurring === null ||
-		isFeatured === null
-	) {
-		return res.status(400).json({ error: 'All fields required' });
+	if (isDraft === undefined || isRecurring === undefined || isFeatured === undefined) {
+		return res.status(400).json({ error: 'Missing required flags' });
+	}
+
+	if (!isDraft && (!title || !description)) {
+		return res.status(400).json({ error: 'Title and description are required for non-drafts' });
 	}
 
 	try {
-		// Check if an event with the same title already exists (case-insensitive)
-		const [existingEvents] = await pool.query(
-			'SELECT COUNT(*) as count FROM Events WHERE LOWER(title) = LOWER(?)',
-			[title]
-		);
+		// Only enforce title uniqueness for finalized events
+		if (!isDraft && title) {
+			const [existingEvents] = await pool.query(
+				'SELECT COUNT(*) as count FROM Events WHERE LOWER(title) = LOWER(?)',
+				[title]
+			);
 
-		if (existingEvents[0].count > 0) {
-			return res.status(400).json({ error: 'An event with this title already exists' });
+			if (existingEvents[0].count > 0) {
+				return res.status(400).json({ error: 'An event with this title already exists' });
+			}
 		}
 
-		// Insert new event
 		const [result] = await pool.query(
-			'INSERT INTO Events (title, description, isRecurring, isFeatured) VALUES (?, ?, ?, ?)',
-			[title, description, isRecurring, isFeatured]
+			'INSERT INTO Events (title, description, isRecurring, isFeatured, isDraft) VALUES (?, ?, ?, ?, ?)',
+			[title || '', description || '', isRecurring, isFeatured, isDraft]
 		);
 
 		const eventID = result.insertId;
@@ -109,9 +108,7 @@ export const createEvent = async (req, res) => {
 // Admin: Update an Event via it's eventID
 export const updateEvent = async (req, res) => {
 	const { id } = req.params;
-	const { title, description, isRecurring, isFeatured, isArchived } = req.body;
-
-	console.log(isArchived);
+	const { title, description, isRecurring, isFeatured, isArchived, isDraft } = req.body;
 
 	if (!title || !description) {
 		return res.status(400).json({ error: 'Title and description are required' });
@@ -119,8 +116,8 @@ export const updateEvent = async (req, res) => {
 
 	try {
 		const [result] = await pool.query(
-			'UPDATE Events SET title = ?, description = ?, isRecurring = ?, isFeatured = ?, isArchived = ? WHERE id = ?',
-			[title, description, isRecurring, isFeatured, isArchived, id]
+			'UPDATE Events SET title = ?, description = ?, isRecurring = ?, isFeatured = ?, isArchived = ?, isDraft = ? WHERE id = ?',
+			[title, description, isRecurring, isFeatured, isArchived, isDraft, id]
 		);
 
 		if (result.affectedRows == 0) {

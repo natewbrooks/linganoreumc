@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSettings } from '../../contexts/SettingsContext';
 
 function EventItem({ event, previous }) {
-	const { eventDates, eventTimes } = useEvents();
+	const { eventDates, eventTimes, getShortDayOfWeek } = useEvents();
 	const { formatDate, formatTime } = useSettings();
 	const [timesMap, setTimesMap] = useState({});
 
@@ -13,7 +13,7 @@ function EventItem({ event, previous }) {
 		const newMap = {};
 
 		eventDates
-			.filter((dateObj) => dateObj.eventID === event.id) // ✅ only for this event
+			.filter((dateObj) => dateObj.eventID === event.id)
 			.forEach((dateObj) => {
 				const matchingTimes = Object.values(eventTimes)
 					.flat()
@@ -25,7 +25,7 @@ function EventItem({ event, previous }) {
 			});
 
 		if (Object.keys(newMap).length > 0) {
-			setTimesMap(newMap); // no need to merge
+			setTimesMap(newMap);
 		}
 	}, [eventDates, eventTimes, event.id]);
 
@@ -35,42 +35,50 @@ function EventItem({ event, previous }) {
 				className={`flex flex-row w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
 					previous ? 'text-darkred' : 'text-darkred bg-accent'
 				}`}>
-				{!previous &&
-					eventDates
-						.filter((dateObj) => dateObj.eventID === event.id)
-						// show only future dates
-						.filter((dateObj) => new Date(dateObj.date) >= new Date())
-						// sort ascending so the earliest is first
-						.sort((a, b) => new Date(a.date) - new Date(b.date))
-						// take only the first upcoming date
-						.slice(0, 1)
-						.map((dateObj, idx) => {
-							const times = timesMap[dateObj.id] || [];
-							if (!times.length) return null;
+				{!previous
+					? eventDates
+							.filter((dateObj) => dateObj.eventID === event.id)
+							.filter((dateObj) => new Date(dateObj.date) >= new Date())
+							.sort((a, b) => new Date(a.date) - new Date(b.date))
+							// Conditionally slice if not recurring
+							.slice(0, event.isRecurring ? undefined : 1)
+							.map((dateObj, idx) => {
+								const times = timesMap[dateObj.id] || [];
+								if (!times.length) return null;
 
-							const date = formatDate(dateObj.date);
-							const timeString = times.map((t) => formatTime(t.time)).join(', ');
+								const date = event.isRecurring
+									? getShortDayOfWeek(dateObj.date)
+									: formatDate(dateObj.date);
 
-							return (
-								<React.Fragment key={dateObj.id}>
-									{idx > 0 && <span className=''>|</span>}
-									<div className='skew-x-[30deg]'>{`${date} @ ${timeString}`}</div>
-								</React.Fragment>
-							);
-						})}
+								const timeString = times.map((t) => formatTime(t.time)).join(', ');
+
+								return (
+									<React.Fragment key={dateObj.id}>
+										{idx > 0 && <span className='skew-x-[30deg]'>|</span>}
+										<div className='skew-x-[30deg]'>{`${date} @ ${timeString}`}</div>
+									</React.Fragment>
+								);
+							})
+					: null}
 			</div>
 
 			<Link
 				to={`/events/${event.id}`}
-				className='flex flex-row items-center bg-tp relative -right-4 sm:right-0 '>
+				className='flex flex-row items-stretch w-full bg-tp relative font-dm'>
+				{/* Title Block */}
 				<div
-					className={`font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center -left-3 text-lg relative ${
+					className={`${
 						previous ? 'bg-darkred' : 'bg-red'
-					} px-4 py-1 -skew-x-[30deg]`}>
-					<p className='skew-x-[30deg]'>{event.title}</p>
+					} w-fit text-bkg px-4 py-2 text-lg text-center -skew-x-[30deg] flex items-center justify-center`}>
+					<p className='skew-x-[30deg] min-w-[200px] w-fit whitespace-nowrap'>{event.title}</p>
 				</div>
-				<div className='p-2 font-dm items-center text-darkred text-lg whitespace-nowrap'>
-					<p>{event.description}</p>
+
+				{/* Description Block */}
+				<div className='flex-1 p-2 px-4 text-darkred text-lg -skew-x-[30deg]'>
+					<div
+						className='line-clamp-1 whitespace-nowrap overflow-hidden skew-x-[30deg]'
+						dangerouslySetInnerHTML={{ __html: event.description }}
+					/>
 				</div>
 			</Link>
 		</div>

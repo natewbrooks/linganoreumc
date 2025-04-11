@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SelectImageDropdown from '../ui/SelectImageDropdown';
+import { FaPlus } from 'react-icons/fa6';
 
 export default function SelectImageGrid({
 	label = 'Image',
@@ -154,9 +155,12 @@ export default function SelectImageGrid({
 
 			<button
 				type='button'
-				className='w-full h-full items-center'
+				className='w-full h-full min-h-[100px] clickable flex items-center justify-center border-2 border-dashed border-darkred transition-all'
 				onClick={() => onChangeImages([...images, { url: '', active: false }])}>
-				<div className='font-dm text-sm clickable '>{`Add ${label}...`}</div>
+				<div className='font-dm text-sm flex flex-row space-x-2 items-center justify-center w-full'>
+					<FaPlus />
+					<span>{`Add ${label}...`}</span>
+				</div>
 			</button>
 		</div>
 	);

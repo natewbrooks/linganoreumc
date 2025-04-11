@@ -36,7 +36,7 @@ function Navigation() {
 		<>
 			<div
 				onMouseLeave={() => setActiveDropdown(null)}
-				className='w-full flex justify-around bg-red h-[60px]'>
+				className='w-full flex justify-around bg-red outline-4 outline-bkg h-[60px]'>
 				{/* Logo */}
 				<div className='relative -right-40'>
 					<div

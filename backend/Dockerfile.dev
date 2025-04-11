@@ -1,7 +1,19 @@
 FROM node:18-alpine
+
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm install && npm install -g nodemon
+
+# Install dependencies and concurrently
+RUN npm install && npm install -g nodemon concurrently
+
 COPY . .
+
 EXPOSE 5000
-CMD ["npx", "nodemon", "index.js"]
+
+# Run API and scheduler simultaneously
+# CMD ["npx", "concurrently", "nodemon index.js", "node scheduler.js"]
+# CMD ["sh", "-c", "npx concurrently \"nodemon index.js\" \"node scheduler.js\""]
+CMD ["sh", "-c", "npx concurrently --raw \"nodemon index.js\" \"node scheduler.js\""]
+
+

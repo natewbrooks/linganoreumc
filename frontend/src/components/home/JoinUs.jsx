@@ -11,16 +11,24 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 
 	useEffect(() => {
 		if (!events.length || !eventIDs.length) return;
-		const newTimesMap = {};
 
-		eventIDs.forEach(({ eventID }) => {
-			const event = events.find((e) => e.id === eventID);
-			if (!event) return;
-			const fetchedTimes = fetchEventTimesByEventId(eventID);
-			newTimesMap[eventID] = fetchedTimes || [];
-		});
+		const fetchAllTimes = async () => {
+			const newTimesMap = {};
 
-		setTimesMap(newTimesMap);
+			await Promise.all(
+				eventIDs.map(async ({ eventID }) => {
+					const event = events.find((e) => e.id === eventID);
+					if (!event) return;
+
+					const fetchedTimes = await fetchEventTimesByEventId(eventID);
+					newTimesMap[eventID] = fetchedTimes || [];
+				})
+			);
+
+			setTimesMap(newTimesMap);
+		};
+
+		fetchAllTimes();
 	}, [events, eventIDs, fetchEventTimesByEventId]);
 
 	// Combine lines in address to create a search-friendly address string
@@ -49,7 +57,7 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 						return (
 							<div
 								key={eventID}
-								className='flex text-lg justify-between'>
+								className='flex text-lg justify-between clickable'>
 								<Link
 									to={`/events/${event.id}`}
 									className={` leading-4 w-fit   `}>
@@ -86,10 +94,12 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap`}>
 					<SiGooglemaps size={32} />
 					<div className={`flex flex-col group`}>
-						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
+						<span
+							className={`transition duration-200 group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
 							{locationName}
 						</span>
-						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
+						<span
+							className={`transition duration-200 group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
 							{address}
 						</span>
 					</div>

@@ -25,16 +25,10 @@
     "sermonImageURL": "/api/media/images/pope-walks-gracefully-through-church-600nw-2253549751.webp",
     "events": [
       {
-        "eventID": 1
+        "eventID": 25
       },
       {
-        "eventID": 4
-      },
-      {
-        "eventID": 2
-      },
-      {
-        "eventID": 8
+        "eventID": 26
       }
     ]
   },

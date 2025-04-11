@@ -324,6 +324,20 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
+	const getShortDayOfWeek = (dateStr) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const date = new Date(year, month - 1, day); // Local time
+		return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()];
+	};
+
+	const getLongDayOfWeek = (dateStr) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const date = new Date(year, month - 1, day); // Local time
+		return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'][
+			date.getDay()
+		];
+	};
+
 	return (
 		<EventsContext.Provider
 			value={{
@@ -349,6 +363,8 @@ export const EventsProvider = ({ children }) => {
 				updateEventTime,
 				deleteEventTimes,
 				setThumbnailImage,
+				getShortDayOfWeek,
+				getLongDayOfWeek,
 			}}>
 			{children}
 		</EventsContext.Provider>

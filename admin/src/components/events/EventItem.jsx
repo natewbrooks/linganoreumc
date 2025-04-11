@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { useEvents } from '../../contexts/EventsContext';
 import { formatShortDate, formatTime } from '../../helper/textFormat';
 
-function EventItem({ id, title, description }) {
-	const { fetchEventDatesById, fetchEventTimesByDateId } = useEvents();
+function EventItem({ event }) {
+	const { fetchEventDatesById, fetchEventTimesByDateId, getShortDayOfWeek } = useEvents();
 	const [eventDates, setEventDates] = useState([]);
 	const [timesMap, setTimesMap] = useState({});
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetchEventDatesById(id)
+		fetchEventDatesById(event.id)
 			.then(setEventDates)
 			.catch((err) => setError(err.message));
-	}, [id, fetchEventDatesById]);
+	}, [event.id, fetchEventDatesById]);
 
 	useEffect(() => {
 		eventDates.forEach((dateObj) => {
@@ -34,7 +34,7 @@ function EventItem({ id, title, description }) {
 
 	return (
 		<Link
-			to={`/events/${id}`}
+			to={`/events/${event.id}`}
 			className='font-dm w-full clickable   '>
 			{/* Date/Time row */}
 			<div className='text-sm text-darkred bg-accent px-2 py-0.5 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2'>
@@ -42,7 +42,10 @@ function EventItem({ id, title, description }) {
 					const times = timesMap[dateObj.id] || [];
 					if (!times.length) return null;
 
-					const date = formatShortDate(dateObj.date);
+					const date = event.isRecurring
+						? getShortDayOfWeek(dateObj.date)
+						: formatShortDate(dateObj.date);
+
 					const timesString = times.map((t) => formatTime(t.time)).join(', ');
 
 					return (
@@ -61,14 +64,17 @@ function EventItem({ id, title, description }) {
 
 			<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
 				<div className='font-dm py-2 text-bkg min-w-[80px] overflow-hidden text-center text-lg relative bg-darkred px-4'>
-					<p className='skew-x-[30deg] whitespace-nowrap'>eid: {id}</p>
+					<p className='skew-x-[30deg] whitespace-nowrap'>eid: {event.id}</p>
 				</div>
 				<div className='font-dm py-2 text-bkg bg-red px-4 text-center text-lg overflow-visible whitespace-nowrap skew-x-0'>
-					<p className='skew-x-[30deg]'>{title}</p>
+					<p className='skew-x-[30deg]'>{event.title}</p>
 				</div>
 
 				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
-					<p className='skew-x-[30deg]'>{description}</p>
+					<div
+						className='skew-x-[30deg] prose prose-sm line-clamp-1 whitespace-nowrap overflow-hidden'
+						dangerouslySetInnerHTML={{ __html: event.description }}
+					/>
 				</div>
 			</div>
 		</Link>

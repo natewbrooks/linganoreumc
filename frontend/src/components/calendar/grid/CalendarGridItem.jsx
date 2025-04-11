@@ -24,21 +24,19 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 	useEffect(() => {
 		const eventEntries = [];
 
-		// Get matching eventDates for the selected day
+		// Step 1: Match one-off (non-recurring) event dates
 		const matchingEventDates = eventDates.filter((d) => {
 			const [eYear, eMonth, eDate] = d.date.split('-').map(Number);
 			const eventDate = new Date(eYear, eMonth - 1, eDate);
 			return isSameDate(eventDate, date);
 		});
 
-		// Loop through matching events
 		matchingEventDates.forEach((d) => {
 			const event = events.find((e) => e.id === d.eventID);
 			if (!event) return;
 
-			// Find times for this event
-			const eventTimesForEvent = eventTimes
-				.filter((time) => time.eventDateID === d.id)
+			const timesForEvent = eventTimes
+				.filter((t) => t.eventDateID === d.id)
 				.map((t) => {
 					const [hours, minutes] = t.time.split(':').map(Number);
 					const timeDate = new Date(date);
@@ -46,20 +44,65 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 
 					return {
 						...event,
-						time: t.time, // Store as string for display
-						timeDate: timeDate, // Store as Date for sorting
+						time: t.time,
+						timeDate,
 						isCancelled: d.isCancelled,
 					};
 				});
 
-			// Add all event times as separate entries
-			eventEntries.push(...eventTimesForEvent);
+			eventEntries.push(...timesForEvent);
 		});
 
-		// Sort by time
-		eventEntries.sort((a, b) => a.timeDate - b.timeDate);
+		// Step 2: Handle recurring events
+		const dayOfWeek = date.getDay();
+		const weekdayAbbr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][dayOfWeek];
 
-		setSortedEventEntries(eventEntries);
+		events
+			.filter((e) => e.isRecurring)
+			.forEach((event) => {
+				const recurringDateEntry = eventDates.find((d) => {
+					const [y, m, d2] = d.date.split('-').map(Number);
+					const eventDate = new Date(y, m - 1, d2); // ✅ local date
+
+					return (
+						d.eventID === event.id && date.getDay() === eventDate.getDay() && date >= eventDate
+					);
+				});
+
+				if (!recurringDateEntry) return;
+
+				const timesForRecurring = eventTimes
+					.filter((t) => t.eventDateID === recurringDateEntry.id)
+					.map((t) => {
+						const [hours, minutes] = t.time.split(':').map(Number);
+						const timeDate = new Date(date);
+						timeDate.setHours(hours, minutes, 0, 0);
+
+						return {
+							...event,
+							time: t.time,
+							timeDate,
+							isCancelled: recurringDateEntry.isCancelled,
+						};
+					});
+
+				eventEntries.push(...timesForRecurring);
+			});
+
+		// Final sort
+		eventEntries.sort((a, b) => a.timeDate - b.timeDate);
+		// Deduplicate based on event ID + time
+		const uniqueMap = new Map();
+
+		eventEntries.forEach((entry) => {
+			const key = `${entry.id}-${entry.time}`;
+			if (!uniqueMap.has(key)) {
+				uniqueMap.set(key, entry);
+			}
+		});
+
+		const uniqueEntries = Array.from(uniqueMap.values()).sort((a, b) => a.timeDate - b.timeDate);
+		setSortedEventEntries(uniqueEntries);
 	}, [date, events, eventDates, eventTimes]);
 
 	return (

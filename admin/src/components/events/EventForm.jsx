@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEvents } from '../../contexts/EventsContext';
 import DateTimeFields from './DAteTimeFields';
 import TextInput from '../ui/TextInput';
 import BodyTextInput from '../ui/BodyTextInput';
 import SelectEventImages from './SelectEventImages';
+import SelectEventDays from './SelectEventDays';
+import RichTextEditor from '../ui/RichTextEditor';
 
-function EventForm({ mode = 'create', initialData = null }) {
+function EventForm({ mode = 'create', initialData = null, setParentEventID = null }) {
 	const navigate = useNavigate();
 	const {
 		events,
@@ -30,6 +32,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 	const [dateTimeData, setDateTimeData] = useState([]);
 	const [eventID, setEventID] = useState(null);
 	const [eventImages, setEventImages] = useState([]);
+	const originalRecurringRef = useRef([]);
 
 	useEffect(() => {
 		if (mode === 'edit' && initialData) {
@@ -47,6 +50,10 @@ function EventForm({ mode = 'create', initialData = null }) {
 					times: (dateEntry.times || []).map((t) => (typeof t === 'string' ? t : t.time)),
 				}));
 				setDateTimeData(converted);
+
+				if (initialData.isRecurring) {
+					originalRecurringRef.current = converted.map((d) => d.eventDateID).filter(Boolean);
+				}
 			} else {
 				setDateTimeData([{ date: '', times: [''] }]);
 			}
@@ -55,11 +62,32 @@ function EventForm({ mode = 'create', initialData = null }) {
 				setEventImages(initialData.eventImages);
 			}
 		}
+	}, [mode, initialData]);
 
+	useEffect(() => {
 		if (mode === 'create') {
+			const createDraft = async () => {
+				try {
+					const draft = await createEvent({
+						title: 'Untitled Draft',
+						description: '',
+						isRecurring: false,
+						isFeatured: false,
+						isDraft: true,
+					});
+					if (draft?.eventID) {
+						setEventID(draft.eventID);
+						setParentEventID(draft.eventID);
+					}
+				} catch (err) {
+					console.error('Failed to create draft event:', err);
+				}
+			};
+
+			createDraft();
 			setDateTimeData([{ date: '', times: [''] }]);
 		}
-	}, [mode, initialData, fetchEventDatesById, fetchEventTimesByDateId]);
+	}, [mode]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -106,15 +134,35 @@ function EventForm({ mode = 'create', initialData = null }) {
 			let finalEventID = eventID;
 
 			if (mode === 'create') {
-				const event = await createEvent({ title, description, isRecurring, isFeatured });
-				if (!event || !event.eventID) {
-					alert('Failed to create event.');
+				if (!eventID) {
+					alert('Event ID not initialized.');
 					return;
 				}
-				finalEventID = event.eventID;
-				setEventID(finalEventID);
+				// Update draft to finalize it
+				await updateEvent(eventID, {
+					title,
+					description,
+					isRecurring,
+					isFeatured,
+					isDraft: false,
+				});
 			} else {
-				await updateEvent(eventID, { title, description, isRecurring, isFeatured });
+				await updateEvent(eventID, {
+					title,
+					description,
+					isRecurring,
+					isFeatured,
+				});
+			}
+
+			if (isRecurring && mode === 'edit') {
+				const updatedEventDateIDs = sortedDateTimeData.map((d) => d.eventDateID).filter(Boolean);
+				const deletedDateIDs = originalRecurringRef.current.filter(
+					(originalID) => !updatedEventDateIDs.includes(originalID)
+				);
+				for (const id of deletedDateIDs) {
+					await deleteEventDate(id);
+				}
 			}
 
 			for (const { date, times, isCancelled = false, eventDateID } of sortedDateTimeData) {
@@ -137,8 +185,6 @@ function EventForm({ mode = 'create', initialData = null }) {
 				}
 			}
 
-			// Automatically set the image as thumbnail if theres only one
-			// Save thumbnail
 			if (eventImages && eventImages.length > 0) {
 				let selectedImage = null;
 
@@ -168,7 +214,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 	return (
 		<div className='w-full'>
 			<form
-				className='flex flex-col font-dm px-6 min-h-[800px]'
+				className='flex flex-col font-dm px-6 min-h-[800px] pb-12'
 				onSubmit={handleSubmit}>
 				<div className='flex flex-col '>
 					<span className='font-dm text-md'>Details</span>
@@ -181,11 +227,16 @@ function EventForm({ mode = 'create', initialData = null }) {
 							maxLength={40}
 							onChange={(e) => setTitle(e.target.value)}
 						/>
-						<BodyTextInput
+						{/* <BodyTextInput
 							title='Description'
 							value={description}
 							maxLength={110}
 							onChange={(e) => setDescription(e.target.value)}
+						/> */}
+						<RichTextEditor
+							title={`Description`}
+							value={description}
+							onChange={setDescription}
 						/>
 						<div className='flex w-full items-center justify-end space-x-2 mt-2 text-sm'>
 							<input
@@ -208,22 +259,33 @@ function EventForm({ mode = 'create', initialData = null }) {
 					</div>
 				</div>
 
-				<div className='flex flex-col'>
+				<div className='flex flex-col space-y-3'>
 					<span className='font-dm text-md'>Dates & Times</span>
-					<div className='flex flex-col space-y-4 px-4 py-3'>
-						<DateTimeFields
+
+					{!isRecurring ? (
+						<>
+							<div className='flex flex-col space-y-4 px-4'>
+								<DateTimeFields
+									dateTimeData={dateTimeData}
+									setDateTimeData={setDateTimeData}
+									deleteEventDate={deleteEventDate}
+								/>
+							</div>
+						</>
+					) : (
+						<SelectEventDays
 							dateTimeData={dateTimeData}
 							setDateTimeData={setDateTimeData}
 							deleteEventDate={deleteEventDate}
 						/>
-					</div>
+					)}
 				</div>
 
 				{eventID && (
 					<div className='flex flex-col mt-6'>
 						<span className='font-dm text-md'>Event Images</span>
 						<span className='font-dm text-sm text-black'>
-							Selected image determines the event thumbnail
+							Checked image determines the event thumbnail
 						</span>
 
 						<div className='flex flex-col space-y-4 px-4 py-3'>
@@ -236,7 +298,7 @@ function EventForm({ mode = 'create', initialData = null }) {
 					</div>
 				)}
 
-				<div className='flex w-full justify-end space-x-4'>
+				<div className='flex w-full justify-end space-x-4 mt-8'>
 					<button
 						type='reset'
 						className='outline-none clickable px-3 py-1'

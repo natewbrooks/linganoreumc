@@ -9,9 +9,10 @@ function CalendarList({ month, year }) {
 	useEffect(() => {
 		const dailyMap = {};
 
+		// Step 1: One-off events
 		eventDates.forEach((dateObj) => {
 			const [y, m, d] = dateObj.date.split('-').map(Number);
-			const eventDate = new Date(y, m - 1, d);
+			const eventDate = new Date(y, m - 1, d); // ✅ local date parsing
 
 			if (eventDate.getMonth() !== month || eventDate.getFullYear() !== year) return;
 
@@ -28,21 +29,87 @@ function CalendarList({ month, year }) {
 					return {
 						id: event.id,
 						title: event.title,
-						time: t.time,
+						time: t.time, // ❗ leave as-is
 						date: eventDate,
 						dateTime: fullDateTime,
 						isCancelled: dateObj.isCancelled,
 					};
 				});
 
-			const dateKey = eventDate.toISOString().split('T')[0]; // YYYY-MM-DD
-			if (!dailyMap[dateKey]) {
-				dailyMap[dateKey] = [];
-			}
-			dailyMap[dateKey].push(...times);
+			const uniqueMap = new Map();
+			times.forEach((entry) => {
+				const key = `${entry.id}-${entry.time}`;
+				if (!uniqueMap.has(key)) uniqueMap.set(key, entry);
+			});
+			const uniqueTimes = Array.from(uniqueMap.values());
+
+			const dateKey = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(
+				2,
+				'0'
+			)}-${String(eventDate.getDate()).padStart(2, '0')}`; // ✅ local-safe dateKey
+			if (!dailyMap[dateKey]) dailyMap[dateKey] = [];
+			dailyMap[dateKey].push(...uniqueTimes);
 		});
 
-		// Sort each day's events and convert to array of [dateKey, events]
+		// Step 2: Recurring events
+		events
+			.filter((e) => e.isRecurring)
+			.forEach((event) => {
+				const recurringDateEntries = eventDates.filter((d) => d.eventID === event.id);
+				if (!recurringDateEntries.length) return;
+
+				const [rYear, rMonth, rDay] = recurringDateEntries[0].date.split('-').map(Number);
+				const recurringStartDate = new Date(rYear, rMonth - 1, rDay);
+
+				const daysInMonth = new Date(year, month + 1, 0).getDate();
+				for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+					const thisDate = new Date(year, month, dayNum);
+					if (thisDate < recurringStartDate) continue;
+
+					const dayOfWeek = thisDate.getDay();
+
+					// Find the eventDate for this weekday
+					const dateObj = recurringDateEntries.find((d) => {
+						const [dy, dm, dd] = d.date.split('-').map(Number);
+						const dDate = new Date(dy, dm - 1, dd);
+						return dDate.getDay() === dayOfWeek;
+					});
+
+					if (!dateObj) continue;
+
+					const times = eventTimes
+						.filter((t) => t.eventDateID === dateObj.id)
+						.map((t) => {
+							const [hours, minutes] = t.time.split(':').map(Number);
+							const fullDateTime = new Date(thisDate);
+							fullDateTime.setHours(hours, minutes, 0, 0);
+
+							return {
+								id: event.id,
+								title: event.title,
+								time: t.time,
+								date: thisDate,
+								dateTime: fullDateTime,
+								isCancelled: dateObj.isCancelled,
+							};
+						});
+
+					const uniqueMap = new Map();
+					times.forEach((entry) => {
+						const key = `${entry.id}-${entry.time}`;
+						if (!uniqueMap.has(key)) uniqueMap.set(key, entry);
+					});
+					const uniqueTimes = Array.from(uniqueMap.values());
+
+					const dateKey = `${thisDate.getFullYear()}-${String(thisDate.getMonth() + 1).padStart(
+						2,
+						'0'
+					)}-${String(thisDate.getDate()).padStart(2, '0')}`;
+					if (!dailyMap[dateKey]) dailyMap[dateKey] = [];
+					dailyMap[dateKey].push(...uniqueTimes);
+				}
+			});
+
 		const sorted = Object.entries(dailyMap)
 			.map(([dateStr, entries]) => {
 				entries.sort((a, b) => a.dateTime - b.dateTime);
@@ -50,11 +117,24 @@ function CalendarList({ month, year }) {
 			})
 			.sort((a, b) => new Date(a[0]) - new Date(b[0]));
 
-		setGroupedByDay(Object.fromEntries(sorted));
+		// Deduplicate final entries per dateKey (event.id + time)
+		const deduped = sorted.map(([dateKey, entries]) => {
+			const seen = new Set();
+			const uniqueEntries = entries.filter((entry) => {
+				const key = `${entry.id}-${entry.time}`;
+				if (seen.has(key)) return false;
+				seen.add(key);
+				return true;
+			});
+			return [dateKey, uniqueEntries];
+		});
+
+		setGroupedByDay(Object.fromEntries(deduped));
 	}, [month, year, events, eventDates, eventTimes]);
 
 	function formatHeader(dateStr) {
-		const date = new Date(dateStr);
+		const [y, m, d] = dateStr.split('-').map(Number); // ✅ local-safe parsing
+		const date = new Date(y, m - 1, d);
 		const weekday = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
 		const month = date.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
 		const day = date.getDate();

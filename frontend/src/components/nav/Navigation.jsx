@@ -23,13 +23,13 @@ function Navigation() {
 			<div className={`z-30 w-full flex justify-around bg-red outline-4 outline-bkg h-[60px] mt-8`}>
 				<div className={`relative right-10 select-none`}>
 					<div
-						className={`z-10 relative -top-5 bg-red outline-4 outline-bkg -skew-x-[30deg] w-fit px-6 py-1`}>
+						className={`z-10 relative select-none -top-5 bg-red outline-4 outline-bkg -skew-x-[30deg] w-fit px-6 py-1`}>
 						<Link
 							to={`/`}
-							className={`group`}>
+							className={`group `}>
 							<Logo
 								width={250}
-								className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1] transition duration-200 skew-x-[30deg] translate-x-1 -translate-y-1`}
+								className={`select-none group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1] transition duration-200 skew-x-[30deg] translate-x-1 -translate-y-1`}
 							/>
 						</Link>
 					</div>

@@ -106,7 +106,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='flex flex-col space-y-4 font-dm px-6 h-full  pb-12'>
+			className='flex flex-col space-y-4 font-dm px-6 h-full pb-12'>
 			{/* Scrape Section */}
 			<div className={`mb-10`}>
 				<div className='font-dm mb-1'>YouTube URL</div>
@@ -153,9 +153,9 @@ function SermonForm({ mode = 'create', initialData = null }) {
 					onChange={(e) => setBody(e.target.value)}
 				/> */}
 				<RichTextEditor
+					title={'Transcript'}
 					value={body}
 					onChange={setBody}
-					title={'Transcript'}
 				/>
 				<TextInput
 					title='Publish Date'
@@ -165,7 +165,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 					onChange={(e) => setPublishDate(e.target.value)}
 				/>
 
-				<div className='flex justify-end space-x-4'>
+				<div className='flex justify-end space-x-4 mt-8'>
 					<button
 						type='button'
 						onClick={handleReset}

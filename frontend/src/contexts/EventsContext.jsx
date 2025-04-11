@@ -69,17 +69,36 @@ export const EventsProvider = ({ children }) => {
 	};
 
 	// Find all event dates associated with this event ID
-	const fetchEventTimesByEventId = (eventId) => {
-		const matchingDates = eventDates.filter((date) => date.eventID === eventId);
+	const fetchEventTimesByEventId = async (eventId) => {
+		try {
+			// First, get all event dates associated with this event
+			const dateRes = await fetch(`/api/events/dates/${eventId}/`);
+			if (!dateRes.ok) throw new Error('Failed to fetch event dates');
+			const eventDates = await dateRes.json();
 
-		const matchingTimes = eventTimes
-			.filter((time) => matchingDates.some((date) => date.id === time.eventDateID))
-			.map((time) => ({
-				eventDateID: time.eventDateID,
-				time: time.time,
+			// For each date, fetch times
+			const timeFetches = eventDates.map((date) =>
+				fetch(`/api/events/times/${date.id}/`).then((res) => {
+					if (!res.ok) throw new Error(`Failed to fetch times for date ID ${date.id}`);
+					return res.json();
+				})
+			);
+
+			// Resolve all time fetches in parallel
+			const allTimes = await Promise.all(timeFetches);
+
+			// Flatten and annotate times with eventDateID
+			const mergedTimes = allTimes.flat().map((t) => ({
+				eventDateID: t.eventDateID,
+				time: t.time,
 			}));
 
-		return matchingTimes;
+			return mergedTimes;
+		} catch (err) {
+			console.error('Error in fetchEventTimesByEventId:', err);
+			setError?.(err.message);
+			return [];
+		}
 	};
 
 	const fetchEventImages = async (eventID) => {
@@ -99,6 +118,20 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
+	const getShortDayOfWeek = (dateStr) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const date = new Date(year, month - 1, day); // Local time
+		return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()];
+	};
+
+	const getLongDayOfWeek = (dateStr) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const date = new Date(year, month - 1, day); // Local time
+		return ['SUNDAYS', 'MONDAYS', 'TUESDAYS', 'WEDNESDAYS', 'THURSDAYS', 'FRIDAYS', 'SATURDAYS'][
+			date.getDay()
+		];
+	};
+
 	return (
 		<EventsContext.Provider
 			value={{
@@ -112,6 +145,8 @@ export const EventsProvider = ({ children }) => {
 				fetchEventTimesByDateId,
 				fetchEventTimesByEventId,
 				fetchEventImages,
+				getShortDayOfWeek,
+				getLongDayOfWeek,
 			}}>
 			{children}
 		</EventsContext.Provider>
