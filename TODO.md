@@ -1,5 +1,10 @@
 ## TODO FINISH WITH MVP
 
+- Make style consistent on backend
+- Make everything responsive
+- Do the events page styling
+- Make recurring events work..........
+
 ### Frontend Changes
 
 - Add event/sermon pages that display the data
@@ -7,6 +12,7 @@
 - Make Recurring Events work on [Calendar](frontend/src/pages/Calendar.jsx)
 - RESPONSIVE MOBILE!!
 - Add responsive navigation on admin panel
+- Bug where saving date times when one is cancelled overrides and neither shows up
 
 ### Admin Panel Changes
 

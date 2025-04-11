@@ -3,7 +3,7 @@ import { useEvents } from '../contexts/EventsContext';
 import { useSettings } from '../contexts/SettingsContext';
 import Header from '../components/home/Header';
 import Motto from '../components/home/Motto';
-import LivestreamEmbed from '../components/home/LivestreamEmbed';
+import LivestreamEmbed from '../components/media/LivestreamEmbed';
 import JoinUs from '../components/home/JoinUs';
 import UpcomingEvents from '../components/home/UpcomingEvents';
 
@@ -116,7 +116,7 @@ function Home() {
 			{/* Header */}
 			<Header activeHeaderImage={activeHeaderImage} />
 
-			<div className='flex flex-col space-y-72'>
+			<div className='flex flex-col space-y-50 lg:space-y-72'>
 				{/* Motto Banner */}
 				<Motto
 					title={mottoTitle}
@@ -155,24 +155,6 @@ function Home() {
 					subtext={homeSettings.upcomingEvents?.text?.subtext || ''}
 					events={upcomingEvents}
 				/>
-
-				{/* <div className='flex flex-col px-4 py-6'>
-					<h2 className='text-2xl font-bold'>
-						{homeSettings.displayedSermons?.text?.title || 'Sermons'}
-					</h2>
-					<p className='text-gray-600'>{homeSettings.displayedSermons?.text?.subtext || ''}</p>
-					{displayedSermons.length > 0 ? (
-						displayedSermons.map((sermon, index) => (
-							<div
-								key={sermon.eventID || index}
-								className='border p-2 my-2'>
-								{events.find((e) => e.id === sermon.eventID)?.title || 'Unknown Sermon'}
-							</div>
-						))
-					) : (
-						<p className='text-darkred'>No displayed sermons.</p>
-					)}
-				</div> */}
 			</div>
 		</div>
 	);

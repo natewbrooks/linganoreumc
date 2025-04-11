@@ -114,7 +114,7 @@ export default function SelectImageGrid({
 				})
 			);
 
-			const updated = images.filter((img) => img?.url?.split('/').pop() !== cleanName); // ✅ filter, not map
+			const updated = images.filter((img) => img?.url?.split('/').pop() !== cleanName);
 			onChangeImages(updated);
 		} catch (error) {
 			console.error('Error deleting image:', error);
@@ -156,7 +156,7 @@ export default function SelectImageGrid({
 				type='button'
 				className='w-full h-full items-center'
 				onClick={() => onChangeImages([...images, { url: '', active: false }])}>
-				<div className='font-dm text-sm cursor-pointer hover:opacity-50'>{`Add ${label}...`}</div>
+				<div className='font-dm text-sm clickable '>{`Add ${label}...`}</div>
 			</button>
 		</div>
 	);

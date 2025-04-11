@@ -1,38 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useEvents } from '../../../contexts/EventsContext';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 function CalendarListItemEvent({ event, date, time, isPast }) {
-	function formatTime(timeStr) {
-		const [hours, minutes] = timeStr.split(':').map(Number);
-		const period = hours >= 12 ? 'PM' : 'AM';
-		const formattedHours = hours % 12 || 12; // Convert 0 (midnight) to 12
-		const formattedMinutes = minutes === 0 ? ':00' : `:${minutes}`; // Omit :00
-
-		return `${formattedHours}${formattedMinutes} ${period}`;
-	}
+	const { formatTime } = useSettings();
 
 	return (
-		<>
-			<Link
-				key={time}
-				to={`/event/${event.id}`}
-				className={`flex items-center font-dm ${
-					event.isCancelled
-						? 'bg-red text-bkg border-red'
-						: isPast
-						? 'border-darkred bg-darkred/10'
-						: 'border-red bg-red/10'
-				} 
-				} border-l-4 px-2 py-3 hover:opacity-50 justify-between`}>
-				<div className='mr-2 text-md whitespace-nowrap'>
-					{event.isCancelled ? 'EVENT CANCELLED' : formatTime(time)}
-				</div>
-				<div className={`${event.isCancelled ? 'line-through' : ''} text-md leading-3 text-end`}>
-					{event.title}
-				</div>
-			</Link>
-		</>
+		<Link
+			to={`/events/${event.id}`}
+			className={`flex w-full items-center justify-between font-dm px-2 py-3 border-l-4 clickable ${
+				event.isCancelled
+					? 'bg-darkred text-bkg border-darkred'
+					: isPast
+					? 'border-darkred bg-darkred/10'
+					: 'border-red bg-tp'
+			}`}>
+			{/* Time */}
+			<div className='text-md flex-shrink-0 pr-4'>
+				{event.isCancelled ? 'EVENT CANCELLED' : formatTime(time)}
+			</div>
+
+			{/* Title */}
+			<div
+				className={`text-md leading-5 text-left w-fit ${event.isCancelled ? 'line-through' : ''}`}>
+				{event.title}
+			</div>
+		</Link>
 	);
 }
 

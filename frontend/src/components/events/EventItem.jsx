@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FaClock } from 'react-icons/fa';
 import { useEvents } from '../../contexts/EventsContext';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../../contexts/SettingsContext';
 
 function EventItem({ event, previous }) {
-	const { eventDates, eventTimes, formatDate, formatTime } = useEvents();
+	const { eventDates, eventTimes } = useEvents();
+	const { formatDate, formatTime } = useSettings();
 	const [timesMap, setTimesMap] = useState({});
 
 	useEffect(() => {
@@ -28,7 +30,7 @@ function EventItem({ event, previous }) {
 	}, [eventDates, eventTimes, event.id]);
 
 	return (
-		<div className='flex flex-col w-full hover:scale-[102%] active:scale-[100%] cursor-pointer hover:opacity-50'>
+		<div className='flex flex-col w-full hover:scale-[1.02] hover:opacity-50 active:scale-[1] '>
 			<div
 				className={`flex flex-row w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
 					previous ? 'text-darkred' : 'text-darkred bg-accent'
@@ -52,15 +54,15 @@ function EventItem({ event, previous }) {
 							return (
 								<React.Fragment key={dateObj.id}>
 									{idx > 0 && <span className=''>|</span>}
-									<span className='skew-x-[30deg]'>{`${date} @ ${timeString}`}</span>
+									<div className='skew-x-[30deg]'>{`${date} @ ${timeString}`}</div>
 								</React.Fragment>
 							);
 						})}
 			</div>
 
 			<Link
-				to={`/event/${event.id}`}
-				className='flex flex-row  items-center  bg-tp relative -right-4 sm:right-0'>
+				to={`/events/${event.id}`}
+				className='flex flex-row items-center bg-tp relative -right-4 sm:right-0 '>
 				<div
 					className={`font-dm p-1 py-2 text-bkg min-w-[200px] overflow-hidden text-center -left-3 text-lg relative ${
 						previous ? 'bg-darkred' : 'bg-red'

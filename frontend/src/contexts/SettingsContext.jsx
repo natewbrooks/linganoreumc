@@ -18,6 +18,30 @@ const fetchSettings = async (endpoint) => {
 	}
 };
 
+function formatLongDate(dateStr) {
+	const date = new Date(dateStr);
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: '2-digit',
+	});
+}
+
+function formatDate(dateStr) {
+	const [year, month, day] = dateStr.split('-').map(Number);
+	return `${month}/${day}/${String(year).slice(-2)}`;
+}
+
+function formatTime(timeStr) {
+	const [hour, minute] = timeStr.split(':').map(Number);
+	const dateObj = new Date(0, 0, 0, hour, minute);
+	return dateObj.toLocaleString('en-US', {
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+	});
+}
+
 // Context provider for multiple settings types
 export const SettingsProvider = ({ children }) => {
 	const [settings, setSettings] = useState({
@@ -47,5 +71,9 @@ export const SettingsProvider = ({ children }) => {
 		fetchAllSettings();
 	}, []);
 
-	return <SettingsContext.Provider value={{ settings }}>{children}</SettingsContext.Provider>;
+	return (
+		<SettingsContext.Provider value={{ settings, formatLongDate, formatDate, formatTime }}>
+			{children}
+		</SettingsContext.Provider>
+	);
 };

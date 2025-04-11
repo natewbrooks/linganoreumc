@@ -64,7 +64,7 @@ export default function SelectImageDropdown({
 			className='relative flex flex-col w-full items-center justify-center text-center'>
 			{/* Clickable image preview */}
 			<div
-				className='font-dm relative border-l-4 border-red bg-tp cursor-pointer h-[100px] w-full items-center justify-center flex'
+				className='font-dm relative border-l-4 border-red bg-tp clickable h-[100px] w-full items-center justify-center flex'
 				onClick={() => setEnabled(true)}>
 				{selectedImage ? (
 					<ImageWithDimensions
@@ -90,7 +90,7 @@ export default function SelectImageDropdown({
 							/>
 						</div>
 						{(!selectedImage || imageLoadFailed || !disableRemove) && (
-							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
+							<div className='bg-red p-1 clickable '>
 								<FaTrash
 									size={12}
 									onClick={(e) => {
@@ -105,7 +105,7 @@ export default function SelectImageDropdown({
 				) : (
 					<>
 						{toggleableActive && selectedImage && (
-							<div className='bg-gray-500 p-1 cursor-pointer hover:opacity-50'>
+							<div className='bg-gray-500 p-1 clickable '>
 								<FaMinus
 									size={12}
 									onClick={(e) => {
@@ -117,7 +117,7 @@ export default function SelectImageDropdown({
 							</div>
 						)}
 						{(!selectedImage || imageLoadFailed || !disableRemove) && (
-							<div className='bg-red p-1 cursor-pointer hover:opacity-50'>
+							<div className='bg-red p-1 clickable '>
 								<FaTrash
 									size={12}
 									onClick={(e) => {
@@ -150,7 +150,7 @@ export default function SelectImageDropdown({
 
 							<button
 								type='button'
-								className='font-dm cursor-pointer'
+								className='font-dm clickable'
 								onClick={() => {
 									fileInputRef.current && fileInputRef.current.click();
 								}}>
@@ -191,7 +191,7 @@ export default function SelectImageDropdown({
 											<img
 												src={filePath}
 												alt={`upload-${idx}`}
-												className='object-cover h-24 w-full cursor-pointer hover:opacity-75'
+												className='object-cover h-24 w-full clickable hover:opacity-75'
 												onClick={() => {
 													setSelectedImage(filePath);
 													onSelectedImageChange && onSelectedImageChange(filePath);
@@ -199,7 +199,7 @@ export default function SelectImageDropdown({
 												}}
 											/>
 											<FaPlus
-												className='absolute top-0 right-0 rotate-45 text-bkg outline-2 outline-red bg-red cursor-pointer hover:opacity-75 hover:scale-[102%] active:scale-[100%]'
+												className='absolute top-0 right-0 rotate-45 text-bkg outline-2 outline-red bg-red clickable hover:opacity-75  '
 												onClick={(e) => {
 													e.stopPropagation();
 													handleDeleteImage && handleDeleteImage(filename);

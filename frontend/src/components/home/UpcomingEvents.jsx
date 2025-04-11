@@ -49,21 +49,21 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 
 	return (
 		<div className={`relative min-h-[600px] md:min-h-[0px] md:h-[300px]`}>
-			<div className='flex flex-col font-dm px-4 md:px-30 mb-4'>
+			<div className='flex flex-col font-dm px-4 md:px-30 mb-4 relative -top-4 page-wrapper'>
 				<h2 className='text-xl'>{title}</h2>
-				<p className='text-4xl'>{subtext}</p>
+				<p className='text-3xl'>{subtext}</p>
 			</div>
 			<div className='flex flex-col relative'>
-				<div className={`hidden md:block`}>
+				<div className={`hidden md:block relative`}>
 					<div
 						className={`absolute -left-30 -bottom-16 -skew-x-[30deg]  w-full z-10 bg-red py-8`}
 					/>
-					<div className='flex space-x-2 px-40  w-full text-bkg justify-between font-dm '>
+					<div className='flex space-x-2 px-40  w-full text-bkg justify-between font-dm page-wrapper '>
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
-								to={`/event/${event.id}`}
+								to={`/events/${event.id}`}
 								key={event.id || index}
-								className='relative w-[300px] flex justify-center cursor-pointer group'>
+								className='relative w-[300px] flex justify-center group'>
 								<div
 									className={`absolute z-10 p-2 text-center leading-4 w-[220px] ${
 										placeholder ? 'pointer-events-none' : 'group-hover:opacity-50'
@@ -79,7 +79,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 								<div
 									className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 										!placeholder
-											? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
+											? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 											: ''
 									}`}>
 									<div className='h-[150px] overflow-hidden'>
@@ -88,7 +88,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 										) : (
 											<img
 												src={thumbnailMap[event.id] || BKG}
-												className='w-full h-full object-cover object-center'
+												className='w-full h-full bg-cover bg-center object-cover object-center'
 												alt='Event'
 											/>
 										)}
@@ -104,14 +104,14 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 
 					<div className={`flex flex-col`}>
 						<div className='grid grid-cols-2 gap-x-2 px-4 text-bkg justify-between font-dm '>
-							{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
+							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => (
 								<Link
-									to={`/event/${event.id}`}
+									to={`/events/${event.id}`}
 									key={event.id || index}
-									className={`relative flex justify-center cursor-pointer group `}>
+									className={`relative flex justify-center clickable  `}>
 									<div
 										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
-											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
+											placeholder ? ' pointer-events-none' : ''
 										}`}>
 										<h3 className='text-lg truncate overflow-hidden whitespace-nowrap'>
 											{event.title.toUpperCase() || 'Unknown Event'}
@@ -123,7 +123,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									<div
 										className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 											!placeholder
-												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
+												? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 												: ''
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
@@ -145,14 +145,14 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 						<div className={`absolute top-60 w-full z-10 bg-red py-8`} />
 
 						<div className='relative top-60 grid grid-cols-2 gap-x-2 px-4 text-bkg justify-between font-dm '>
-							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => (
+							{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
 								<Link
-									to={`/event/${event.id}`}
+									to={`/events/${event.id}`}
 									key={event.id || index}
-									className={`relative flex justify-center cursor-pointer group  `}>
+									className={`relative flex justify-center clickable group  `}>
 									<div
 										className={`absolute z-10 p-2 text-center leading-4 w-[200px] ${
-											placeholder ? ' pointer-events-none' : 'group-hover:opacity-50'
+											placeholder ? ' pointer-events-none' : 'group-'
 										}`}>
 										<h3 className='text-lg truncate overflow-hidden whitespace-nowrap'>
 											{event.title.toUpperCase() || 'Unknown Event'}
@@ -164,7 +164,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 									<div
 										className={`absolute right-0 top-[60px] skew-x-[5deg] ${
 											!placeholder
-												? 'group-hover:opacity-50 group-hover:scale-[102%] group-active:scale-[100%]'
+												? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 												: ''
 										}`}>
 										<div className='h-[150px] overflow-hidden'>
@@ -188,8 +188,8 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 
 			<Link
 				to={'/events/'}
-				className={`w-fit pl-8 absolute bottom-0 sm:-bottom-4 bg-red py-2 pr-20 -right-8  -skew-x-[30deg] font-dm text-bkg cursor-pointer group hover:scale-[102%] active:scale-[100%] `}>
-				<div className={`skew-x-[30deg] text-lg group-hover:opacity-50 `}>VIEW ALL EVENTS</div>
+				className={`w-fit pl-8 absolute bottom-0 bg-red py-2 pr-20 -right-8  clickable-l-skew font-dm text-bkg group   `}>
+				<div className={`skew-r text-lg`}>VIEW ALL EVENTS</div>
 			</Link>
 		</div>
 	);

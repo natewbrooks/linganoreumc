@@ -24,7 +24,7 @@ function SermonItem({ sermon }) {
 	return (
 		<Link
 			to={`/sermons/${sermon.id}`}
-			className='font-dm w-full outline-0 cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[100%]'>
+			className='font-dm w-full outline-0 clickable'>
 			{/* Top Info Panel */}
 			<div className='text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] flex items-center space-x-4'>
 				<span className='skew-x-[30deg]'>Published: {formattedPublishDate}</span>
@@ -45,11 +45,12 @@ function SermonItem({ sermon }) {
 					<p className='skew-x-[30deg]'>{sermon.title}</p>
 				</div>
 
-				{/* Description */}
-				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
-					<p className='skew-x-[30deg]'>
-						{sermon.body?.length > 100 ? `${sermon.body.slice(0, 100)}...` : sermon.body}
-					</p>
+				{/* Body */}
+				<div className='p-2 pl-4 font-dm items-center text-darkred text-lg overflow-hidden max-w-[600px] max-h-[4.5rem] leading-snug'>
+					<div
+						className='skew-x-[30deg] prose prose-sm line-clamp-1 whitespace-nowrap overflow-hidden'
+						dangerouslySetInnerHTML={{ __html: sermon.body }}
+					/>
 				</div>
 			</div>
 		</Link>

@@ -62,14 +62,14 @@ function CalendarList({ month, year }) {
 	}
 
 	return (
-		<div className='w-full flex flex-col space-y-6 py-8'>
+		<div className='flex flex-col space-y-6 py-8 w-full'>
 			{Object.keys(groupedByDay).length === 0 ? (
 				<div className='text-center text-darkred font-dm italic'>No events this month.</div>
 			) : (
 				Object.entries(groupedByDay).map(([dateStr, entries]) => (
 					<div
 						key={dateStr}
-						className='flex flex-col space-y-1'>
+						className='flex flex-col space-y-1 w-full'>
 						<div className='font-dm text-md'>{formatHeader(dateStr)}</div>
 						{entries.map((entry, index) => {
 							const now = new Date();

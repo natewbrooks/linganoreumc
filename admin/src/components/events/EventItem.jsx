@@ -35,7 +35,7 @@ function EventItem({ id, title, description }) {
 	return (
 		<Link
 			to={`/events/${id}`}
-			className='font-dm w-full cursor-pointer hover:opacity-50 hover:scale-[102%] active:scale-[100%]'>
+			className='font-dm w-full clickable   '>
 			{/* Date/Time row */}
 			<div className='text-sm text-darkred bg-accent px-2 py-0.5 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2'>
 				{eventDates.map((dateObj, idx) => {

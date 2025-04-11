@@ -37,13 +37,13 @@ function EditSermon() {
 	if (!editData) return <div>Loading sermon details...</div>;
 
 	return (
-		<div className='flex flex-col w-full'>
+		<div className='flex flex-col w-full min-h-[800px]'>
 			<div className='flex space-x-1 items-center justify-between'>
 				<h1 className='text-2xl font-dm mb-4'>Edit Sermon</h1>
 				<Link
 					to='/sermons/'
 					className='font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 -skew-x-[30deg]'>
-					<div className='flex space-x-1 skew-x-[30deg] items-center'>
+					<div className='flex space-x-1 skew-x-[30deg] items-center hover:opacity-50 hover:scale-[1.02] active:scale-[1]'>
 						<FaArrowLeft size={16} />
 						<div>Return</div>
 					</div>

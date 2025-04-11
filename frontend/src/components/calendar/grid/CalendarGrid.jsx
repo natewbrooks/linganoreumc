@@ -54,7 +54,7 @@ function CalendarGrid({ month, year }) {
 	}
 
 	return (
-		<div className='w-full flex flex-col justify-center '>
+		<div className='w-full flex flex-col justify-center'>
 			<div className='grid grid-cols-7 gap-1 text-center w-full font-dm text-md pt-2'>
 				{days.map((day, i) => (
 					<div key={i}>{day}</div>

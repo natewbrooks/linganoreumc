@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useEvents } from '../../../contexts/EventsContext';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 function CalendarGridItemEvent({ event, date, time, isPast }) {
-	function formatTime(timeStr) {
-		const [hours, minutes] = timeStr.split(':').map(Number);
-		const period = hours >= 12 ? 'PM' : 'AM';
-		const formattedHours = hours % 12 || 12; // Convert 0 (midnight) to 12
-		const formattedMinutes = minutes === 0 ? '' : `:${minutes}`; // Omit :00
-
-		return `${formattedHours}${formattedMinutes} ${period}`;
-	}
+	const { formatTime } = useSettings();
 
 	console.log(event);
 
@@ -18,14 +12,14 @@ function CalendarGridItemEvent({ event, date, time, isPast }) {
 		<>
 			<Link
 				key={time}
-				to={`/event/${event.id}`}
+				to={`/events/${event.id}`}
 				className={`flex ${
 					event.isCancelled
-						? 'flex-col space-y-1 bg-red text-bkg text-center'
+						? 'flex-col space-y-1 bg-darkred text-bkg text-center clickable'
 						: isPast
 						? 'border-darkred bg-darkred/10'
 						: 'border-red bg-red/10 justify-between'
-				} items-center border-l-4 px-2 py-1 hover:opacity-50`}>
+				} items-center border-l-4 px-2 py-1 `}>
 				<div className={` mr-2 text-sm whitespace-nowrap`}>
 					{event.isCancelled ? 'EVENT CANCELLED' : formatTime(time)}
 				</div>

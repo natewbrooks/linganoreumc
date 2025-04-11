@@ -9,6 +9,7 @@
 
 @theme {
   --color-bkg: #FFF8EF;
+  --color-dark: #010100;
   --color-red: #AD2C3F;
   --color-darkred: #47121A;
   --color-accent: #FFCC00;
@@ -32,15 +33,70 @@
 }
 
 
-#parallelogram {
-  padding: 8px;
-  display: inline-block;
-  background: #AD2C3F;
+:root {
+  background-color: #FFF8EF;
+}
+
+.skew-r {
+  transform: skewX(30deg);
+}
+
+.skew-l {
   transform: skewX(-30deg);
 }
 
-:root {
-  background-color: #FFF8EF;
+.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.clickable:hover {
+  transform: scale(1.02);
+  opacity: 0.5;
+}
+
+.clickable:active {
+  transform: scale(1);
+}
+
+.clickable-l-skew {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  transform: skewX(-30deg);
+}
+
+.clickable-l-skew:hover {
+  transform: skewX(-30deg);
+  opacity: 0.5;
+}
+
+/* Right skew */
+.clickable-r-skew {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  transform: skewX(30deg);
+}
+
+.clickable-r-skew:hover {
+  transform: skewX(30deg);
+  opacity: 0.5;
+}
+
+
+
+.page-wrapper {
+  width: 100%;
+  margin: auto;
+  max-width: 1400px;
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+.page-l-wrapper {
+  width: 100%;
+  margin-left: auto;
+  max-width: 1400px;
+  padding-right: 8px;
 }
 
 /*

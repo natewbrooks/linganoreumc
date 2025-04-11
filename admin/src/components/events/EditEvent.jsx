@@ -68,8 +68,8 @@ function EditEvent() {
 				<h1 className='text-2xl font-dm mb-4'>Edit Event</h1>
 				<Link
 					to='/events/'
-					className='font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 -skew-x-[30deg]'>
-					<div className='flex space-x-1 skew-x-[30deg] items-center'>
+					className='font-dm text-bkg text-md text-end w-fit bg-red px-3 py-1 clickable-r-skew'>
+					<div className='flex space-x-1 skew-l items-center'>
 						<FaArrowLeft size={16} />
 						<div>Return</div>
 					</div>

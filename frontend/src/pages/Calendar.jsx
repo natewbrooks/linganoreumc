@@ -48,27 +48,27 @@ function Calendar() {
 		});
 	};
 
-	const changeMode = () => {
-		setMode((prevMode) => (prevMode === 'grid' ? 'list' : 'grid'));
+	const changeMode = (modeStr) => {
+		setMode(modeStr);
 	};
 
 	return (
-		<div className={`flex flex-col w-full my-8`}>
+		<div className={`flex flex-col w-full my-8 min-h-[800px]`}>
 			{/* Title header thing */}
-			<div className={`flex flex-col jusify-center`}>
+			<div className={`flex flex-col jusify-center `}>
 				<div className={`w-full flex justify-center items-center`}>
 					<div className={`text-black text-xl font-dm`}>CALENDAR</div>
 				</div>
 				<div className={`flex justify-around items-center bg-red w-full py-2 text-bkg`}>
 					<button
 						onClick={() => returnToToday()}
-						className={`bg-bkg rounded-full hover:opacity-50 w-[80px] sm:w-[100px] font-dm text-red text-sm sm:text-lg cursor-pointer`}>
+						className={`bg-bkg rounded-full  w-[80px] sm:w-[100px] font-dm text-red text-sm sm:text-lg clickable`}>
 						TODAY
 					</button>
 					<div className={`flex justify-center text-center space-x-4 text-2xl`}>
 						<button
 							onClick={() => previousMonth()}
-							className={`cursor-pointer`}>{`<`}</button>
+							className={`clickable`}>{`<`}</button>
 						<h1 className={`block sm:hidden font-dm w-[120px] md:w-[200px]`}>
 							{monthNames[month].toUpperCase()}
 							<br />
@@ -80,34 +80,37 @@ function Calendar() {
 							{year}
 						</h1>
 						<button
-							className={`cursor-pointer`}
+							className={`clickable`}
 							onClick={() => nextMonth()}>{`>`}</button>
 					</div>
 					<div
 						className={`invisible sm:visible space-x-2 w-[80px] sm:w-[100px] font-dm text-sm sm:text-lg`}>
 						<button
-							onClick={() => changeMode()}
-							className={`${mode == 'grid' ? 'underline underline-offset-2' : ''} cursor-pointer`}>
+							onClick={() => changeMode('grid')}
+							className={`${mode == 'grid' ? 'underline underline-offset-4' : ''} clickable`}>
 							GRID
 						</button>
 						<span>|</span>
 						<button
-							onClick={() => changeMode()}
-							className={`${mode == 'list' ? 'underline underline-offset-2' : ''} cursor-pointer`}>
+							onClick={() => changeMode('list')}
+							className={`${mode == 'list' ? 'underline underline-offset-4' : ''} clickable`}>
 							LIST
 						</button>
 					</div>
 				</div>
 			</div>
 
-			<div className={`px-4 md:px-20 lg:px-30 `}>
-				<div className={`block sm:hidden`}>
+			<div className={`w-full`}>
+				<div className={`block sm:hidden mx-auto`}>
 					<CalendarList
 						month={month}
 						year={year}
 					/>
 				</div>
-				<div className={`hidden sm:block`}>
+				<div
+					className={`hidden sm:block mx-auto ${
+						mode === 'grid' ? 'page-wrapper' : 'max-w-[800px]'
+					} `}>
 					{mode === 'grid' ? (
 						<CalendarGrid
 							month={month}

@@ -39,7 +39,7 @@ export const getArchivedSermons = async (req, res) => {
 export const createSermon = async (req, res) => {
 	const { title, description, body, videoURL, publishDate } = req.body;
 
-	if (!title || !body || !videoURL) {
+	if (!title || !body) {
 		return res.status(400).json({ error: 'Required fields missing: title, body, or videoURL' });
 	}
 

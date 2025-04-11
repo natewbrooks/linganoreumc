@@ -30,13 +30,13 @@ function FeaturedEventItem({ event }) {
 
 	return (
 		<Link
-			to={`/event/${event.id}`}
-			className={`flex flex-col w-full h-[180px] skew-x-[10deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] ${
-				hasBackground ? 'bg-cover object-center object-cover bg-center' : 'bg-tp'
+			to={`/events/${event.id}`}
+			className={`flex flex-col w-full h-[180px] skew-x-[10deg] hover:scale-[1.02] hover:opacity-50 active:scale-[1]     ${
+				hasBackground ? 'bg-contain object-center object-contain bg-center' : 'bg-tp'
 			}`}
 			style={hasBackground ? { backgroundImage: `url(${thumbnailUrl})` } : {}}>
 			{!hasBackground ? (
-				<div className='font-dm text-center w-full -skew-x-[10deg] text-lg flex items-center justify-center h-full text-white'>
+				<div className='font-dm text-center w-full -skew-x-[10deg] text-lg flex items-center justify-center h-full text-darkred'>
 					{event.title}
 				</div>
 			) : (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Logo from '../../assets/header-logo.svg?react';
+import Logo from '../../assets/logos/logo-no-bkg-white.svg?react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import NavLink from './NavLink';
@@ -33,61 +33,83 @@ function Navigation() {
 	];
 
 	return (
-		<div
-			className='relative w-full flex justify-around bg-red h-[60px] mb-20'
-			onMouseLeave={() => setActiveDropdown(null)}>
-			{/* Logo */}
-			<div className='relative right-20'>
-				<Logo
-					width={400}
-					className='relative -top-10'
-				/>
-				<h3 className='absolute -bottom-13 right-18 font-newb text-xl'>Admin Dashboard</h3>
-			</div>
-
-			{/* Links */}
-			<div className='flex text-start w-fit space-x-6 items-center text-xl'>
-				{isAuthenticated ? (
-					<>
-						<NavLink link={{ title: 'Events', to: '/events/' }} />
-						<NavLink link={{ title: 'Sermons', to: '/sermons/' }} />
-						{isAdmin && (
-							<NavLinkDropdown
-								title='Manage'
-								links={manageLinks}
-								isActive={activeDropdown === 'Manage'}
-								onHover={() => setActiveDropdown('Manage')}
+		<>
+			<div
+				onMouseLeave={() => setActiveDropdown(null)}
+				className='w-full flex justify-around bg-red h-[60px]'>
+				{/* Logo */}
+				<div className='relative -right-40'>
+					<div
+						className={`z-10 relative -top-4 bg-red outline-4 outline-bkg -skew-x-[30deg] w-fit px-6 py-1`}>
+						<Link
+							to={`/settings/general/`}
+							className={`group`}>
+							<Logo
+								width={250}
+								className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1] transition duration-200 skew-x-[30deg] translate-x-1 -translate-y-1`}
 							/>
-						)}
-						<NavLinkDropdown
-							title='Settings'
-							links={settingsLinks}
-							isActive={activeDropdown === 'Settings'}
-							onHover={() => setActiveDropdown('Settings')}
-						/>
-						<span className={`text-darkred`}>|</span>
+						</Link>
+					</div>
+					<h3 className='absolute -bottom-13 right-8 font-newb text-xl'>Admin Dashboard</h3>
+				</div>
 
-						<NavLinkDropdown
-							title={
-								<div className='flex items-center space-x-2'>
-									<FaUserCircle />
-									<span>{user.username}</span>
-								</div>
-							}
-							links={[{ title: 'Account', to: '/manage/account/' }, ...accountLinks]}
-							isActive={activeDropdown === 'Account'}
-							onHover={() => setActiveDropdown('Account')}
-						/>
-					</>
-				) : (
-					<Link
-						to='http://localhost'
-						className='font-dm text-bkg text-2xl cursor-pointer'>
-						Exit
-					</Link>
-				)}
+				{/* Links */}
+				<div className='flex text-start w-full  items-center justify-end pr-40 text-xl bg-red '>
+					{isAuthenticated ? (
+						<>
+							<NavLink
+								onHover={() => setActiveDropdown(null)}
+								link={{ title: 'Events', to: '/events/' }}
+							/>
+							<NavLink
+								onHover={() => setActiveDropdown(null)}
+								link={{ title: 'Sermons', to: '/sermons/' }}
+							/>
+
+							<NavLinkDropdown
+								title={'Settings'}
+								links={settingsLinks}
+								doUnderline={true}
+								isActive={activeDropdown === 'Settings'}
+								onHover={() => setActiveDropdown('Settings')}
+							/>
+							{isAdmin && (
+								<NavLinkDropdown
+									title={'Manage'}
+									links={manageLinks}
+									doUnderline={true}
+									isActive={activeDropdown === 'Manage'}
+									onHover={() => setActiveDropdown('Manage')}
+								/>
+							)}
+							<span className={`text-darkred px-2`}>|</span>
+
+							<NavLinkDropdown
+								title={
+									<div className='flex items-center space-x-2 text-darkred'>
+										<FaUserCircle
+											size={20}
+											className={``}
+										/>
+										<span>{user.username}</span>
+									</div>
+								}
+								doUnderline={false}
+								links={[{ title: 'Account', to: '/manage/account/' }, ...accountLinks]}
+								isActive={activeDropdown === 'Account'}
+								onHover={() => setActiveDropdown('Account')}
+							/>
+						</>
+					) : (
+						<Link
+							to='http://localhost'
+							className='font-dm text-bkg text-2xl clickable'>
+							Exit
+						</Link>
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

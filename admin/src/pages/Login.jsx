@@ -68,7 +68,7 @@ function Login() {
 				<div className={`flex w-full justify-end`}>
 					<button
 						type='submit'
-						className={`font-dm flex bg-red px-4 text-bkg skew-x-[30deg] cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50`}>
+						className={`font-dm flex bg-red px-4 text-bkg skew-x-[30deg] clickable   `}>
 						<div className={`-skew-x-[30deg]`}>Submit</div>
 					</button>
 				</div>

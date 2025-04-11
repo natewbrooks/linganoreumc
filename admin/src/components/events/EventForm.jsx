@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEvents } from '../../contexts/EventsContext';
-import DateTimeFields from './DateTimeFields';
+import DateTimeFields from './DAteTimeFields';
 import TextInput from '../ui/TextInput';
 import BodyTextInput from '../ui/BodyTextInput';
 import SelectEventImages from './SelectEventImages';
@@ -239,14 +239,14 @@ function EventForm({ mode = 'create', initialData = null }) {
 				<div className='flex w-full justify-end space-x-4'>
 					<button
 						type='reset'
-						className='bg-tp py-1 px-2 outline-none cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'
+						className='outline-none clickable px-3 py-1'
 						onClick={() => setDateTimeData([{ date: '', times: [''] }])}>
 						Reset Fields
 					</button>
 					<button
 						type='submit'
-						className='bg-red text-bkg py-1 px-2 outline-none cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'>
-						{mode === 'create' ? 'Create Event' : 'Update Event'}
+						className='bg-red text-bkg px-3 py-1 outline-none clickable-r-skew'>
+						<div className={`skew-l`}>{mode === 'create' ? 'Create Event' : 'Update Event'}</div>
 					</button>
 				</div>
 			</form>

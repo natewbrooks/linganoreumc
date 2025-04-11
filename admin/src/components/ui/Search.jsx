@@ -4,11 +4,11 @@ export default function Search({ searchTerm, setSearchTerm }) {
 	return (
 		<div className={`relative flex flex-col space-y-1 items-center justify-center h-full font-dm`}>
 			<div className={`flex h-full space-x-1 items-center justify-center `}>
-				<div className={`flex space-x-1 items-center  bg-bkg-tp skew-x-[30deg]`}>
+				<div className={`flex space-x-1 items-center  bg-bkg-tp skew-r`}>
 					<input
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
-						className={`font-dm px-4 h-[32px] outline-0 text-black text-md w-full -skew-x-[30deg]`}
+						className={`font-dm px-4 h-[32px] outline-0 text-black text-md w-full skew-l`}
 						placeholder='Search'
 					/>
 				</div>
@@ -23,7 +23,7 @@ export default function Search({ searchTerm, setSearchTerm }) {
 						onClick={() => setFilter(option)}
 						className={`-skew-x-[30deg] ${
 							filter === option ? 'bg-red text-bkg' : 'bg-bkg-tp text-black/50'
-						} w-full px-2 cursor-pointer`}>
+						} w-full px-2 clickable`}>
 						<div className={`skew-x-[30deg]`}>
 							{option.charAt(0).toUpperCase() + option.slice(1)}
 						</div>

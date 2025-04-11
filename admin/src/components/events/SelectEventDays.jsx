@@ -22,7 +22,7 @@ function SelectEventDays() {
 					<div
 						key={index}
 						onClick={() => toggleDay(d)}
-						className='font-dm text-sm text-bkg bg-red w-full text-center cursor-pointer'>
+						className='font-dm text-sm text-bkg bg-red w-full text-center clickable'>
 						{d}
 					</div>
 				) : (
@@ -30,7 +30,7 @@ function SelectEventDays() {
 					<div
 						key={index}
 						onClick={() => toggleDay(d)}
-						className='font-dm text-sm text-black bg-tp w-full text-center cursor-pointer'>
+						className='font-dm text-sm text-black bg-tp w-full text-center clickable'>
 						{d}
 					</div>
 				);

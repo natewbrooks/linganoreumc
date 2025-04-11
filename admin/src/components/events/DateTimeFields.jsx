@@ -84,7 +84,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 								<div className='absolute -left-8 items-center justify-center l text-xs pl-1'>
 									<div
 										onClick={() => handleCancelToggle(dateIndex)}
-										className={`transition-all duration-200 ease-in-out rounded-full h-full text-bkg cursor-pointer ${
+										className={`transition-all duration-200 ease-in-out rounded-full h-full text-bkg clickable ${
 											entry.isCancelled ? 'bg-red' : 'bg-gray-500 opacity-50'
 										} `}>
 										<TiCancel size={20} />
@@ -111,7 +111,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 
 								{dateIndex === 0 ? (
 									<div
-										className='absolute -right-8 bg-red rounded-full p-1 w-fit cursor-pointer'
+										className='absolute -right-8 bg-red rounded-full p-1 w-fit clickable'
 										onClick={addDateField}>
 										<FaPlus
 											className='text-bkg'
@@ -120,7 +120,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 									</div>
 								) : (
 									<div
-										className='absolute -right-8 bg-red rounded-sm p-1 w-fit cursor-pointer'
+										className='absolute -right-8 bg-red rounded-sm p-1 w-fit clickable'
 										onClick={() => removeDateField(dateIndex)}>
 										<FaTrash
 											className='text-bkg'
@@ -151,7 +151,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 
 										{timeIndex === 0 ? (
 											<div
-												className='absolute -right-8 bg-red rounded-full  p-1 w-fit cursor-pointer'
+												className='absolute -right-8 bg-red rounded-full  p-1 w-fit clickable'
 												onClick={() => addTimeField(dateIndex)}>
 												<FaPlus
 													className='text-bkg'
@@ -160,7 +160,7 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 											</div>
 										) : (
 											<div
-												className='absolute -right-8 bg-red rounded-sm p-1 w-fit cursor-pointer'
+												className='absolute -right-8 bg-red rounded-sm p-1 w-fit clickable'
 												onClick={() => removeTimeField(dateIndex, timeIndex)}>
 												<FaTrash
 													className='text-bkg'

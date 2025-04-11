@@ -25,7 +25,8 @@ export const SermonsProvider = ({ children }) => {
 	useEffect(() => {
 		const loadSermons = async () => {
 			const sermonsData = await fetchSermons();
-			setSermons(sermonsData);
+			const activeSermons = sermonsData.filter((sermon) => !sermon.isArchived);
+			setSermons(activeSermons);
 		};
 
 		loadSermons();

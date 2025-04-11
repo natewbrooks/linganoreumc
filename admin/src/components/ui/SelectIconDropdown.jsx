@@ -59,7 +59,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 			ref={dropdownRef}
 			className='relative flex flex-col'>
 			{/* Clickable field */}
-			<div className='font-dm relative border-l-4 border-red bg-tp cursor-pointer px-2 py-1 h-[64px] w-[100px] flex items-center'>
+			<div className='font-dm relative border-l-4 border-red bg-tp clickable px-2 py-1 h-[64px] w-[100px] flex items-center'>
 				{selectedIcon ? (
 					<div
 						onClick={() => setEnabled(!enabled)}
@@ -79,7 +79,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 				<FaTimes
 					size={16}
 					onClick={handleRemoveIcon}
-					className='absolute right-2 hover:scale-105 top-2 text-black/50 cursor-pointer'
+					className='absolute right-2 hover:scale-105 top-2 text-black/50 clickable'
 				/>
 				{/* )} */}
 			</div>
@@ -111,7 +111,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 								<div
 									key={name}
 									onClick={() => handleSelect(name)}
-									className='p-2 cursor-pointer hover:bg-gray-200 rounded flex flex-col items-center text-center'>
+									className='p-2 clickable hover:bg-gray-200 rounded flex flex-col items-center text-center'>
 									<IconComponent
 										size={24}
 										className='text-black'

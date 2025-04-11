@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import TextInput from '../ui/TextInput';
 import BodyTextInput from '../ui/BodyTextInput';
 import { useSermons } from '../../contexts/SermonsContext';
+import RichTextEditor from '../ui/RichTextEditor';
 
 function SermonForm({ mode = 'create', initialData = null }) {
 	const navigate = useNavigate();
@@ -20,8 +21,6 @@ function SermonForm({ mode = 'create', initialData = null }) {
 	const [isArchived, setIsArchived] = useState(false);
 	const [sermonID, setSermonID] = useState(null);
 
-	const [content, setContent] = useState(false);
-
 	useEffect(() => {
 		if (mode === 'edit' && initialData) {
 			setTitle(initialData.title || '');
@@ -32,7 +31,6 @@ function SermonForm({ mode = 'create', initialData = null }) {
 			setLastEditDate(initialData.lastEditDate || '');
 			setIsArchived(initialData.isArchived || false);
 			setSermonID(initialData.id || null);
-			setContent(true);
 		}
 	}, [mode, initialData]);
 
@@ -54,8 +52,6 @@ function SermonForm({ mode = 'create', initialData = null }) {
 				console.log('Scraped publish date:', data.publishDate);
 				console.log('Formatted for input:', formattedDate);
 			}
-
-			setContent(true);
 		} catch (err) {
 			console.error(err);
 			alert('Failed to scrape video metadata.');
@@ -66,7 +62,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 		e.preventDefault();
 
 		if (!title || !description || !body) {
-			alert('Please fill in all required fields.');
+			alert('Please fill in the title, description, and transcript.');
 			return;
 		}
 
@@ -74,7 +70,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 			title,
 			description,
 			body,
-			videoURL,
+			videoURL: videoURL || null,
 			publishDate,
 			lastEditDate,
 			isArchived,
@@ -105,31 +101,32 @@ function SermonForm({ mode = 'create', initialData = null }) {
 		setVideoURL('');
 		setIsArchived(false);
 		setSermonID(null);
-		setContent(false);
 	};
 
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='flex flex-col space-y-4 font-dm px-6'>
+			className='flex flex-col space-y-4 font-dm px-6 h-full  pb-12'>
 			{/* Scrape Section */}
 			<div className={`mb-10`}>
 				<div className='font-dm mb-1'>YouTube URL</div>
 				<div className='flex space-x-1'>
-					<div className={`flex space-x-1 items-center w-full bg-bkg-tp skew-x-[30deg]`}>
+					<div className={`flex space-x-1 items-center w-full bg-bkg-tp skew-r`}>
 						<input
 							value={videoURL}
 							onChange={(e) => setVideoURL(e.target.value)}
-							className={`font-dm px-4 h-[32px] outline-0 text-black text-md w-full -skew-x-[30deg]`}
+							className={`font-dm px-4 h-[32px] outline-0 text-black text-md w-full skew-l`}
 							placeholder='YouTube Video URL'
 						/>
 					</div>
-					<button
-						type='button'
-						onClick={handleScrape}
-						className='bg-darkred skew-x-[30deg] cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50 text-white px-3'>
-						<div className={`-skew-x-[30deg]`}>Scrape</div>
-					</button>
+					{videoURL && (
+						<button
+							type='button'
+							onClick={handleScrape}
+							className='bg-darkred skew-l clickable-r-skew    text-white px-3'>
+							<div className={`skew-l`}>Scrape</div>
+						</button>
+					)}
 				</div>
 				<div className={`font-dm pl-4 text-sm text-darkred`}>
 					Scrape information from a YouTube video, or manually input sermon information.
@@ -149,11 +146,16 @@ function SermonForm({ mode = 'create', initialData = null }) {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
-				<BodyTextInput
+				{/* <BodyTextInput
 					title='Transcript'
 					minHeight={300}
 					value={body}
 					onChange={(e) => setBody(e.target.value)}
+				/> */}
+				<RichTextEditor
+					value={body}
+					onChange={setBody}
+					title={'Transcript'}
 				/>
 				<TextInput
 					title='Publish Date'
@@ -163,26 +165,17 @@ function SermonForm({ mode = 'create', initialData = null }) {
 					onChange={(e) => setPublishDate(e.target.value)}
 				/>
 
-				<div className='flex items-center space-x-2'>
-					<input
-						type='checkbox'
-						checked={isArchived}
-						onChange={(e) => setIsArchived(e.target.checked)}
-					/>
-					<label>Archived</label>
-				</div>
-
 				<div className='flex justify-end space-x-4'>
 					<button
 						type='button'
 						onClick={handleReset}
-						className='bg-gray-200 px-3 py-1 cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'>
+						className='bg-gray-200 px-3 py-1 clickable  '>
 						Reset
 					</button>
 					<button
 						type='submit'
-						className='bg-red text-bkg px-3 py-1 cursor-pointer hover:scale-[102%] active:scale-[100%] hover:opacity-50'>
-						{mode === 'edit' ? 'Update Sermon' : 'Save Sermon'}
+						className='bg-red text-bkg px-3 py-1 clickable-r-skew'>
+						<div className={`skew-l`}>{mode === 'edit' ? 'Update Sermon' : 'Save Sermon'}</div>
 					</button>
 				</div>
 			</>

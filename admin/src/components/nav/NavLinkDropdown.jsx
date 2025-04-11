@@ -1,39 +1,58 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-function NavLinkDropdown({ title, links, isActive, onHover }) {
-	const navigate = useNavigate();
+function NavLinkDropdown({ title, links, isActive, onHover, doUnderline }) {
+	const location = useLocation();
+
+	const isAnyChildActive = links.some((link) => location.pathname.startsWith(link.to));
 
 	const handleClick = (e, link) => {
 		if (link.onClick) {
 			e.preventDefault();
-			link.onClick();
-		} else {
-			navigate(link.to);
+			link.onClick(e);
 		}
 	};
 
 	return (
 		<div
 			onMouseEnter={onHover}
-			className='relative font-dm text-bkg cursor-pointer w-fit'>
-			<div className={`${isActive ? 'underline underline-offset-8' : ''}`}>{title}</div>
+			className='group relative cursor-pointer font-dm text-bkg h-full flex justify-center text-center w-[100px] items-center'>
+			<div
+				className={`px-2 ${
+					isAnyChildActive ? (doUnderline ? 'underline underline-offset-8' : '') : ''
+				}`}>
+				{typeof title === 'string' ? (
+					<>
+						<span className='text-xl group-hover:opacity-50 group-hover:scale-[1.02] group-active:scale-[1]'>
+							{title[0]}
+						</span>
+						<span className='text-lg group-hover:opacity-50 group-hover:scale-[1.02] group-active:scale-[1]'>
+							{title.slice(1).toUpperCase()}
+						</span>
+					</>
+				) : (
+					<span className='text-xl group-hover:opacity-50 group-hover:scale-[1.02] group-active:scale-[1]'>
+						{title}
+					</span>
+				)}
+			</div>
 
-			{isActive && (
-				<div className='absolute left-0 mt-2 bg-red text-bkg p-2 skew-x-[10deg] shadow transition-all duration-200 transform z-20 w-max min-w-[200px] px-8'>
-					<div className='flex flex-col w-full items-center -skew-x-[10deg]'>
-						{links.map((link, index) => (
-							<Link
-								key={index}
-								to={link.to}
-								onClick={(e) => handleClick(e, link)}
-								className='hover:underline underline-offset-4 hover:text-white transition text-lg whitespace-nowrap'>
-								{link.title}
-							</Link>
-						))}
-					</div>
+			<div
+				className={`${
+					isActive ? 'translate-y-full' : 'translate-y-0'
+				} -z-10 absolute bottom-0 -left-10 bg-darkred text-bkg p-2 skew-x-[10deg] shadow transition-all duration-300 transform w-fit min-w-[200px] px-8`}>
+				<div className='flex flex-col w-full items-center -skew-x-[10deg]'>
+					{links.map((link, index) => (
+						<Link
+							key={index}
+							to={link.to}
+							onClick={(e) => handleClick(e, link)}
+							className='hover:underline underline-offset-4 hover:text-white transition text-lg whitespace-nowrap cursor-pointer'>
+							{link.title}
+						</Link>
+					))}
 				</div>
-			)}
+			</div>
 		</div>
 	);
 }

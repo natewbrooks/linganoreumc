@@ -15,11 +15,13 @@ function Layout() {
 	if (loading) return null; // or a loading spinner
 
 	return (
-		<div className={`flex flex-col my-8`}>
-			<Navigation />
-			<div className={`flex flex-row`}>
-				<div className={`justify-center flex w-full h-full mt-8`}>
-					<div className={`min-w-[500px] w-[800px]`}>
+		<div className={`flex flex-col overflow-hidden`}>
+			<div className={`bg-darkred pt-12 h-fit sticky top-0 z-50`}>
+				<Navigation />
+			</div>
+			<div className={`flex flex-row mt-20`}>
+				<div className={`justify-center flex w-full h-full`}>
+					<div className={`min-w-[500px] min-h-[800px] w-[800px]`}>
 						<App />
 					</div>
 				</div>

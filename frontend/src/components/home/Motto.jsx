@@ -10,8 +10,12 @@ function Motto({ title, subtext }) {
 				width={380}
 				className={`absolute -top-18 z-10`}
 			/>
-			<span className={`text-2xl xs:text-4xl px-4 md:px-0`}>{title}</span>
-			<span className={`text-md p-4 sm:p-0 sm:text-xl sm:w-[800px] px-12`}>{subtext}</span>
+			<div className={`flex flex-col space-y-8`}>
+				<div className={`text-3xl xs:text-4xl px-4 md:px-0 mx-auto mb-4`}>{title}</div>
+				<div className={`text-lg sm:p-0 lg:text-xl px-4 max-w-[500px] lg:max-w-[700px] mx-auto`}>
+					{subtext}
+				</div>
+			</div>
 			<Bottom className={`absolute -bottom-12 sm:-bottom-14 z-10`} />
 		</div>
 	);

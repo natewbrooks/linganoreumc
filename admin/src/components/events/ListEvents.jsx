@@ -146,10 +146,10 @@ function ListEvents() {
 								onClick={handleDeleteSelectedEvents}
 								className={`${
 									selectedEvents.length > 0 && !deleting
-										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
-										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+										? 'bg-red text-bkg clickable-r-skew    '
+										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed skew-r'
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1`}>
+								<div className='flex space-x-1 h-full skew-l items-center'>
 									<FaTrashCan size={16} />
 								</div>
 							</div>
@@ -157,17 +157,17 @@ function ListEvents() {
 								onClick={handleArchiveSelectedEvents}
 								className={`${
 									selectedEvents.length > 0 && !archiving
-										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] '
-										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+										? 'bg-red text-bkg clickable-r-skew    '
+										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed skew-r'
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1`}>
+								<div className='flex space-x-1 h-full skew-l items-center'>
 									<FaArchive size={16} />
 								</div>
 							</div>
 							<Link
 								to='/events/new/'
-								className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
-								<div className='flex space-x-1 -skew-x-[30deg] items-center'>
+								className='clickable-r-skew font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1'>
+								<div className='flex space-x-1 skew-l items-center'>
 									<FaPlus size={16} />
 									<div>Add Event</div>
 								</div>
@@ -190,7 +190,7 @@ function ListEvents() {
 								: filteredEvents.map((event) => event.id) // Select all filtered
 						);
 					}}
-					className={`font-dm text-darkred cursor-pointer hover:opacity-50 select-none`}>
+					className={`font-dm text-darkred hover:opacity-50 cursor-pointer  select-none`}>
 					{selectedEvents.length === filteredEvents.length ? 'Deselect' : 'Select'} all events
 				</div>
 			</div>

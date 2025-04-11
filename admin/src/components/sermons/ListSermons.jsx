@@ -104,10 +104,10 @@ function ListSermons() {
 								onClick={handleDeleteSelectedSermons}
 								className={`${
 									selectedSermons.length > 0 && !deleting
-										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'
-										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+										? 'bg-red text-bkg clickable-r-skew   '
+										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed skew-r'
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1 `}>
+								<div className='flex space-x-1 h-full skew-l items-center'>
 									<FaTrashCan size={16} />
 								</div>
 							</div>
@@ -115,17 +115,17 @@ function ListSermons() {
 								onClick={handleArchiveSelectedSermons}
 								className={`${
 									selectedSermons.length > 0 && !archiving
-										? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'
+										? 'bg-red text-bkg clickable-r-skew   '
 										: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
-								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
-								<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
+								} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-r`}>
+								<div className='flex space-x-1 h-full skew-l items-center'>
 									<FaArchive size={16} />
 								</div>
 							</div>
 							<Link
 								to={'/sermons/new/'}
-								className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
-								<div className='flex space-x-1 -skew-x-[30deg] items-center'>
+								className='clickable-r-skew    font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1'>
+								<div className='flex space-x-1 skew-l items-center'>
 									<FaPlus size={16} />
 									<div>Add Sermon</div>
 								</div>
@@ -149,7 +149,7 @@ function ListSermons() {
 								: filteredSermons.map((sermon) => sermon.id) // Select all filtered
 						);
 					}}
-					className={`font-dm text-darkred cursor-pointer hover:opacity-50`}>
+					className={`font-dm text-darkred hover:opacity-50 cursor-pointer `}>
 					{selectedSermons.length === filteredSermons.length ? 'Deselect' : 'Select'} all sermons
 				</div>
 			</div>

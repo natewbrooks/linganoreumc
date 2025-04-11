@@ -87,7 +87,7 @@ function Account() {
 
 							setFeedback(resultMessages.join('. ') + '.');
 						}}
-						className='px-3 py-1 bg-red text-white -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+						className='px-3 py-1 bg-red text-white -skew-x-[30deg] clickable   '>
 						<div className='skew-x-[30deg]'>Confirm Changes</div>
 					</button>
 				</div>

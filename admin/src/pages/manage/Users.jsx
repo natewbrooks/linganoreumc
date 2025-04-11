@@ -110,7 +110,7 @@ function Users() {
 							onClick={handleDeleteSelected}
 							className={`${
 								selectedUsers.length > 0
-									? 'bg-red text-bkg cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'
+									? 'bg-red text-bkg clickable   '
 									: 'text-darkred/50 bg-bkg-tp cursor-not-allowed'
 							} transition font-dm text-md h-full text-center w-fit px-3 py-1 skew-x-[30deg]`}>
 							<div className='flex space-x-1 h-full -skew-x-[30deg] items-center'>
@@ -119,7 +119,7 @@ function Users() {
 						</div>
 						<div
 							onClick={() => setNewUserModal(true)}
-							className='cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%] font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
+							className='clickable    font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
 							<div className='flex space-x-1 -skew-x-[30deg] items-center'>
 								<FaPlus size={16} />
 								<div>Add User</div>
@@ -176,7 +176,7 @@ function Users() {
 													setEditNameModal({ id: u.id, username: u.username });
 													setEditedUsername(u.username);
 												}}
-												className='text-darkred hover:underline pr-4 skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+												className='text-darkred hover:underline pr-4 skew-x-[30deg] clickable   '>
 												<FaPen />
 											</button>
 											<button
@@ -184,7 +184,7 @@ function Users() {
 													setEditingId(u.id);
 													setConfirmModal({ id: u.id, username: u.username });
 												}}
-												className='text-darkred hover:underline pr-4 skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+												className='text-darkred hover:underline pr-4 skew-x-[30deg] clickable   '>
 												<FaKey />
 											</button>
 										</div>
@@ -253,7 +253,7 @@ function Users() {
 										setFeedback('');
 										setNewUser({ username: '', password: '', role: 'user' });
 									}}
-									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] clickable   '>
 									<div className='skew-x-[30deg]'>Cancel</div>
 								</button>
 								<button
@@ -263,7 +263,7 @@ function Users() {
 										);
 										if (proceed) handleCreateUser();
 									}}
-									className='px-3 py-1 bg-red text-white -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-red text-white -skew-x-[30deg] clickable   '>
 									<div className='skew-x-[30deg]'>Submit</div>
 								</button>
 							</div>
@@ -289,7 +289,7 @@ function Users() {
 							<div className='flex justify-end space-x-2'>
 								<button
 									onClick={() => setEditNameModal(null)}
-									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] clickable   '>
 									<div className='skew-x-[30deg]'>Cancel</div>
 								</button>
 								<button
@@ -316,7 +316,7 @@ function Users() {
 											setFeedback(err.response?.data?.error || 'Error updating username');
 										}
 									}}
-									className='px-3 py-1 bg-red text-white -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-red text-white -skew-x-[30deg] clickable   '>
 									<div className='skew-x-[30deg]'>Confirm</div>
 								</button>
 							</div>
@@ -347,7 +347,7 @@ function Users() {
 							<div className='flex justify-end space-x-2'>
 								<button
 									onClick={() => setConfirmModal(null)}
-									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-bkg-tp text-darkred -skew-x-[30deg] clickable   '>
 									<div className={`skew-x-[30deg]`}>Cancel</div>
 								</button>
 								<button
@@ -357,7 +357,7 @@ function Users() {
 										);
 										if (proceed) handleResetPassword(confirmModal.id);
 									}}
-									className='px-3 py-1 bg-red text-white -skew-x-[30deg] cursor-pointer hover:scale-[102%] hover:opacity-50 active:scale-[100%]'>
+									className='px-3 py-1 bg-red text-white -skew-x-[30deg] clickable   '>
 									<div className={`skew-x-[30deg]`}>Confirm</div>
 								</button>
 							</div>

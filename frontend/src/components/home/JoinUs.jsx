@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useEvents } from '../../contexts/EventsContext';
 import { Link } from 'react-router-dom';
 import { SiGooglemaps } from 'react-icons/si';
+import { useSettings } from '../../contexts/SettingsContext';
 
 function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
-	const { events, fetchEventTimesByEventId, formatTime } = useEvents();
+	const { events, fetchEventTimesByEventId } = useEvents();
+	const { formatTime } = useSettings();
 	const [timesMap, setTimesMap] = useState({});
 
 	useEffect(() => {
@@ -29,14 +31,15 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 	)}`;
 
 	return (
-		<div className='relative w-full flex flex-col items-center xl:items-start lg:px-40 xl:px-80 space-y-4 font-dm'>
-			<div className={`flex flex-col items-center  space-y-8 w-fit`}>
+		<div className='flex flex-col font-dm page-l-wrapper relative md:-right-8 '>
+			<div
+				className={`relative flex flex-col items-center space-y-8 w-full md:max-w-[400px] lg:max-w-[700px]`}>
 				<div className={`-space-y-1 flex flex-col w-fit text-center`}>
 					<span className='text-xl'>{title}</span>
-					<span className='text-4xl'>{subtext}</span>
+					<span className='text-3xl'>{subtext}</span>
 				</div>
 
-				<div className='flex flex-col space-y-4 space-x-20 w-full sm:min-w-[600px] md:max-w-[800px]  px-4 '>
+				<div className='flex flex-col space-y-4 w-full px-8 '>
 					{eventIDs.map(({ eventID }) => {
 						const event = events.find((e) => e.id === eventID);
 						if (!event) return null;
@@ -46,10 +49,10 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 						return (
 							<div
 								key={eventID}
-								className='flex text-lg justify-between w-full'>
+								className='flex text-lg justify-between'>
 								<Link
-									to={`/event/${event.id}`}
-									className={` leading-4 w-fit hover:opacity-50 hover:scale-[102%] active:scale-[100%]`}>
+									to={`/events/${event.id}`}
+									className={` leading-4 w-fit   `}>
 									{event.title}
 								</Link>
 								<div className='w-fit leading-4 whitespace-nowrap'>
@@ -66,41 +69,47 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 						);
 					})}
 				</div>
+				<div className='hidden md:block absolute z-10 -right-[450px] -bottom-20 -translate-y-[1px] skew-x-[20deg] overflow-hidden w-fit h-fit'>
+					<img
+						src={picture}
+						className='object-contain bg-center object-center transition-all w-[400px] h-[300px] duration-300 scale-150 -skew-x-[20deg]'
+					/>
+				</div>
 			</div>
-			<div
-				className='invisible xl:visible absolute h-[300px] w-[280px] top-4 right-20 xl:right-60 skew-x-[10deg] bg-cover bg-center z-10'
-				style={{ backgroundImage: `url(${picture})` }}
-			/>
 
 			<div
-				className={`hidden sm:block absolute -right-20 lg:-right-40 xl:-right-60 -bottom-24 skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-5 group`}>
+				className={`hidden md:block skew-x-0 sm:-skew-x-[30deg] w-full text-center sm:text-start  pl-2 sm:pl-8 bg-red text-bkg py-4 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'
 					rel='noopener noreferrer'
-					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50 `}>
+					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap`}>
 					<SiGooglemaps size={32} />
 					<div className={`flex flex-col group`}>
-						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>
+						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
 							{locationName}
 						</span>
-						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>{address}</span>
+						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
+							{address}
+						</span>
 					</div>
 				</Link>
 			</div>
 
-			<div className={`flex sm:hidden w-full text-start  px-4 bg-red text-bkg py-3 group`}>
+			<div className={`flex md:hidden w-full text-start  px-4 bg-red text-bkg py-3 group`}>
 				<Link
 					to={googleMapsLink}
 					target='_blank'
 					rel='noopener noreferrer'
-					className={`outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap group-hover:opacity-50`}>
+					className={`outline-none flex items-center space-x-4 skew-x-0 md:skew-x-[30deg] sm:whitespace-nowrap group-`}>
 					<SiGooglemaps size={32} />
 					<div className={`flex flex-col group`}>
-						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>
+						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
 							{locationName}
 						</span>
-						<span className={`group-hover:scale-[102%] group-active:scale-[100%]`}>{address}</span>
+						<span className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}>
+							{address}
+						</span>
 					</div>
 				</Link>
 			</div>

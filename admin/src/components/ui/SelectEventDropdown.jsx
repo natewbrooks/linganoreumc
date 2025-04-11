@@ -59,7 +59,7 @@ function SelectEventDropdown({
 			ref={dropdownRef}
 			className='relative flex flex-col w-full'>
 			{/* Clickable field */}
-			<div className='font-dm relative border-l-4 border-red bg-tp cursor-pointer px-2 py-1 h-[32px]'>
+			<div className='font-dm relative border-l-4 border-red bg-tp clickable px-2 py-1 h-[32px]'>
 				{selectedEventID ? (
 					<p
 						onClick={() => setEnabled(!enabled)}
@@ -118,7 +118,7 @@ function SelectEventDropdown({
 							<div
 								key={ev.id}
 								onClick={() => handleSelect(ev.id)}
-								className='bg-red text-bkg px-2 flex space-x-4 w-full font-dm cursor-pointer items-center hover:bg-red/80'>
+								className='bg-red text-bkg px-2 flex space-x-4 w-full font-dm clickable items-center hover:bg-red/80'>
 								<span className={`text-xs`}>id: {ev.id}</span>
 								<span>{ev.title}</span>
 							</div>
