@@ -106,7 +106,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='flex flex-col space-y-4 font-dm px-6 h-full pb-12'>
+			className='flex flex-col space-y-4 font-dm px-4 h-full pb-12'>
 			{/* Scrape Section */}
 			<div className={`mb-10`}>
 				<div className='font-dm mb-1'>YouTube URL</div>
@@ -169,8 +169,8 @@ function SermonForm({ mode = 'create', initialData = null }) {
 					<button
 						type='button'
 						onClick={handleReset}
-						className='bg-gray-200 px-3 py-1 clickable  '>
-						Reset
+						className='px-3 py-1 clickable  '>
+						Reset Fields
 					</button>
 					<button
 						type='submit'

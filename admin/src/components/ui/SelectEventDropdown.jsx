@@ -88,8 +88,8 @@ function SelectEventDropdown({
 
 			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-full max-h-[200px] translate-y-[32px] z-30 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
-					<div className='flex flex-col md:flex-row md:space-x-4 items-center py-2'>
+				<div className='absolute w-full max-h-[200px] translate-y-[32px] z-20 overflow-y-auto flex flex-col space-y-1 bg-bkg border-l-4 border-red pb-2 px-4'>
+					<div className='flex flex-row justify-between items-center py-2'>
 						<span className='font-dm text-black'>
 							{eventType === 'recurring'
 								? 'Recurring Events'

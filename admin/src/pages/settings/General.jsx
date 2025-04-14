@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGeneralSettings } from '../../contexts/GeneralSettingsContext';
 import TextInput from '../../components/ui/TextInput';
 import SocialMediaLinks from '../../components/general/socialmedia/SocialMediaLinks';
+import SkewedSelectToggle from '../../components/ui/SkewedSelectToggle';
 
 function GeneralSettingsAdmin() {
 	const { generalSettings, loading, updateGeneralSettings } = useGeneralSettings();
@@ -89,7 +90,7 @@ function GeneralSettingsAdmin() {
 						/>
 						<label>Enable Announcement Banner</label>
 					</div>
-					<div className='flex flex-col pl-8'>
+					<div className='flex flex-col md:pl-8'>
 						<TextInput
 							title='Banner Title'
 							type='text'
@@ -110,7 +111,7 @@ function GeneralSettingsAdmin() {
 				{/* Contact Information */}
 				<div className='flex flex-col space-y-2'>
 					<h3 className='font-dm'>Contact Information</h3>
-					<div className='flex flex-col pl-8'>
+					<div className='flex flex-col md:pl-8'>
 						<TextInput
 							title='Name'
 							type='text'
@@ -138,7 +139,7 @@ function GeneralSettingsAdmin() {
 				{/* Location Information */}
 				<div className='flex flex-col space-y-2'>
 					<h3 className='font-dm'>Location Information</h3>
-					<div className='flex flex-col pl-8'>
+					<div className='flex flex-col md:pl-8'>
 						<TextInput
 							title='Location Name'
 							type='text'

@@ -79,7 +79,7 @@ function ListSermons() {
 		: [];
 
 	return (
-		<div className='flex flex-col space-y-6'>
+		<div className='flex flex-col space-y-6 px-4'>
 			{/* Header */}
 			<div className={`flex flex-col space-y-4`}>
 				<div className='flex flex-row items-center justify-between'>
@@ -92,7 +92,7 @@ function ListSermons() {
 				</div>
 
 				{/* Filters + Actions */}
-				<div className={`flex flex-col space-y-1`}>
+				<div className={`flex flex-col space-y-1 space-x-1`}>
 					<div className='flex flex-row justify-between'>
 						<Search
 							searchTerm={searchTerm}
@@ -127,7 +127,7 @@ function ListSermons() {
 								className='clickable-r-skew    font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1'>
 								<div className='flex space-x-1 skew-l items-center'>
 									<FaPlus size={16} />
-									<div>Add Sermon</div>
+									<div>Add</div>
 								</div>
 							</Link>
 						</div>
@@ -155,7 +155,7 @@ function ListSermons() {
 			</div>
 
 			{/* Sermon List */}
-			<div className='my-2 flex flex-col space-y-4 px-8 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 px-4 md:px-8 min-h-[800px]'>
 				{filteredSermons.length > 0 ? (
 					filteredSermons.map((sermon) => (
 						<div

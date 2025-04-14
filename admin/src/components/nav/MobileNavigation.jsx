@@ -27,7 +27,7 @@ function MobileNavigation() {
 	return (
 		<>
 			{/* Header Bar */}
-			<div className='relative w-full flex items-center justify-between px-4 bg-red border-y-4 border-bkg h-[80px]'>
+			<div className='relative w-full flex items-center justify-between px-4 bg-red border-b-4 border-bkg h-[80px]'>
 				<Link to={`/`}>
 					<Logo
 						width={250}
@@ -101,7 +101,7 @@ function MobileNavigation() {
 											<span>Manage</span> <span className={`italic`}>(admin)</span>
 										</div>
 										<Link
-											to='/settings/general/'
+											to='/manage/users/'
 											onClick={() => handleCloseAndNavigate('/manage/users/')}
 											className='text-3xl font-dm block'>
 											Users

@@ -86,7 +86,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 
 			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-fit -left-20 max-h-[300px] translate-y-[32px] z-30 overflow-y-auto flex flex-col space-y-2 bg-white border-l-4 border-red pb-2 px-4 shadow-md'>
+				<div className='absolute w-fit max-h-[300px] translate-y-[32px] z-30 overflow-y-auto flex flex-col space-y-2 bg-white border-l-4 border-red pb-2 px-4 shadow-md'>
 					<div className='flex flex-col md:flex-row md:space-x-4 items-center py-2'>
 						<span className='font-dm text-black whitespace-nowrap'>Search Icons</span>
 						<div className='flex space-x-2 items-center'>

@@ -14,7 +14,7 @@ export default function Livestream({
 	onChange,
 }) {
 	return (
-		<div className='flex flex-col space-y-1 pl-8'>
+		<div className='flex flex-col space-y-1 md:pl-8'>
 			<div className={`flex flex-col`}>
 				<TextInput
 					title='YouTube API Key'

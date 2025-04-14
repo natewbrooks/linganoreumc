@@ -97,7 +97,7 @@ function Users() {
 	filtered = filtered.filter((u) => u.username.toLowerCase().includes(searchTerm.toLowerCase()));
 
 	return (
-		<div className='flex flex-col space-y-6'>
+		<div className='flex flex-col space-y-6 px-4'>
 			<div className='flex flex-col'>
 				<div className='font-dm text-2xl'>Manage Users ({filtered.length})</div>
 				<div className='font-dm text-md'>Create, update, or remove user accounts</div>
@@ -122,7 +122,7 @@ function Users() {
 							className='clickable    font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1 skew-x-[30deg]'>
 							<div className='flex space-x-1 -skew-x-[30deg] items-center'>
 								<FaPlus size={16} />
-								<div>Add User</div>
+								<div>Add</div>
 							</div>
 						</div>
 					</div>
@@ -135,7 +135,7 @@ function Users() {
 				/>
 			</div>
 
-			<div className='my-2 flex flex-col space-y-4 px-8 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 px-6 min-h-[800px]'>
 				{filtered.length > 0 ? (
 					filtered.map((u) => (
 						<div
@@ -150,19 +150,20 @@ function Users() {
 									/>
 								</div>
 							)}
-							<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
-								<div className='font-dm py-2 text-bkg min-w-[80px] overflow-hidden text-center text-lg relative bg-darkred px-4'>
-									<p className='skew-x-[30deg] whitespace-nowrap'>uid: {u.id}</p>
+							<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative text-md md:text-lg'>
+								<div className='font-dm py-2 text-bkg min-w-[45px] md:min-w-[80px] overflow-hidden text-center relative bg-darkred px-4'>
+									<p className='block md:hidden skew-x-[30deg] whitespace-nowrap'>{u.id}</p>
+									<p className='hidden md:block skew-x-[30deg] whitespace-nowrap'>uid: {u.id}</p>
 								</div>
-								<div className='font-dm py-2 text-bkg bg-red px-4 text-center text-lg overflow-visible whitespace-nowrap skew-x-0'>
+								<div className='font-dm py-2 text-bkg bg-red px-4 text-center overflow-visible whitespace-nowrap skew-x-0'>
 									<p className='skew-x-[30deg]'>{u.role}</p>
 								</div>
 								<div className={`flex w-full justify-between items-center`}>
-									<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
+									<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred overflow-hidden'>
 										<p className='skew-x-[30deg]'>
 											{u.username === user.username ? (
 												<span>
-													{u.username} <span className={`italic text-sm`}> (you)</span>
+													{u.username} <span className={`italic text-xs md:text-sm`}> (you)</span>
 												</span>
 											) : (
 												u.username

@@ -17,7 +17,7 @@ function Layout() {
 
 	return (
 		<div className={`flex flex-col `}>
-			<div className={`bg-darkred sticky top-0 z-30 mb-10 md:mb-20 overflow-hidden `}>
+			<div className={`bg-darkred sticky top-0 z-30 mb-4 md:mb-20 `}>
 				<div className={`pt-12 hidden md:block`}>
 					<Navigation />
 				</div>

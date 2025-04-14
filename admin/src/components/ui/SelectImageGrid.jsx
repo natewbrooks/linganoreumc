@@ -158,7 +158,6 @@ export default function SelectImageGrid({
 				className='w-full h-full min-h-[100px] clickable flex items-center justify-center border-2 border-dashed border-darkred transition-all'
 				onClick={() => onChangeImages([...images, { url: '', active: false }])}>
 				<div className='font-dm text-sm flex flex-row space-x-2 items-center justify-center w-full'>
-					<FaPlus />
 					<span>{`Add ${label}...`}</span>
 				</div>
 			</button>

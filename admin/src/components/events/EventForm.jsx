@@ -214,11 +214,11 @@ function EventForm({ mode = 'create', initialData = null, setParentEventID = nul
 	return (
 		<div className='w-full'>
 			<form
-				className='flex flex-col font-dm px-6 min-h-[800px] pb-12'
+				className='flex flex-col font-dm px-4 min-h-[800px] pb-12'
 				onSubmit={handleSubmit}>
 				<div className='flex flex-col '>
 					<span className='font-dm text-md'>Details</span>
-					<div className='flex flex-col space-y-2 px-4 py-3'>
+					<div className='flex flex-col space-y-2 md:px-4 py-3'>
 						<TextInput
 							title='Title'
 							toggleHeader={true}
@@ -264,7 +264,7 @@ function EventForm({ mode = 'create', initialData = null, setParentEventID = nul
 
 					{!isRecurring ? (
 						<>
-							<div className='flex flex-col space-y-4 px-4'>
+							<div className='flex flex-col space-y-4 ml-4 mr-6 md:px-4'>
 								<DateTimeFields
 									dateTimeData={dateTimeData}
 									setDateTimeData={setDateTimeData}
@@ -284,11 +284,11 @@ function EventForm({ mode = 'create', initialData = null, setParentEventID = nul
 				{eventID && (
 					<div className='flex flex-col mt-6'>
 						<span className='font-dm text-md'>Event Images</span>
-						<span className='font-dm text-sm text-black'>
-							Checked image determines the event thumbnail
+						<span className='font-dm text-xs md:text-sm text-black'>
+							* Checked image determines the event thumbnail
 						</span>
 
-						<div className='flex flex-col space-y-4 px-4 py-3'>
+						<div className='flex flex-col space-y-4 md:px-4 py-3'>
 							<SelectEventImages
 								eventID={eventID}
 								eventImages={eventImages}

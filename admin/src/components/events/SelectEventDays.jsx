@@ -91,7 +91,7 @@ function SelectEventDays({ dateTimeData = [], setDateTimeData }) {
 	};
 
 	return (
-		<div className='flex flex-col w-full space-y-4  pl-4'>
+		<div className='flex flex-col w-full space-y-4  md:pl-4'>
 			{/* Day Buttons */}
 			<div className='flex w-full space-x-2'>
 				{days.map((d) => (
@@ -122,7 +122,7 @@ function SelectEventDays({ dateTimeData = [], setDateTimeData }) {
 							{(entry.times || []).map((time, idx) => (
 								<div
 									key={idx}
-									className='relative flex items-center border-l-4 border-red ml-4'>
+									className='relative flex items-center border-l-4 border-red mr-6 md:ml-4'>
 									<div className='flex w-full pl-2 items-center'>
 										<span className='text-xs whitespace-nowrap w-[24px]'>#{idx + 1}</span>
 										<input

@@ -25,9 +25,9 @@ export default function JoinUs({
 	};
 
 	return (
-		<div className='flex flex-col space-y-1 pl-8'>
+		<div className='flex flex-col space-y-1 md:pl-8'>
 			<div className={`flex space-x-2`}>
-				<div className='flex flex-col w-full '>
+				<div className='flex flex-col w-full'>
 					<TextInput
 						title='Title'
 						value={joinUsTitle}

@@ -59,91 +59,92 @@ export default function SelectImageDropdown({
 		: [];
 
 	return (
-		<div
-			ref={dropdownRef}
-			className='relative flex flex-col w-full items-center justify-center text-center'>
-			{/* Clickable image preview */}
+		<>
 			<div
-				className='font-dm relative border-l-4 border-red bg-tp clickable h-[100px] w-full items-center justify-center flex'
-				onClick={() => setEnabled(true)}>
-				{selectedImage ? (
-					<ImageWithDimensions
-						src={selectedImage}
-						alt='Selected'
-						imgClassName='w-full h-full object-cover'
-						onError={() => setImageLoadFailed(true)} // ✅
-						onLoad={() => setImageLoadFailed(false)} // ✅
-					/>
-				) : (
-					<div className='ml-2 w-full items-center text-black/50'>Select image...</div>
-				)}
+				ref={dropdownRef}
+				className='relative flex flex-col w-full items-center justify-center text-center'>
+				{/* Clickable image preview */}
+				<div
+					className='font-dm relative border-l-4 border-red bg-tp clickable h-[100px] w-full items-center justify-center flex'
+					onClick={() => setEnabled(true)}>
+					{selectedImage ? (
+						<ImageWithDimensions
+							src={selectedImage}
+							alt='Selected'
+							imgClassName='w-full h-full object-cover'
+							onError={() => setImageLoadFailed(true)}
+							onLoad={() => setImageLoadFailed(false)}
+						/>
+					) : (
+						<div className='ml-2 w-full items-center text-black/50'>Select image...</div>
+					)}
+				</div>
+
+				{/* Control icons */}
+				<div className='flex flex-row absolute -top-0 -right-0 space-x-1 outline-4 bg-bkg outline-bkg'>
+					{toggleableActive && active ? (
+						<>
+							<div className='bg-green-500 p-1 cursor-default'>
+								<FaCheck
+									size={12}
+									className='text-bkg'
+								/>
+							</div>
+							{(!selectedImage || imageLoadFailed || !disableRemove) && (
+								<div className='bg-red p-1 clickable '>
+									<FaTrash
+										size={12}
+										onClick={(e) => {
+											e.stopPropagation();
+											onRemoveImage();
+										}}
+										className='text-bkg'
+									/>
+								</div>
+							)}
+						</>
+					) : (
+						<>
+							{toggleableActive && selectedImage && (
+								<div className='bg-gray-500 p-1 clickable '>
+									<FaMinus
+										size={12}
+										onClick={(e) => {
+											e.stopPropagation();
+											onSelectActive && onSelectActive();
+										}}
+										className='text-bkg'
+									/>
+								</div>
+							)}
+							{(!selectedImage || imageLoadFailed || !disableRemove) && (
+								<div className='bg-red p-1 clickable '>
+									<FaTrash
+										size={12}
+										onClick={(e) => {
+											e.stopPropagation();
+											onRemoveImage();
+										}}
+										className='text-bkg'
+									/>
+								</div>
+							)}
+						</>
+					)}
+				</div>
+
+				{/* File input */}
+				<input
+					type='file'
+					accept='image/*'
+					ref={fileInputRef}
+					style={{ display: 'none' }}
+					onChange={handleFileChange}
+				/>
 			</div>
-
-			{/* Control icons */}
-			<div className='flex flex-row absolute -top-0 -right-0 space-x-1 outline-4 bg-bkg outline-bkg'>
-				{toggleableActive && active ? (
-					<>
-						<div className='bg-green-500 p-1 cursor-default'>
-							<FaCheck
-								size={12}
-								className='text-bkg'
-							/>
-						</div>
-						{(!selectedImage || imageLoadFailed || !disableRemove) && (
-							<div className='bg-red p-1 clickable '>
-								<FaTrash
-									size={12}
-									onClick={(e) => {
-										e.stopPropagation();
-										onRemoveImage();
-									}}
-									className='text-bkg'
-								/>
-							</div>
-						)}
-					</>
-				) : (
-					<>
-						{toggleableActive && selectedImage && (
-							<div className='bg-gray-500 p-1 clickable '>
-								<FaMinus
-									size={12}
-									onClick={(e) => {
-										e.stopPropagation();
-										onSelectActive && onSelectActive();
-									}}
-									className='text-bkg'
-								/>
-							</div>
-						)}
-						{(!selectedImage || imageLoadFailed || !disableRemove) && (
-							<div className='bg-red p-1 clickable '>
-								<FaTrash
-									size={12}
-									onClick={(e) => {
-										e.stopPropagation();
-										onRemoveImage();
-									}}
-									className='text-bkg'
-								/>
-							</div>
-						)}
-					</>
-				)}
-			</div>
-
-			{/* File input */}
-			<input
-				type='file'
-				accept='image/*'
-				ref={fileInputRef}
-				style={{ display: 'none' }}
-				onChange={handleFileChange}
-			/>
-
 			{/* Dropdown list */}
 			{enabled && (
-				<div className='absolute w-[360px] max-h-[200px] translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg border-l-4 border-red pb-2  px-4'>
+				<div className='absolute w-[360px] max-h-[200px] left-1/2 -translate-x-1/2 md:left-auto translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg border-l-4 border-red pb-2  px-4'>
 					<div className='sticky top-0 z-10 border-b-4 border-darkred/10 flex-col items-center space-y-2 py-2  bg-bkg'>
 						<div className='flex flex-row w-full justify-between'>
 							<span className='font-dm text-sm text-black'>{label}</span>
@@ -215,6 +216,6 @@ export default function SelectImageDropdown({
 					)}
 				</div>
 			)}
-		</div>
+		</>
 	);
 }

@@ -37,7 +37,7 @@ function EventItem({ event }) {
 			to={`/events/${event.id}`}
 			className='font-dm w-full clickable   '>
 			{/* Date/Time row */}
-			<div className='text-sm text-darkred bg-accent px-2 py-0.5 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2'>
+			<div className='text-xs md:text-sm text-darkred bg-accent px-2 py-0.5 w-fit -skew-x-[30deg] relative flex flex-wrap items-center space-x-2'>
 				{eventDates.map((dateObj, idx) => {
 					const times = timesMap[dateObj.id] || [];
 					if (!times.length) return null;
@@ -62,15 +62,16 @@ function EventItem({ event }) {
 				})}
 			</div>
 
-			<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative'>
-				<div className='font-dm py-2 text-bkg min-w-[80px] overflow-hidden text-center text-lg relative bg-darkred px-4'>
-					<p className='skew-x-[30deg] whitespace-nowrap'>eid: {event.id}</p>
+			<div className='w-full flex flex-row items-center bg-tp -skew-x-[30deg] relative text-md md:text-lg '>
+				<div className='font-dm py-2 text-bkg min-w-[45px] md:min-w-[80px] overflow-hidden text-center relative bg-darkred px-4'>
+					<p className='block md:hidden skew-x-[30deg] whitespace-nowrap'>{event.id}</p>
+					<p className='hidden md:block skew-x-[30deg] whitespace-nowrap'>eid: {event.id}</p>
 				</div>
-				<div className='font-dm py-2 text-bkg bg-red px-4 text-center text-lg overflow-visible whitespace-nowrap skew-x-0'>
+				<div className='font-dm py-2 text-bkg bg-red px-4 text-center overflow-visible whitespace-nowrap skew-x-0'>
 					<p className='skew-x-[30deg]'>{event.title}</p>
 				</div>
 
-				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred text-lg overflow-hidden'>
+				<div className='p-2 pl-4 font-dm items-center whitespace-nowrap text-darkred overflow-hidden'>
 					<div
 						className='skew-x-[30deg] prose prose-sm line-clamp-1 whitespace-nowrap overflow-hidden'
 						dangerouslySetInnerHTML={{ __html: event.description }}

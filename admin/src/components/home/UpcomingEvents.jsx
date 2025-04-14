@@ -31,7 +31,7 @@ export default function UpcomingEvents({
 	};
 
 	return (
-		<div className='flex flex-col pl-8'>
+		<div className='flex flex-col md:pl-8'>
 			<TextInput
 				title='Title'
 				value={upcomingEventsTitle}

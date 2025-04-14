@@ -123,7 +123,7 @@ function ListEvents() {
 		});
 
 	return (
-		<div className='flex flex-col space-y-6'>
+		<div className='flex flex-col space-y-6 px-4'>
 			{/* Header */}
 			<div className='flex flex-col space-y-4'>
 				<div className='flex flex-row items-center justify-between'>
@@ -169,7 +169,7 @@ function ListEvents() {
 								className='clickable-r-skew font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1'>
 								<div className='flex space-x-1 skew-l items-center'>
 									<FaPlus size={16} />
-									<div>Add Event</div>
+									<div>Add</div>
 								</div>
 							</Link>
 						</div>
@@ -196,7 +196,7 @@ function ListEvents() {
 			</div>
 
 			{/* Event List */}
-			<div className='my-2 flex flex-col space-y-4 px-8 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 px-4 md:px-8 min-h-[800px]'>
 				{filteredEvents.length > 0 ? (
 					filteredEvents.map((event) => (
 						<div
