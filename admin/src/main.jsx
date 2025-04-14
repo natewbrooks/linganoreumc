@@ -8,6 +8,7 @@ import { HomePageSettingsProvider } from './contexts/HomepageSettingsContext.jsx
 import { GeneralSettingsProvider } from './contexts/GeneralSettingsContext.jsx';
 import { SermonsProvider } from './contexts/SermonsContext.jsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
+import MobileNavigation from './components/nav/MobileNavigation.jsx';
 
 function Layout() {
 	const { isAuthenticated, loading } = useAuth();
@@ -15,13 +16,19 @@ function Layout() {
 	if (loading) return null; // or a loading spinner
 
 	return (
-		<div className={`flex flex-col overflow-hidden`}>
-			<div className={`bg-darkred pt-12 h-fit sticky top-0 z-50`}>
-				<Navigation />
+		<div className={`flex flex-col `}>
+			<div className={`bg-darkred sticky top-0 z-30 mb-10 md:mb-20 overflow-hidden `}>
+				<div className={`pt-12 hidden md:block`}>
+					<Navigation />
+				</div>
+				<div className={`block md:hidden`}>
+					<MobileNavigation />
+				</div>
 			</div>
-			<div className={`flex flex-row mt-20`}>
+
+			<div className={`flex flex-row overflow-hidden px-2`}>
 				<div className={`justify-center flex w-full h-full`}>
-					<div className={`min-w-[500px] min-h-[800px] w-[800px]`}>
+					<div className={` min-h-[800px] w-full h-full max-w-[800px] mx-auto`}>
 						<App />
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useGeneralSettings } from '../contexts/GeneralSettingsContext';
-import TextInput from '../components/ui/TextInput';
-import SocialMediaLinks from '../components/general/socialmedia/SocialMediaLinks';
+import { useGeneralSettings } from '../../contexts/GeneralSettingsContext';
+import TextInput from '../../components/ui/TextInput';
+import SocialMediaLinks from '../../components/general/socialmedia/SocialMediaLinks';
 
 function GeneralSettingsAdmin() {
 	const { generalSettings, loading, updateGeneralSettings } = useGeneralSettings();
@@ -75,7 +75,7 @@ function GeneralSettingsAdmin() {
 	}
 
 	return (
-		<div className='flex flex-col'>
+		<div className='flex flex-col mb-12'>
 			<h2 className='font-dm text-2xl'>General Settings</h2>
 
 			<div className='flex flex-col space-y-8 pt-4'>

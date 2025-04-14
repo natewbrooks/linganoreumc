@@ -1,6 +1,6 @@
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
-import NotFound from '../NotFound';
+import NotFound from '../misc/NotFound';
 
 function Account() {
 	const { user, updateOwnPassword, updateOwnUsername } = useAuth();

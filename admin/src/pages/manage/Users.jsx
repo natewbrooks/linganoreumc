@@ -6,7 +6,7 @@ import Filter from '../../components/ui/Filter';
 import SkewedSelectToggle from '../../components/ui/SkewedSelectToggle';
 import { FaTrashCan, FaPlus } from 'react-icons/fa6';
 import { FaKey, FaPen } from 'react-icons/fa';
-import Unauthorized from '../Unauthorized';
+import Unauthorized from '../misc/Unauthorized';
 
 function Users() {
 	const { user, resetUserPassword } = useAuth();

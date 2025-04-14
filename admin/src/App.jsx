@@ -1,17 +1,21 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/edit/Home.jsx';
-import General from './pages/General.jsx';
-import Events from './pages/Events.jsx';
-import EditEvent from './components/events/EditEvent.jsx';
+
+import Home from './pages/settings/Home.jsx';
+import General from './pages/settings/General.jsx';
+
+import Events from './pages/maintenance/Events.jsx';
 import CreateEvent from './components/events/CreateEvent.jsx';
-import Sermons from './pages/Sermons.jsx';
+import EditEvent from './components/events/EditEvent.jsx';
+import Sermons from './pages/maintenance/Sermons.jsx';
 import CreateSermon from './components/sermons/CreateSermon.jsx';
 import EditSermon from './components/sermons/EditSermon.jsx';
-import Login from './pages/Login.jsx';
-import NotFound from './pages/NotFound.jsx';
+
 import Users from './pages/manage/Users.jsx';
 import Account from './pages/manage/Account.jsx';
+
+import Login from './pages/misc/Login.jsx';
+import NotFound from './pages/misc/NotFound.jsx';
 
 // Handles routing
 function App() {
