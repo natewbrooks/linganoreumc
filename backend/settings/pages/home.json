@@ -6,7 +6,7 @@
         "active": true
       },
       {
-        "url": "/api/media/images/night-jhenmoran.png",
+        "url": "/api/media/images/CEM46806669_117962812740.jpg",
         "active": false
       }
     ]
@@ -22,10 +22,13 @@
       "title": "JOIN US FOR WORSHIP",
       "subtext": "Sundays"
     },
-    "sermonImageURL": "/api/media/images/dancing-cat-dance.gif",
+    "sermonImageURL": "/api/media/images/DSC_8272-Edit.jpg",
     "events": [
       {
         "eventID": 16
+      },
+      {
+        "eventID": 25
       }
     ]
   },
@@ -64,6 +67,34 @@
       },
       {
         "eventID": ""
+      }
+    ]
+  },
+  "stainedGlassDisplay": {
+    "images": [
+      {
+        "url": "/api/media/images/stained-glass-1.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/stained-glass-2.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/stained-glass-3.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/stained-glass-4.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/stained-glass-5.png",
+        "active": false
+      },
+      {
+        "url": "/api/media/images/stained-glass-6.png",
+        "active": false
       }
     ]
   }

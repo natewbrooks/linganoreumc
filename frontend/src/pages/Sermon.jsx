@@ -74,7 +74,9 @@ const Sermon = () => {
 						</div>
 					</div>
 					{/* <pre className='whitespace-pre-wrap font-dm text-lg '>{sermon.body}</pre> */}
-					<MarkdownText html={sermon.body} />
+					<div className={`text-md md:text-lg `}>
+						<MarkdownText html={sermon.body} />
+					</div>
 				</div>
 			)}
 		</div>

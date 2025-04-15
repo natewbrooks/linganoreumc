@@ -13,7 +13,7 @@ function SermonItem({ sermon, index }) {
 					{/* Title Block */}
 					<div
 						className={`${
-							index % 2 == 0 ? 'bg-red' : 'bg-red'
+							index % 2 == 0 ? 'bg-red' : 'bg-darkred'
 						} w-fit relative -left-3 text-bkg px-4 py-2 text-lg text-center -skew-x-[30deg] flex items-center justify-center`}>
 						<p className='skew-x-[30deg] min-w-[200px] w-fit whitespace-nowrap'>{sermon.title}</p>
 					</div>

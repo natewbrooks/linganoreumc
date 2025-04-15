@@ -3,7 +3,7 @@ import React from 'react';
 function MarkdownText({ html }) {
 	return (
 		<div
-			className='flex flex-col space-y-2 font-dm text-lg leading-relaxed whitespace-pre-wrap 
+			className='flex flex-col space-y-4 font-dm leading-relaxed whitespace-pre-wrap 
 		[&>ul]:list-disc 
 		[&>ol]:list-decimal 
 		[&>ul>li]:ml-6 

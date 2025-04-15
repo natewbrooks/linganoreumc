@@ -23,7 +23,7 @@ function YouTubeEmbed({ videoID }) {
 	};
 
 	return (
-		<div className='w-full flex items-center justify-center min-h-[360px]'>
+		<div className='w-full flex items-center justify-center md:min-h-[360px]'>
 			<div className='relative w-full sm:w-[640px] mx-auto'>
 				<YouTube
 					videoId={videoID}

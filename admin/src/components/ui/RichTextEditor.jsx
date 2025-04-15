@@ -49,8 +49,18 @@ const RichTextEditor = ({ value, onChange, title }) => {
 	}, [editor, value]);
 
 	const setLink = () => {
-		const url = window.prompt('Enter URL');
-		if (url) {
+		const previousUrl = editor.getAttributes('link').href;
+		const url = window.prompt('Enter URL', previousUrl);
+
+		if (!url) return; // cancelled or empty
+
+		const { empty } = editor.state.selection;
+
+		if (empty) {
+			// No text selected: insert the URL as both the text and the href
+			editor.chain().focus().insertContent(`<a href="${url}">${url}</a>`).run();
+		} else {
+			// Text selected: apply link to the selection
 			editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
 		}
 	};
@@ -94,6 +104,14 @@ const RichTextEditor = ({ value, onChange, title }) => {
 						}`}>
 						U
 					</button>
+					<button
+						type='button'
+						onClick={() => editor.chain().focus().toggleStrike().run()}
+						className={`cursor-pointer hover:opacity-50 line-through px-2 rounded ${
+							editor.isActive('strike') ? 'bg-bkg text-red' : ''
+						}`}>
+						S
+					</button>
 				</div>
 				<span className='text-darkred'>|</span>
 				<div className='flex space-x-4'>
@@ -120,6 +138,21 @@ const RichTextEditor = ({ value, onChange, title }) => {
 					onClick={setLink}
 					className='cursor-pointer hover:opacity-50'>
 					<FaLink />
+				</button>
+				<span className='text-darkred'>|</span>
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setHorizontalRule().run()}
+					className={`cursor-pointer hover:opacity-50 px-2 rounded`}>
+					—
+				</button>
+				<button
+					type='button'
+					onClick={() => editor.chain().toggleBlockquote().run()}
+					className={`cursor-pointer hover:opacity-50 px-2 rounded ${
+						editor.isActive('blockquote') ? 'bg-bkg text-red' : ''
+					}`}>
+					“
 				</button>
 				<button
 					type='button'
@@ -157,6 +190,16 @@ const RichTextEditor = ({ value, onChange, title }) => {
 		[&_a]:hover:opacity-80
 		[&_a]:transition-opacity
 		[&_a]:clickable
+		[&_li]:pl-2
+		[&_ol]:list-decimal
+		[&_ul]:list-disc
+		[&_blockquote]:border-l-4
+		[&_blockquote]:border-darkred
+		[&_blockquote]:pl-4
+		[&_blockquote]:italic
+		[&_blockquote]:text-darkred
+		[&_blockquote]:bg-tp
+
 	'
 				/>
 			</div>

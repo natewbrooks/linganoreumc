@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 // Base directories
 const imagesDir = path.join(__dirname, '..', 'media', 'images');
 const headerImagesDir = path.join(imagesDir, 'header');
+const stainedGlassDir = path.join(imagesDir, 'stained-glass');
 const eventImagesDir = path.join(imagesDir, 'events');
 
 import { fetchVideoMetadata, fetchTranscript } from '../middleware/youtubeScraper.js';
@@ -64,6 +65,19 @@ export const getAllHeaderImages = (req, res) => {
 	try {
 		const headerFiles = getAllFilesRecursively(headerImagesDir);
 		const paths = headerFiles.map(
+			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+		);
+		res.json(paths);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
+
+// GET /api/media/images/stained-glass/
+export const getAllStainedGlassImages = (req, res) => {
+	try {
+		const files = getAllFilesRecursively(stainedGlassDir);
+		const paths = files.map(
 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 		);
 		res.json(paths);
@@ -190,6 +204,14 @@ export const uploadHeaderImage = (req, res) => {
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
 
 	res.json({ filePath: '/api/media/images/header/' + sanitized });
+};
+
+// POST /api/admin/media/images/stained-glass/
+export const uploadStainedGlassImage = (req, res) => {
+	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
+
+	const sanitized = req.file.originalname.replace(/\s+/g, '-');
+	res.json({ filePath: '/api/media/images/stained-glass/' + sanitized });
 };
 
 // POST /api/admin/media/images/events/:eventID

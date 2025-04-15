@@ -42,6 +42,9 @@ export const HomePageSettingsProvider = ({ children }) => {
 					upcomingEvents: data.upcomingEvents || {
 						text: { title: '', subtext: '', seeMore: '' },
 					},
+					stainedGlassDisplay: data.stainedGlassDisplay || {
+						images: [],
+					},
 				});
 
 				setLoading(false);
@@ -91,9 +94,37 @@ export const HomePageSettingsProvider = ({ children }) => {
 		}
 	};
 
+	const uploadStainedGlassImage = async (file) => {
+		if (!file) return null;
+
+		const formData = new FormData();
+		formData.append('image', file);
+
+		try {
+			const res = await fetch('/api/admin/media/images/stained-glass/', {
+				method: 'POST',
+				body: formData,
+			});
+			const data = await res.json();
+			if (res.ok && data?.filePath) {
+				return data.filePath;
+			}
+			throw new Error('Upload failed');
+		} catch (err) {
+			console.error('Error uploading stained glass image:', err);
+			return null;
+		}
+	};
+
 	return (
 		<HomePageSettingsContext.Provider
-			value={{ homepageSettings, loading, updateHomepageSettings, uploadHeaderImage }}>
+			value={{
+				homepageSettings,
+				loading,
+				updateHomepageSettings,
+				uploadHeaderImage,
+				uploadStainedGlassImage,
+			}}>
 			{children}
 		</HomePageSettingsContext.Provider>
 	);

@@ -38,6 +38,18 @@ function SelectEventDays({ dateTimeData = [], setDateTimeData }) {
 		return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][weekday];
 	};
 
+	const formatDateInEST = (dateStr) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const utcDate = new Date(Date.UTC(year, month - 1, day, 5)); // 5 AM UTC = midnight EST
+
+		return new Intl.DateTimeFormat('en-US', {
+			timeZone: 'America/New_York',
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		}).format(utcDate);
+	};
+
 	const dayDataMap = {};
 	for (const entry of dateTimeData) {
 		const abbr = entry.abbr || getAbbrFromDate(entry.date);
@@ -51,6 +63,24 @@ function SelectEventDays({ dateTimeData = [], setDateTimeData }) {
 	const applyUpdate = (updatedMap) => {
 		const ordered = days.filter((abbr) => updatedMap[abbr]).map((abbr) => updatedMap[abbr]);
 		setDateTimeData(ordered);
+	};
+
+	const addDaysToDate = (dateStr, days) => {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		const date = new Date(year, month - 1, day);
+		date.setDate(date.getDate() + days);
+
+		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+			date.getDate()
+		).padStart(2, '0')}`;
+	};
+
+	const skipDate = (abbr) => {
+		const updated = { ...dayDataMap };
+		if (updated[abbr]?.date) {
+			updated[abbr].date = addDaysToDate(updated[abbr].date, 7);
+			applyUpdate(updated);
+		}
 	};
 
 	const toggleDay = (abbr) => {
@@ -117,7 +147,21 @@ function SelectEventDays({ dateTimeData = [], setDateTimeData }) {
 						<div
 							key={abbr}
 							className='flex flex-col'>
-							<div className='font-dm text-sm mb-1'>{dayLabels[abbr].toUpperCase()}</div>
+							<div className='flex flex-row justify-between items-center'>
+								<div className={`flex space-x-2`}>
+									<div className='font-dm text-sm mb-1'>{dayLabels[abbr].toUpperCase()}</div>
+									<div className='font-dm text-sm mb-1'>|</div>
+									<div className='font-dm text-sm mb-1'>NEXT @ {formatDateInEST(entry.date)}</div>
+								</div>
+
+								<div className={`flex space-x-4`}>
+									<div
+										className='font-dm text-sm mb-1 bg-red px-4 text-bkg clickable-r-skew'
+										onClick={() => skipDate(abbr)}>
+										<div className='skew-l'>SKIP THIS DATE</div>
+									</div>
+								</div>
+							</div>
 
 							{(entry.times || []).map((time, idx) => (
 								<div

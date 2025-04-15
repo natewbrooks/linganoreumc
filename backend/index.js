@@ -96,11 +96,6 @@ app.use('/api/admin/settings/', adminSettingsRouter);
 // Requires the admin role as well
 app.use('/api/admin/users/', adminUsersRouter);
 
-// Health check
-app.get('/api/', (req, res) => {
-	res.json({ message: 'API is working!' });
-});
-
 // Global error handler for multer and other uncaught errors
 app.use((err, req, res, next) => {
 	console.error('Global error handler:', err);

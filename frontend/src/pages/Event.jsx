@@ -25,6 +25,12 @@ const Event = () => {
 	const [loading, setLoading] = useState(true);
 	const [modalIndex, setModalIndex] = useState(null);
 
+	// Ensures date-only values aren't shifted due to timezone offset
+	function parseDateAsLocal(dateStr) {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		return new Date(year, month - 1, day); // JS months are 0-based
+	}
+
 	useEffect(() => {
 		const loadEvent = async () => {
 			try {
@@ -65,8 +71,8 @@ const Event = () => {
 					<h1 className='text-3xl'>{event.title}</h1>
 				</div>
 
-				<div className={`bg-red px-8 skew-l`}>
-					<div className={`skew-r text-bkg`}>
+				<div className={`md:bg-red md:px-12 md:py-2 skew-r`}>
+					<div className={`skew-l md:text-bkg text-sm md:text-lg`}>
 						<MarkdownText html={event.description} />
 					</div>
 				</div>
@@ -85,7 +91,9 @@ const Event = () => {
 									} px-4 text-bkg space-y-2 py-2`}>
 									<div className='flex w-full text-center  items-center  justify-center skew-l bg-red px-4'>
 										<span className={`skew-r whitespace-nowrap`}>
-											{event.isRecurring ? getLongDayOfWeek(date.date) : formatLongDate(date.date)}
+											{event.isRecurring
+												? getLongDayOfWeek(parseDateAsLocal(date.date))
+												: formatLongDate(parseDateAsLocal(date.date))}
 											{date.isCancelled ? <span className='ml-2 text-red'>Cancelled</span> : ''}
 										</span>
 									</div>

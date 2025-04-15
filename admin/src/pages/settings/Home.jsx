@@ -6,6 +6,7 @@ import MottoBanner from '../../components/home/MottoBanner';
 import JoinUs from '../../components/home/JoinUs';
 import Livestream from '../../components/home/Livestream';
 import UpcomingEvents from '../../components/home/UpcomingEvents';
+import SelectStainedGlassImages from '../../components/home/SelectStainedGlassImages';
 
 function HomePageSettingsAdmin() {
 	const { homepageSettings, loading, updateHomepageSettings } = useHomePageSettings();
@@ -48,6 +49,9 @@ function HomePageSettingsAdmin() {
 				upcomingEventsSubtext: homepageSettings.upcomingEvents?.text?.subtext || '',
 				upcomingEventsSeeMore: homepageSettings.upcomingEvents?.text?.seeMore || '',
 				upcomingEvents,
+
+				// STAINED GLASS DISPLAY
+				stainedGlassImages: homepageSettings.stainedGlassDisplay?.images || [],
 			});
 		}
 	}, [homepageSettings]);
@@ -145,6 +149,9 @@ function HomePageSettingsAdmin() {
 				},
 				events: settings.upcomingEvents,
 			},
+			stainedGlassDisplay: {
+				images: settings.stainedGlassImages,
+			},
 		};
 		updateHomepageSettings(updatedSettings);
 		alert('Settings saved');
@@ -204,7 +211,7 @@ function HomePageSettingsAdmin() {
 				</div>
 
 				{/* LIVESTREAM */}
-				<div className='flex flex-col space-y-2'>
+				{/* <div className='flex flex-col space-y-2'>
 					<h3 className='font-dm'>YouTube Livestream</h3>
 					<Livestream
 						youtubeAPIKey={settings.youtubeAPIKey}
@@ -218,7 +225,7 @@ function HomePageSettingsAdmin() {
 						offlineSeeMore={settings.offlineSeeMore}
 						onChange={handleChange}
 					/>
-				</div>
+				</div> */}
 
 				{/* UPCOMING EVENTS */}
 				<div className='flex flex-col space-y-2'>
@@ -232,6 +239,19 @@ function HomePageSettingsAdmin() {
 						onChangeEventID={handleUpcomingEventChange}
 						onReorder={handleReorderUpcomingEvents}
 					/>
+				</div>
+
+				{/* SELECT STAINED GLASS IMAGES */}
+				<div className='flex flex-col'>
+					<h3 className='font-dm'>Stained Glass Display</h3>
+					<div className='md:pl-8'>
+						<SelectStainedGlassImages
+							stainedGlassImages={settings.stainedGlassImages}
+							onChangeStainedGlassImages={(newArray) =>
+								setSettings((prev) => ({ ...prev, stainedGlassImages: newArray }))
+							}
+						/>
+					</div>
 				</div>
 
 				{/* SAVE BUTTON */}

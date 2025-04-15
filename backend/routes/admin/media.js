@@ -6,6 +6,7 @@ import {
 	uploadHeaderImage,
 	deleteImage,
 	uploadEventImage,
+	uploadStainedGlassImage,
 } from '../../api/mediaAPI.js';
 import { createMulterUploader } from '../../middleware/multerConfig.js';
 
@@ -16,6 +17,7 @@ const __dirname = path.dirname(__filename);
 // Use process.cwd() so that the media folder is at the project root.
 const mediaImagesPath = path.join(process.cwd(), 'media', 'images');
 const headerImagesPath = path.join(mediaImagesPath, 'header');
+const stainedGlassDir = path.join(mediaImagesPath, 'stained-glass');
 const eventImagesDir = path.join(mediaImagesPath, 'events');
 
 // POST /api/admin/media/images/
@@ -32,6 +34,17 @@ router.post(
 		next();
 	},
 	uploadHeaderImage
+);
+
+// POST /api/admin/media/images/stained-glass/
+router.post(
+	'/images/stained-glass/',
+	createMulterUploader(stainedGlassDir).single('image'),
+	(req, res, next) => {
+		console.log('Uploaded stained glass file:', req.file);
+		next();
+	},
+	uploadStainedGlassImage
 );
 
 // POST /api/admin/media/images/events/:eventID

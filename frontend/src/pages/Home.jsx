@@ -6,6 +6,7 @@ import Motto from '../components/home/Motto';
 import LivestreamEmbed from '../components/media/LivestreamEmbed';
 import JoinUs from '../components/home/JoinUs';
 import UpcomingEvents from '../components/home/UpcomingEvents';
+import StainedGlassDisplay from '../components/home/StainedGlassDisplay';
 
 function Home() {
 	const { events, eventDates } = useEvents();
@@ -97,22 +98,38 @@ function Home() {
 		})
 		.filter((entry) => entry !== null); // Remove nulls
 
+	const getNextValidEventDate = (eventID) => {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		return (
+			eventDates
+				.filter((d) => d.eventID === eventID && !d.isCancelled)
+				.filter((d) => {
+					const date = new Date(d.date);
+					date.setHours(0, 0, 0, 0);
+					return date >= today;
+				})
+				.sort((a, b) => new Date(a.date) - new Date(b.date))[0]?.date || null
+		);
+	};
+
 	// Get future chronological events (only future events if settings do NOT override)
 	const futureEvents = events
 		.map((event) => ({
 			event,
-			date: getUpcomingEventDate(event.id, true), // Require only future dates
+			date: getNextValidEventDate(event.id),
 		}))
-		.filter((entry) => entry.date !== null) // Ensure only events with an upcoming date
-		.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by earliest upcoming date
+		.filter((entry) => entry.date !== null)
+		.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 	// Merge preset events with future events
 	const upcomingEvents = [...presetEvents, ...futureEvents]
-		.filter((entry, index, self) => self.findIndex((e) => e.event.id === entry.event.id) === index) // Remove duplicates
-		.slice(0, 4); // Limit to 4 events
+		.filter((entry, index, self) => self.findIndex((e) => e.event.id === entry.event.id) === index)
+		.slice(0, 4);
 
 	return (
-		<div className='w-full flex flex-col pb-20 overflow-hidden'>
+		<div className='w-full flex flex-col overflow-hidden'>
 			{/* Header */}
 			<Header activeHeaderImage={activeHeaderImage} />
 
@@ -134,7 +151,7 @@ function Home() {
 				/>
 
 				{/* Livestream Section */}
-				<div className='flex flex-col items-center text-center py-6'>
+				{/* <div className='flex flex-col items-center text-center py-6'>
 					<LivestreamEmbed
 						liveTitle={livestreamText.live?.title}
 						liveSubtext={livestreamText.live?.subtext}
@@ -147,7 +164,7 @@ function Home() {
 						size={600}
 						socialLinks={socialMediaLinks}
 					/>
-				</div>
+				</div> */}
 
 				{/* Upcoming Events */}
 				<UpcomingEvents
@@ -155,6 +172,8 @@ function Home() {
 					subtext={homeSettings.upcomingEvents?.text?.subtext || ''}
 					events={upcomingEvents}
 				/>
+
+				<StainedGlassDisplay stainedGlassImages={homeSettings.stainedGlassDisplay?.images || []} />
 			</div>
 		</div>
 	);

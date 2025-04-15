@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [sessionExpired, setSessionExpired] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -28,6 +29,22 @@ export const AuthProvider = ({ children }) => {
 
 	useEffect(() => {
 		checkAuth(); // Initial check when app loads
+
+		const interceptor = axios.interceptors.response.use(
+			(response) => response,
+			(error) => {
+				if (error.response?.status === 401) {
+					setIsAuthenticated(false);
+					setSessionExpired(true);
+					// Optionally, navigate('/login');
+				}
+				return Promise.reject(error);
+			}
+		);
+
+		return () => {
+			axios.interceptors.response.eject(interceptor);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -96,18 +113,26 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	return (
-		<AuthContext.Provider
-			value={{
-				user,
-				isAuthenticated,
-				loading,
-				checkAuth,
-				logout,
-				updateOwnPassword,
-				updateOwnUsername,
-			}}>
-			{!loading && children}
-		</AuthContext.Provider>
+		<>
+			{sessionExpired && (
+				<div className='fixed top-4 right-4 z-50 bg-red text-white p-4 rounded shadow-lg'>
+					Session expired. Please log in again.
+				</div>
+			)}
+
+			<AuthContext.Provider
+				value={{
+					user,
+					isAuthenticated,
+					loading,
+					checkAuth,
+					logout,
+					updateOwnPassword,
+					updateOwnUsername,
+				}}>
+				{!loading && children}
+			</AuthContext.Provider>
+		</>
 	);
 };
 

@@ -33,7 +33,7 @@ function MobileNavigation({ announcementBannerEnabled }) {
 		{ path: '/calendar/', label: 'CALENDAR' },
 		{ path: '/events/', label: 'EVENTS' },
 		{ path: '/sermons/', label: 'SERMONS' },
-		{ path: '/', label: 'GIVE' },
+		// { path: '/', label: 'GIVE' },
 	];
 
 	return (

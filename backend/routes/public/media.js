@@ -5,6 +5,7 @@ import {
 	getAllEventImages,
 	getAllEventsImages,
 	getImage,
+	getAllStainedGlassImages,
 } from '../../api/mediaAPI.js';
 import { scrapeYouTubeVideo } from '../../api/mediaAPI.js';
 
@@ -14,6 +15,8 @@ const router = express.Router();
 router.get('/images/', getAllImages); // or rename to /api/images to replace static
 // GET /api/media/images/header/
 router.get('/images/header/', getAllHeaderImages); // all header images
+// GET /api/media/images/stained-glass/
+router.get('/images/stained-glass/', getAllStainedGlassImages); // all stained glass images
 // GET /api/media/images/events/
 router.get('/images/events/:eventID', getAllEventImages); // all event images
 // GET /api/media/images/events/

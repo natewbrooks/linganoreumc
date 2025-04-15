@@ -118,18 +118,27 @@ export const EventsProvider = ({ children }) => {
 		}
 	};
 
-	const getShortDayOfWeek = (dateStr) => {
-		const [year, month, day] = dateStr.split('-').map(Number);
-		const date = new Date(year, month - 1, day); // Local time
-		return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()];
+	const normalizeDateInput = (input) => {
+		if (input instanceof Date) return input;
+		if (typeof input === 'string') {
+			const [y, m, d] = input.split('-').map(Number);
+			return new Date(y, m - 1, d);
+		}
+		return null;
 	};
 
-	const getLongDayOfWeek = (dateStr) => {
-		const [year, month, day] = dateStr.split('-').map(Number);
-		const date = new Date(year, month - 1, day); // Local time
-		return ['SUNDAYS', 'MONDAYS', 'TUESDAYS', 'WEDNESDAYS', 'THURSDAYS', 'FRIDAYS', 'SATURDAYS'][
-			date.getDay()
-		];
+	const getShortDayOfWeek = (input) => {
+		const date = normalizeDateInput(input);
+		return date ? ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()] : '';
+	};
+
+	const getLongDayOfWeek = (input) => {
+		const date = normalizeDateInput(input);
+		return date
+			? ['SUNDAYS', 'MONDAYS', 'TUESDAYS', 'WEDNESDAYS', 'THURSDAYS', 'FRIDAYS', 'SATURDAYS'][
+					date.getDay()
+			  ]
+			: '';
 	};
 
 	return (

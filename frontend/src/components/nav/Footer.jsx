@@ -26,7 +26,7 @@ function Footer() {
 				/>
 
 				<div
-					className={`sm:flex grid grid-cols-2 items-center text-center space-y-2 space-x-0 sm:space-y-0 sm:space-x-10 sm:flex-row text-xl`}>
+					className={`sm:flex grid grid-cols-2 gap-2 w-fit items-center text-center space-x-0 sm:space-y-0 sm:space-x-10 sm:flex-row text-xl`}>
 					<Link
 						to={`/`}
 						className={`text-bkg`}>
@@ -47,11 +47,11 @@ function Footer() {
 						className={`text-bkg`}>
 						E<span className={`text-lg`}>VENTS</span>
 					</Link>
-					<Link
+					{/* <Link
 						to={`/`}
 						className={`text-bkg`}>
 						G<span className={`text-lg`}>IVE</span>
-					</Link>
+					</Link> */}
 				</div>
 			</div>
 
@@ -64,6 +64,7 @@ function Footer() {
 							key={index}
 							to={link.url}
 							target='_blank'
+							className={`flex justify-center items-center`}
 							rel='noopener noreferrer'>
 							{IconComponent ? <IconComponent size={30} /> : <span>{link.platform}</span>}
 						</Link>

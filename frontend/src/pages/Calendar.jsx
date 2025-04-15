@@ -101,7 +101,7 @@ function Calendar() {
 			</div>
 
 			<div className={`w-full`}>
-				<div className={`block sm:hidden mx-auto`}>
+				<div className={`block sm:hidden mx-auto px-2`}>
 					<CalendarList
 						month={month}
 						year={year}

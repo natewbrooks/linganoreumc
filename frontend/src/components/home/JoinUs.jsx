@@ -76,15 +76,14 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 			</div>
 
 			<div className={`hidden md:block skew-x-0 sm:-skew-x-[30deg] text-bkg py-4 group`}>
-				<div className='hidden md:block absolute z-10 -bottom-7.75 -right-50 skew-x-[40deg] overflow-hidden w-fit h-fit'>
+				<div className='hidden md:block absolute z-10 -bottom-7.75 -left-80 skew-x-[30deg] rounded-full overflow-hidden w-[300px] h-[300px] '>
 					<img
 						src={picture}
-						className='object-contain bg-center object-center transition-all w-[250px] h-[300px] duration-300 scale-180 translate-x-6 -skew-x-[20deg]'
+						className='w-full h-full object-cover bg-center object-center transition-all duration-300 '
 					/>
 				</div>
 
-				<div
-					className={`absolute w-screen bg-red left-10 top-0 -z-10 bottom-0 py-10 skew-l`}>{` `}</div>
+				<div className={`absolute w-screen bg-red left-10 top-0 -z-10 bottom-0 py-10 `}>{` `}</div>
 
 				<Link
 					to={googleMapsLink}
@@ -122,20 +121,6 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 					</div>
 				</Link>
 			</div>
-
-			{/* <div className='flex relative sm:-right-10 text-bkg w-full justify-end text-start py-2'>
-				<div className='bg-red px-4 sm:px-8 py-4 sm:-skew-x-[30deg] w-full '>
-					<Link
-						to={googleMapsLink}
-						target='_blank'
-						rel='noopener noreferrer'
-						className={`flex flex-col -skew-x-[30deg] sm:skew-x-0 whitespace-nowrap`}>
-						<span>{locationName}</span>
-						<span>{address}</span>
-					</Link>
-					<div className='flex justify-between items-center skew-x-[30deg]  max-w-[600px] xl:max-w-[750px] 2xl:max-w-[950px]'></div>
-				</div>
-			</div> */}
 		</div>
 	);
 }
