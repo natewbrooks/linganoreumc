@@ -125,7 +125,7 @@ function ListEvents() {
 	return (
 		<div className='flex flex-col space-y-6 px-4'>
 			{/* Header */}
-			<div className='flex flex-col space-y-4'>
+			<div className='flex flex-col space-y-4 relative'>
 				<div className='flex flex-row items-center justify-between'>
 					<div className='flex flex-col'>
 						<div className='font-dm text-2xl'>
@@ -196,12 +196,12 @@ function ListEvents() {
 			</div>
 
 			{/* Event List */}
-			<div className='my-2 flex flex-col space-y-4 px-4 md:px-8 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 min-h-[800px] w-full relative'>
 				{filteredEvents.length > 0 ? (
 					filteredEvents.map((event) => (
 						<div
 							key={event.id}
-							className='flex relative items-center justify-center'>
+							className='flex relative left-0 items-center justify-start'>
 							<SkewedSelectToggle
 								id={event.id}
 								selectedList={selectedEvents}

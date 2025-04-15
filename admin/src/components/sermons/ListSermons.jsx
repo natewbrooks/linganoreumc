@@ -155,25 +155,12 @@ function ListSermons() {
 			</div>
 
 			{/* Sermon List */}
-			<div className='my-2 flex flex-col space-y-4 px-4 md:px-8 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 min-h-[800px]'>
 				{filteredSermons.length > 0 ? (
 					filteredSermons.map((sermon) => (
 						<div
 							key={sermon.id}
-							className='flex relative items-center justify-center'>
-							{/* <input
-									className='absolute -left-8 -skew-x-[30deg] rounded-0'
-									type='checkbox'
-									checked={selectedSermons.includes(sermon.id)}
-									onChange={(e) => {
-										setSelectedSermons((prevSelected) =>
-											e.target.checked
-												? [...prevSelected, sermon.id]
-												: prevSelected.filter((id) => id !== sermon.id)
-										);
-									}}
-								/> */}
-
+							className='flex relative items-center justify-start'>
 							<SkewedSelectToggle
 								id={sermon.id}
 								selectedList={selectedSermons}

@@ -82,10 +82,10 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 		<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/70 w-screen h-screen'>
 			<div
 				ref={modalRef}
-				className='relative flex items-center justify-center bg-bkg-tp border-4 border-bkg-tp skew-x-[10deg] w-[70vw] h-[80vh] overflow-hidden'>
+				className='relative flex items-center justify-center bg-bkg-tp border-4 border-bkg-tp w-[90vw] h-[80vh] md:w-[70vw] md:h-[80vh] overflow-hidden'>
 				{/* Embla Carousel */}
 				<div
-					className='w-full h-full overflow-hidden -skew-x-[10deg]'
+					className='w-full h-full overflow-hidden'
 					ref={emblaRef}>
 					<div className='flex h-full'>
 						{images.map((img, i) => {
@@ -112,24 +112,28 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 
 				{/* Navigation Controls */}
 				<button
-					className='absolute top-4 right-4 text-darkred z-50 -skew-x-[10deg] clickable'
+					className='absolute top-4 right-4 text-darkred z-50 clickable'
 					onClick={handleClose}>
 					<FaXmark size={32} />
 				</button>
-				<button
-					className='absolute left-4 top-1/2 -translate-y-1/2 text-darkred z-50 -skew-x-[10deg] clickable'
-					onClick={goPrev}>
-					<FaArrowLeft size={40} />
-				</button>
-				<button
-					className='absolute right-4 top-1/2 -translate-y-1/2 text-darkred z-50 -skew-x-[10deg] clickable'
-					onClick={goNext}>
-					<FaArrowRight size={40} />
-				</button>
+				{images.length > 1 && (
+					<>
+						<button
+							className='absolute left-4 top-1/2 -translate-y-1/2 text-darkred z-50 clickable'
+							onClick={goPrev}>
+							<FaArrowLeft size={40} />
+						</button>
+						<button
+							className='absolute right-4 top-1/2 -translate-y-1/2 text-darkred z-50 clickable'
+							onClick={goNext}>
+							<FaArrowRight size={40} />
+						</button>
+					</>
+				)}
 
 				{/* Index Display */}
-				<div className='absolute top-4 left-4 text-bkg text-sm font-medium z-50 bg-darkred px-2 -skew-x-[30deg]'>
-					<div className={`skew-x-[20deg]`}>
+				<div className='absolute top-4 left-4 text-bkg text-sm font-medium z-50 bg-darkred px-2'>
+					<div className={``}>
 						{currentIndexRef.current + 1} / {images.length}
 					</div>
 				</div>

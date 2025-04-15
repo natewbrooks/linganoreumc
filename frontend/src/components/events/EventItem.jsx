@@ -64,12 +64,13 @@ function EventItem({ event, previous }) {
 
 			<Link
 				to={`/events/${event.id}`}
-				className='flex flex-row items-stretch w-full bg-tp relative font-dm'>
+				className='relative flex flex-row items-stretch w-full font-dm'>
+				<div className={`absolute bg-tp w-screen h-full`}>{` `}</div>
 				{/* Title Block */}
 				<div
 					className={`${
 						previous ? 'bg-darkred' : 'bg-red'
-					} w-fit text-bkg px-4 py-2 text-lg text-center -skew-x-[30deg] flex items-center justify-center`}>
+					} w-fit text-bkg relative -left-3 px-4 py-2 text-lg text-center -skew-x-[30deg] flex items-center justify-center`}>
 					<p className='skew-x-[30deg] min-w-[200px] w-fit whitespace-nowrap'>{event.title}</p>
 				</div>
 

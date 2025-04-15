@@ -22,13 +22,10 @@
       "title": "JOIN US FOR WORSHIP",
       "subtext": "Sundays"
     },
-    "sermonImageURL": "/api/media/images/pope-walks-gracefully-through-church-600nw-2253549751.webp",
+    "sermonImageURL": "/api/media/images/dancing-cat-dance.gif",
     "events": [
       {
-        "eventID": 25
-      },
-      {
-        "eventID": 26
+        "eventID": 16
       }
     ]
   },

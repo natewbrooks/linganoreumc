@@ -26,9 +26,9 @@ function SermonItem({ sermon }) {
 			to={`/sermons/${sermon.id}`}
 			className='font-dm w-full outline-0 clickable'>
 			{/* Top Info Panel */}
-			<div className='text-xs md:text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] flex flex-col md:flex-row md:items-center space-x-4'>
-				<span className='skew-x-[30deg]'>Published: {formattedPublishDate}</span>
-				<span className='skew-x-[30deg]'>
+			<div className='text-xs md:text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] flex flex-col md:flex-row md:items-center md:space-x-4'>
+				<span className=' skew-x-[30deg]'>Published: {formattedPublishDate}</span>
+				<span className='hidden md:inline-block skew-x-[30deg]'>
 					Last edited: {localEditDate} @ {localEditTime}
 				</span>
 			</div>
@@ -47,7 +47,7 @@ function SermonItem({ sermon }) {
 				</div>
 
 				{/* Body */}
-				<div className='p-2 pl-4 font-dm items-center text-darkred overflow-hidden max-w-[600px] max-h-[4.5rem] leading-snug'>
+				<div className='p-2 pl-4 font-dm items-center text-darkred overflow-hidden max-w-screen max-h-[4.5rem] leading-snug'>
 					<div
 						className='skew-x-[30deg] prose prose-sm line-clamp-1 whitespace-nowrap overflow-hidden'
 						dangerouslySetInnerHTML={{ __html: sermon.body }}

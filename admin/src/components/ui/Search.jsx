@@ -2,7 +2,8 @@ import React from 'react';
 
 export default function Search({ searchTerm, setSearchTerm }) {
 	return (
-		<div className={`relative flex flex-col space-y-1 items-center justify-center h-full font-dm`}>
+		<div
+			className={`relative flex flex-col space-y-1 mr-1 items-center justify-center h-full font-dm`}>
 			<div className={`flex h-full space-x-1 items-center justify-center `}>
 				<div className={`flex space-x-1 items-center  bg-bkg-tp skew-r`}>
 					<input

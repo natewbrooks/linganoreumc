@@ -45,8 +45,8 @@ const Sermon = () => {
 	const videoId = extractYouTubeId(sermon.videoURL);
 
 	return (
-		<div className='flex flex-col items-center w-full px-4 py-8 mb-12 max-w-[1000px] mx-auto space-y-4'>
-			<div className={`flex flex-col w-full space-y-4 text-center`}>
+		<div className='flex flex-col items-center w-full py-8 mb-12 max-w-[1000px] mx-auto space-y-4'>
+			<div className={`flex flex-col w-full space-y-4 text-center px-4 `}>
 				<div className={`flex flex-col items-center space-y-1`}>
 					<h1 className='text-3xl font-dm'>{sermon.title}</h1>
 					<div className={`w-fit bg px-4 -skew-x-[30deg]`}>
@@ -66,7 +66,7 @@ const Sermon = () => {
 			{videoId && <YouTubeEmbed videoID={videoId} />}
 
 			{sermon.body && (
-				<div className={`flex flex-col space-y-4 font-dm w-full`}>
+				<div className={`flex flex-col space-y-4 font-dm w-full px-4 `}>
 					<div className={`flex w-full justify-between py-1 bg-red px-4 text-bkg skew-x-[30deg]`}>
 						<div className={`text-lg -skew-x-[30deg]`}>Transcript</div>
 						<div className={`text-lg -skew-x-[30deg]`}>

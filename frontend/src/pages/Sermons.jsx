@@ -3,6 +3,8 @@ import { useSermons } from '../contexts/SermonsContext';
 import SermonMonthLabel from '../components/sermons/SermonMonthLabel';
 import SermonItem from '../components/sermons/SermonItem';
 
+import { IoFilter } from 'react-icons/io5';
+
 function Sermons() {
 	const { sermons } = useSermons();
 	const [searchTerm, setSearchTerm] = useState('');
@@ -40,42 +42,57 @@ function Sermons() {
 	}, [filteredAndSortedSermons]);
 
 	return (
-		<div className='flex flex-col my-8'>
-			<div className='flex flex-col space-y-4 items-center w-full page-l-wrapper px-4 py-4 md:py-10'>
-				<div className='font-dm text-md w-full'>SERMONS</div>
-				<div className='flex flex-col sm:flex-row space-x-4 items-start sm:items-center w-full'>
-					<div className='bg-tp w-full sm:w-[300px] px-2 -skew-x-[30deg]'>
+		<div className='flex flex-col'>
+			<div className='flex flex-col space-y-4 items-center w-full page-wrapper px-4 py-4 md:py-10'>
+				<div className='font-dm text-lg text-darkred w-full'>SERMONS ({sermons.length})</div>
+				<div className='flex flex-row items-center w-full gap-2 sm:gap-1 px-2'>
+					{/* Search input wrapper */}
+					<div className='bg-tp w-full sm:w-[300px] px-2 -skew-x-[30deg] h-[28px] flex items-center'>
 						<input
 							type='text'
 							placeholder='Search sermons...'
-							className='px-2 font-dm w-full skew-x-[30deg] outline-none'
+							className='px-2 font-dm w-full h-full skew-x-[30deg] outline-none'
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
 					</div>
-					<button
-						className='px-4 py-1 rounded bg-slate-200 text-sm font-dm hover:bg-slate-300'
-						onClick={() => setSortAsc((prev) => !prev)}>
-						Sort: {sortAsc ? 'Oldest First' : 'Newest First'}
-					</button>
+
+					{/* Sort button */}
+					<div className='h-[28px] flex space-x-3 items-center'>
+						<button
+							className='bg-red clickable-l-skew px-2 h-full flex items-center text-bkg text-sm font-dm '
+							onClick={() => setSortAsc((prev) => !prev)}>
+							<div className='skew-r'>
+								<IoFilter size={18} />
+							</div>
+						</button>
+						<div className='hidden md:block font-dm text-sm'>
+							{sortAsc ? 'Sort by: Oldest' : 'Sort by: Newest'}
+						</div>
+						<div className='block md:hidden font-dm text-sm'>{sortAsc ? 'Oldest' : 'Newest'}</div>
+					</div>
 				</div>
 			</div>
 
-			<div className='flex flex-col space-y-4 ml-auto max-w-[1400px] pl-4 w-full  min-h-[800px] '>
-				{Object.entries(groupedByMonth).map(([month, sermons]) => (
-					<div
-						key={month}
-						className='flex flex-col w-full space-y-2 '>
-						<SermonMonthLabel text={`${month}`} />
-						{sermons.map((sermon, index) => (
-							<SermonItem
-								sermon={sermon}
-								key={sermon.id}
-								index={index}
-							/>
-						))}
-					</div>
-				))}
+			<div className='relative w-full overflow-x-hidden mt-8 md:mt-0'>
+				<div className='flex flex-col space-y-4 mx-auto max-w-[1400px] pl-4 w-full  min-h-[800px]'>
+					{Object.entries(groupedByMonth).map(([month, sermons]) => (
+						<div
+							key={month}
+							className='flex flex-col w-full space-y-2 '>
+							<div className={`w-fit flex h-[36px] `}>
+								<SermonMonthLabel text={`${month}`} />
+							</div>
+							{sermons.map((sermon, index) => (
+								<SermonItem
+									sermon={sermon}
+									key={sermon.id}
+									index={index}
+								/>
+							))}
+						</div>
+					))}
+				</div>
 
 				{filteredAndSortedSermons.length === 0 && (
 					<p className='font-dm text-darkred text-sm italic'>No sermons found.</p>

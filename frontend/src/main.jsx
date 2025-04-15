@@ -18,7 +18,9 @@ const Layout = () => {
 		<div className='flex flex-col'>
 			{' '}
 			{/* Sticky Wrapper */}
-			<div className='sticky top-0 z-30 bg-red'>
+			<div
+				id={`navigation`}
+				className='sticky top-0 z-30 bg-red'>
 				{settings.general?.announcementBanner?.enabled && (
 					<AnnouncementBanner
 						title={settings.general.announcementBanner.title}
@@ -29,14 +31,16 @@ const Layout = () => {
 					<Navigation />
 				</div>
 				<div className={`block md:hidden`}>
-					<MobileNavigation />
+					<MobileNavigation
+						announcementBannerEnabled={settings.general?.announcementBanner?.enabled}
+					/>
 				</div>
 			</div>
 			{/* Main content */}
 			<div className={`bg-bkg overflow-hidden`}>
 				<App />
+				<Footer />
 			</div>
-			<Footer />
 		</div>
 	);
 };

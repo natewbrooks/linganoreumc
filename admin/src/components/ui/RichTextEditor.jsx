@@ -7,6 +7,7 @@ import Link from '@tiptap/extension-link';
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
+import TextAlign from '@tiptap/extension-text-align';
 
 import { FaLink, FaImage } from 'react-icons/fa';
 import { MdFormatListBulleted, MdFormatListNumbered } from 'react-icons/md';
@@ -14,7 +15,17 @@ import { MdFormatListBulleted, MdFormatListNumbered } from 'react-icons/md';
 const RichTextEditor = ({ value, onChange, title }) => {
 	const editor = useEditor({
 		extensions: [
-			StarterKit, // no custom hardBreak config
+			StarterKit.configure({
+				// Only enable align on certain nodes
+				paragraph: {
+					HTMLAttributes: {
+						class: 'text-left',
+					},
+				},
+			}),
+			TextAlign.configure({
+				types: ['heading', 'paragraph'],
+			}),
 			BulletList,
 			OrderedList,
 			ListItem,
@@ -110,6 +121,15 @@ const RichTextEditor = ({ value, onChange, title }) => {
 					className='cursor-pointer hover:opacity-50'>
 					<FaLink />
 				</button>
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setTextAlign('center').run()}
+					className={`cursor-pointer hover:opacity-50 px-2 rounded ${
+						editor.isActive({ textAlign: 'center' }) ? 'bg-bkg text-red' : ''
+					}`}>
+					C
+				</button>
+
 				{/* <button
 					type='button'
 					onClick={addImage}

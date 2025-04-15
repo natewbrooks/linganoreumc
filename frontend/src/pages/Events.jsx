@@ -64,18 +64,18 @@ function Events() {
 	}, [events, eventDateMap, searchTerm]);
 
 	return (
-		<div className='flex flex-col my-8'>
+		<div className='flex flex-col'>
 			<div className={`flex flex-col `}>
 				<div className={`flex flex-col items-center w-full  px-4 py-4 md:py-10`}>
-					<div className={`flex w-full items-start justify-start mx-auto max-w-[1100px] `}>
-						<div className={`font-dm text-lg text-darkred w-full max-w-[1200px]`}>
+					<div className={`flex flex-col space-y-2 md:flex-row w-full page-wrapper`}>
+						<div className={`font-dm text-lg text-darkred w-full `}>
 							{featured.length > 0 ? `FEATURED EVENTS (${featured.length})` : 'EVENTS'}
 						</div>
-						<div className={`bg-tp w-[300px] px-2 -skew-x-[30deg]`}>
+						<div className={`bg-tp md:w-[300px] px-2 -skew-x-[30deg]`}>
 							<input
 								type='text'
 								placeholder='Search all events...'
-								className='px-2 font-dm w-full skew-x-[30deg] outline-none'
+								className='px-2 font-dm w-full skew-x-[30deg] h-[28px] outline-none'
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 							/>
@@ -103,10 +103,10 @@ function Events() {
 				</div>
 
 				<div
-					className={`flex flex-col space-y-12 w-full ml-auto max-w-[1400px] pl-4 min-h-[800px]`}>
+					className={`flex flex-col space-y-12 w-full mx-auto max-w-[1400px] pl-4 min-h-[800px]`}>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`RECURRING EVENTS (${recurring.length})`} />
-						<div className={`flex flex-col space-y-1 w-full`}>
+						<div className={`flex flex-col space-y-1 w-full pl-4`}>
 							{recurring.length > 0 ? (
 								recurring.map((event) => (
 									<EventItem
@@ -122,7 +122,7 @@ function Events() {
 
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`UPCOMING EVENTS (${upcoming.length})`} />
-						<div className={`flex flex-col space-y-4 sm:space-y-2 w-full`}>
+						<div className={`flex flex-col space-y-4 sm:space-y-2 w-full pl-4`}>
 							{upcoming.length > 0 ? (
 								upcoming.map((event) => (
 									<EventItem
@@ -137,7 +137,7 @@ function Events() {
 					</div>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`PREVIOUS EVENTS (${previous.length})`} />
-						<div className={`flex flex-col space-y-1 w-full`}>
+						<div className={`flex flex-col space-y-1 w-full pl-4`}>
 							{previous.length > 0 ? (
 								previous.map((event) => (
 									<EventItem

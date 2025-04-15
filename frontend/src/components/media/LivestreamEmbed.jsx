@@ -172,7 +172,7 @@ function LivestreamEmbed({
 							</div>
 						)}
 						{/* MOBILE LINK ICONS */}
-						<div className='flex sm:hidden flex-wrap gap-2'>
+						<div className='flex w-full sm:hidden gap-2 px-2'>
 							{socialLinks.map((link, i) => {
 								const IconComponent = getIconComponent(link.reactIcon);
 								if (!IconComponent) return null;
@@ -182,18 +182,18 @@ function LivestreamEmbed({
 										to={link.url}
 										target='_blank'
 										rel='noopener noreferrer'
-										className='skew-x-[30deg] w-10 h-8 flex items-center justify-center bg-red text-bkg hover:bg-red/80'>
+										className='skew-x-[30deg] flex-grow w-full h-8 flex items-center justify-center bg-red text-bkg hover:bg-red/80'>
 										<IconComponent className='w-full h-full p-1 -skew-x-[30deg]' />
 									</Link>
 								);
 							})}
 						</div>
 
-						<Link
+						{/* <Link
 							to='/sermons'
 							className='font-dm text-lg sm:text-xl clickable  '>
 							{isLive ? liveSeeMore : offlineSeeMore}
-						</Link>
+						</Link> */}
 					</div>
 				</div>
 			</div>
