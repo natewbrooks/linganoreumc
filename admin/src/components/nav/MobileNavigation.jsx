@@ -55,30 +55,31 @@ function MobileNavigation() {
 				</div>
 
 				{/* Slide-out Fullscreen Nav */}
+				{/* Slide-out Fullscreen Nav */}
 				<div
-					className={`fixed bottom-0 left-0 h-[calc(100vh-80px)]  w-screen -z-10 bg-darkred text-bkg transform ${
+					className={`fixed bottom-0 left-0 h-[calc(100vh-80px)] w-screen -z-10 bg-darkred text-bkg transform ${
 						open ? 'translate-x-0' : '-translate-x-full'
 					} transition-transform duration-300 ease-in-out px-6 py-8 flex flex-col justify-between`}>
-					{/* Nav Links */}
-					<div className='flex flex-col space-y-8 text-center font-dm'>
-						<div className={`flex flex-col space-y-4`}>
-							<div className={`w-full text-left border-b-1 pb-2 text-lg`}>Maintenance</div>
-							<Link
-								to='/events/'
-								onClick={() => handleCloseAndNavigate('/events/')}
-								className='text-3xl font-dm'>
-								Events
-							</Link>
-							<Link
-								to='/sermons/'
-								onClick={() => handleCloseAndNavigate('/sermons/')}
-								className='text-3xl font-dm'>
-								Sermons
-							</Link>
-						</div>
+					{/* If logged in, show nav sections */}
+					{isAuthenticated ? (
+						<>
+							<div className='flex flex-col space-y-8 text-center font-dm'>
+								<div className={`flex flex-col space-y-4`}>
+									<div className={`w-full text-left border-b-1 pb-2 text-lg`}>Maintenance</div>
+									<Link
+										to='/events/'
+										onClick={() => handleCloseAndNavigate('/events/')}
+										className='text-3xl font-dm'>
+										Events
+									</Link>
+									<Link
+										to='/sermons/'
+										onClick={() => handleCloseAndNavigate('/sermons/')}
+										className='text-3xl font-dm'>
+										Sermons
+									</Link>
+								</div>
 
-						{isAuthenticated && (
-							<>
 								<div className={`flex flex-col space-y-4`}>
 									<div className={`w-full text-left border-b-1 pb-2 text-lg`}>Settings</div>
 									<Link
@@ -108,24 +109,35 @@ function MobileNavigation() {
 										</Link>
 									</div>
 								)}
-							</>
-						)}
-					</div>
+							</div>
 
-					{/* Account + Logout */}
-					{isAuthenticated && (
-						<div className='flex justify-between items-center'>
-							<button
-								onClick={() => handleCloseAndNavigate('/manage/account/')}
-								className='flex items-center space-x-2 text-xl font-dm'>
-								<FaUserCircle size={24} />
-								<span>{user.username}</span>
-							</button>
-							<button
-								onClick={handleLogoutClick}
-								className='text-xl font-dm text-bkg'>
-								Logout
-							</button>
+							{/* Account + Logout */}
+							<div className='flex justify-between items-center'>
+								<button
+									onClick={() => handleCloseAndNavigate('/manage/account/')}
+									className='flex items-center space-x-2 text-xl font-dm'>
+									<FaUserCircle size={24} />
+									<span>{user.username}</span>
+								</button>
+								<button
+									onClick={handleLogoutClick}
+									className='text-xl font-dm text-bkg'>
+									Logout
+								</button>
+							</div>
+						</>
+					) : (
+						// Not logged in → show only Exit to Home
+						<div className='w-full h-full flex items-center justify-center'>
+							<Link
+								to='http://localhost'
+								onClick={() => setOpen(false)}
+								className='font-dm text-bkg text-center text-3xl'>
+								<span className={`text-4xl`}>E</span>
+								<span className={`text-2xl`}>XIT TO </span>
+								<span className={`text-4xl`}>H</span>
+								<span className={`text-2xl`}>OME</span>
+							</Link>
 						</div>
 					)}
 				</div>

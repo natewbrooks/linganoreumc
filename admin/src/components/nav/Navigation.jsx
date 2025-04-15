@@ -103,8 +103,11 @@ function Navigation() {
 					) : (
 						<Link
 							to='http://localhost'
-							className='font-dm text-bkg text-2xl clickable'>
-							Exit
+							className='font-dm text-bkg clickable'>
+							<span className={`text-xl`}>E</span>
+							<span className={`text-lg`}>
+								XIT TO <span className={`text-xl`}>H</span>OME
+							</span>
 						</Link>
 					)}
 				</div>
