@@ -8,7 +8,7 @@ const navItems = [
 	{ path: '/calendar/', label: 'CALENDAR' },
 	{ path: '/sermons/', label: 'SERMONS' },
 	{ path: '/events/', label: 'EVENTS' },
-	{ path: '/give/', label: 'GIVE' },
+	// { path: '/give/', label: 'GIVE' },
 ];
 
 function Navigation() {

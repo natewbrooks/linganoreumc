@@ -72,7 +72,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 					<div className='relative flex space-x-2 w-full text-bkg font-dm mx-auto '>
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
-								to={`/events/${event.id}`}
+								to={`${placeholder ? '/' : `/events/${event.id}`}`}
 								key={event.id || index}
 								className='relative w-[200px] lg:w-[250px] flex justify-center group'>
 								<div
@@ -201,12 +201,15 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 						)}
 					</div>
 				</div>
-				<div className={`w-full relative left-[50%] md:left-[80%] h-[40px] top-2`}>
-					<div className={`bg-red py-5 skew-r left-0 top-10 `} />
+				<div
+					className={`w-full relative left-[50%] md:left-[80%] h-[40px] ${
+						secondRowOnlyPlaceholders ? '-top-64 md:top-2' : 'top-2'
+					}`}>
+					<div className={`bg-red py-5 skew-r left-0 top-10`} />
 					<Link
 						to={'/events/'}
 						className={``}>
-						<div className={`clickable text-lg absolute top-1 px-4 font-dm text-bkg`}>
+						<div className={`clickable text-lg absolute top-1.5 px-4 font-dm text-bkg`}>
 							VIEW ALL EVENTS
 						</div>
 					</Link>
