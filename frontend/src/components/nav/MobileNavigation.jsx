@@ -40,7 +40,7 @@ function MobileNavigation({ announcementBannerEnabled }) {
 		<>
 			{/* Header Bar */}
 			<div className='relative w-full flex items-center justify-between px-4 bg-red border-y-4 border-bkg h-[80px]'>
-				<Link to={`/`}>
+				<Link to={`${import.meta.env.VITE_BASE_URL}/`}>
 					<Logo
 						width={250}
 						className='group- h-full select-none'

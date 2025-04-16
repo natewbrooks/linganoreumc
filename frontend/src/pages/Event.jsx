@@ -134,7 +134,9 @@ const Event = () => {
 								}`}
 								onClick={() => setModalIndex(i)}>
 								<img
-									src={'/api/media/images/' + img.url.split('/').pop()}
+									src={
+										`${import.meta.env.VITE_API_BASE_URL}/media/images/` + img.url.split('/').pop()
+									}
 									alt='Event'
 									className='w-full object-cover'
 								/>

@@ -9,8 +9,8 @@ export default function SelectStainedGlassImages({
 	const [availableUploads, setAvailableUploads] = useState([]);
 	const { uploadStainedGlassImage } = useHomePageSettings();
 
-	const folderFilter = '/api/media/images/stained-glass/';
-	const mediaBasePath = '/api/media/images/';
+	const folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/stained-glass/`;
+	const mediaBasePath = `${import.meta.env.VITE_API_BASE_URL}/media/images/`;
 
 	useEffect(() => {
 		fetch(folderFilter)

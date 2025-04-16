@@ -54,7 +54,7 @@ export default function SelectEventImages({
 			onChangeImages={handleEventImagesChange}
 			availableUploads={availableUploads}
 			setAvailableUploads={setAvailableUploads}
-			folderFilter={`/api/media/images/events/${eventID}/`}
+			folderFilter={`${import.meta.env.VITE_API_BASE_URL}/media/images/events/${eventID}/`}
 			customUploadFunction={uploadHandler}
 			toggleableActive={true}
 			showDeleteButton={false}

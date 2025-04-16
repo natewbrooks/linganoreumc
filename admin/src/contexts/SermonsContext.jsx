@@ -13,7 +13,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const getAllSermons = async () => {
 		try {
-			const res = await fetch('/api/sermons/all/');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/sermons/all/`);
 			const data = await res.json();
 			setSermons(data);
 			setLoading(false);
@@ -24,7 +24,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const getSermonById = async (id) => {
 		try {
-			const res = await fetch(`/api/sermons/${id}`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/sermons/${id}`);
 			if (!res.ok) throw new Error('Sermon not found');
 			return await res.json();
 		} catch (err) {
@@ -35,7 +35,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const getArchivedSermons = async () => {
 		try {
-			const res = await fetch('/api/admin/sermons/archived/');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sermons/archived/`);
 			if (!res.ok) throw new Error('Failed to fetch archived sermons');
 			return await res.json();
 		} catch (err) {
@@ -47,7 +47,7 @@ export const SermonsProvider = ({ children }) => {
 	const scrapeSermonDataFromURL = async (videoURL) => {
 		console.log('SCRAPE IN OCNTEXT: ' + videoURL);
 		try {
-			const res = await fetch(`/api/media/scrape-youtube/`, {
+			const res = await fetch(`/media/scrape-youtube/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ videoURL }),
@@ -63,7 +63,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const createSermon = async (sermonData) => {
 		try {
-			const res = await fetch(`/api/admin/sermons/new/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sermons/new/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(sermonData),
@@ -79,7 +79,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const updateSermon = async (id, updatedData) => {
 		try {
-			const res = await fetch(`/api/admin/sermons/update/${id}/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sermons/update/${id}/`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(updatedData),
@@ -98,7 +98,7 @@ export const SermonsProvider = ({ children }) => {
 
 	const deleteSermon = async (id) => {
 		try {
-			const res = await fetch(`/api/admin/sermons/delete/${id}/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sermons/delete/${id}/`, {
 				method: 'DELETE',
 			});
 			if (!res.ok) throw new Error('Failed to delete sermon');

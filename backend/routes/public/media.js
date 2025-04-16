@@ -11,22 +11,22 @@ import { scrapeYouTubeVideo } from '../../api/mediaAPI.js';
 
 const router = express.Router();
 
-// GET /api/media/images
-router.get('/images/', getAllImages); // or rename to /api/images to replace static
-// GET /api/media/images/header/
+// GET /media/images
+router.get('/images/', getAllImages); // or rename to /images to replace static
+// GET /media/images/header/
 router.get('/images/header/', getAllHeaderImages); // all header images
-// GET /api/media/images/stained-glass/
+// GET /media/images/stained-glass/
 router.get('/images/stained-glass/', getAllStainedGlassImages); // all stained glass images
-// GET /api/media/images/events/
+// GET /media/images/events/
 router.get('/images/events/:eventID', getAllEventImages); // all event images
-// GET /api/media/images/events/
+// GET /media/images/events/
 router.get('/images/events/', getAllEventsImages); // all event images
-// GET /api/media/images/:filename
+// GET /media/images/:filename
 router.get('/images/:filename', getImage); // get specific image by name, regardless of the folder its in
 
-// POST /api/media/scrape-youtube/
+// POST /media/scrape-youtube/
 router.post('/scrape-youtube/', scrapeYouTubeVideo);
 
-// app.use('/api/images', express.static(path.join(__dirname, 'media', 'images')));
+// app.use('/images', express.static(path.join(__dirname, 'media', 'images')));
 
 export default router;

@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 	// Check login status
 	const checkAuth = async () => {
 		try {
-			const res = await axios.get('http://localhost:5000/api/admin/login', {
+			const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/login`, {
 				withCredentials: true,
 			});
 			setIsAuthenticated(true);
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
 	const logout = async () => {
 		try {
 			await axios.post(
-				'http://localhost:5000/api/admin/login/logout',
+				`${import.meta.env.VITE_API_BASE_URL}/admin/login/logout`,
 				{},
 				{ withCredentials: true }
 			);
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
 	const updateOwnPassword = async (currentPassword, newPassword) => {
 		try {
 			const res = await axios.put(
-				'http://localhost:5000/api/admin/users/self/password',
+				`${import.meta.env.VITE_API_BASE_URL}/admin/users/self/password`,
 				{ currentPassword, newPassword },
 				{ withCredentials: true }
 			);
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
 	const updateOwnUsername = async (username) => {
 		try {
 			const res = await axios.put(
-				'http://localhost:5000/api/admin/users/self/username',
+				`${import.meta.env.VITE_API_BASE_URL}/admin/users/self/username`,
 				{ username },
 				{ withCredentials: true }
 			);

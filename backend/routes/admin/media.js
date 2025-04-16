@@ -20,11 +20,11 @@ const headerImagesPath = path.join(mediaImagesPath, 'header');
 const stainedGlassDir = path.join(mediaImagesPath, 'stained-glass');
 const eventImagesDir = path.join(mediaImagesPath, 'events');
 
-// POST /api/admin/media/images/
+// POST /admin/media/images/
 // Use multerConfig to handle general image uploads, storing files in /media/images/
 router.post('/images/', createMulterUploader(mediaImagesPath).single('image'), uploadImage);
 
-// POST /api/admin/media/images/header/
+// POST /admin/media/images/header/
 // Use multerConfig to handle header image uploads, storing files in /media/images/header/
 router.post(
 	'/images/header/',
@@ -36,7 +36,7 @@ router.post(
 	uploadHeaderImage
 );
 
-// POST /api/admin/media/images/stained-glass/
+// POST /admin/media/images/stained-glass/
 router.post(
 	'/images/stained-glass/',
 	createMulterUploader(stainedGlassDir).single('image'),
@@ -47,7 +47,7 @@ router.post(
 	uploadStainedGlassImage
 );
 
-// POST /api/admin/media/images/events/:eventID
+// POST /admin/media/images/events/:eventID
 // Use multerConfig to handle event image uploads, storing files in /media/images/event/:eventID
 router.post(
 	'/images/events/:eventID',
@@ -67,7 +67,7 @@ router.post(
 	uploadEventImage
 );
 
-// DELETE /api/admin/media/images/:filename
+// DELETE /admin/media/images/:filename
 router.delete('/images/:filename', deleteImage);
 
 export default router;

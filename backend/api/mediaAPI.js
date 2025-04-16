@@ -47,12 +47,12 @@ function findFileRecursively(dir, targetFilename) {
 	return null;
 }
 
-// GET /api/media/images/
+// GET /media/images/
 export const getAllImages = (req, res) => {
 	try {
 		const allFiles = getAllFilesRecursively(imagesDir);
 		const paths = allFiles.map(
-			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 		);
 		res.json(paths);
 	} catch (err) {
@@ -60,12 +60,12 @@ export const getAllImages = (req, res) => {
 	}
 };
 
-// GET /api/media/images/header/
+// GET /media/images/header/
 export const getAllHeaderImages = (req, res) => {
 	try {
 		const headerFiles = getAllFilesRecursively(headerImagesDir);
 		const paths = headerFiles.map(
-			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 		);
 		res.json(paths);
 	} catch (err) {
@@ -73,12 +73,12 @@ export const getAllHeaderImages = (req, res) => {
 	}
 };
 
-// GET /api/media/images/stained-glass/
+// GET /media/images/stained-glass/
 export const getAllStainedGlassImages = (req, res) => {
 	try {
 		const files = getAllFilesRecursively(stainedGlassDir);
 		const paths = files.map(
-			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 		);
 		res.json(paths);
 	} catch (err) {
@@ -86,12 +86,12 @@ export const getAllStainedGlassImages = (req, res) => {
 	}
 };
 
-// GET /api/media/images/events/
+// GET /media/images/events/
 // export const getAllEventsImages = (req, res) => {
 // 	try {
 // 		const eventImageFiles = getAllFilesRecursively(eventImagesDir);
 // 		const paths = eventImageFiles.map(
-// 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+// 			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 // 		);
 // 		res.json(paths);
 // 	} catch (err) {
@@ -108,7 +108,7 @@ export const getAllEventsImages = async (req, res) => {
 	}
 };
 
-// GET /api/media/images/events/:eventID
+// GET /media/images/events/:eventID
 // export const getAllEventImages = (req, res) => {
 // 	try {
 // 		const eventID = req.params.eventID;
@@ -120,7 +120,7 @@ export const getAllEventsImages = async (req, res) => {
 
 // 		const eventImageFiles = getAllFilesRecursively(eventPath);
 // 		const paths = eventImageFiles.map(
-// 			(file) => '/api/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+// 			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
 // 		);
 
 // 		res.json(paths);
@@ -142,7 +142,7 @@ export const getAllEventImages = async (req, res) => {
 	}
 };
 
-// GET /api/media/images/:filename
+// GET /media/images/:filename
 export const getImage = (req, res) => {
 	const { filename } = req.params;
 	const fileLocation = findFileRecursively(imagesDir, filename);
@@ -152,7 +152,7 @@ export const getImage = (req, res) => {
 	return res.sendFile(fileLocation);
 };
 
-// DELETE /api/media/images/:filename
+// DELETE /media/images/:filename
 // deletes relevant EventPhoto from database if applicable
 export const deleteImage = async (req, res) => {
 	const { filename } = req.params;
@@ -172,7 +172,7 @@ export const deleteImage = async (req, res) => {
 
 			if (match) {
 				const eventID = match[1];
-				const photoURL = `/api/media/images/${relativePath}`;
+				const photoURL = `/media/images/${relativePath}`;
 
 				await pool.execute('DELETE FROM EventPhotos WHERE eventID = ? AND photoURL = ?', [
 					eventID,
@@ -188,33 +188,33 @@ export const deleteImage = async (req, res) => {
 	});
 };
 
-// POST /api/admin/media/images/
+// POST /admin/media/images/
 export const uploadImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
 
-	res.json({ filePath: '/api/media/images/' + sanitized });
+	res.json({ filePath: '/media/images/' + sanitized });
 };
 
-// POST /api/admin/media/images/header/
+// POST /admin/media/images/header/
 export const uploadHeaderImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
 
-	res.json({ filePath: '/api/media/images/header/' + sanitized });
+	res.json({ filePath: '/media/images/header/' + sanitized });
 };
 
-// POST /api/admin/media/images/stained-glass/
+// POST /admin/media/images/stained-glass/
 export const uploadStainedGlassImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
-	res.json({ filePath: '/api/media/images/stained-glass/' + sanitized });
+	res.json({ filePath: '/media/images/stained-glass/' + sanitized });
 };
 
-// POST /api/admin/media/images/events/:eventID
+// POST /admin/media/images/events/:eventID
 export const uploadEventImage = async (req, res) => {
 	if (!req.file) {
 		return res.status(400).json({ error: 'No file uploaded.' });
@@ -227,7 +227,7 @@ export const uploadEventImage = async (req, res) => {
 
 	try {
 		const sanitized = req.file.originalname.replace(/\s+/g, '-');
-		const filePath = `/api/media/images/events/${eventID}/${sanitized}`;
+		const filePath = `/media/images/events/${eventID}/${sanitized}`;
 
 		// Insert image into EventPhotos table
 		await pool.execute(
@@ -282,7 +282,7 @@ export const setEventPhotoThumbnail = async (req, res) => {
 	console.log('Setting eventID: ', eventID, ' thumbnail to: ', filename);
 
 	// Rebuild photoURL from known path structure
-	const photoURL = `/api/media/images/events/${eventID}/${filename}`;
+	const photoURL = `/media/images/events/${eventID}/${filename}`;
 
 	try {
 		// Unset all current thumbnails for the event

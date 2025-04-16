@@ -89,7 +89,8 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 					ref={emblaRef}>
 					<div className='flex h-full'>
 						{images.map((img, i) => {
-							const src = '/api/media/images/' + img.url.split('/').pop();
+							const src =
+								`${import.meta.env.VITE_API_BASE_URL}/media/images/` + img.url.split('/').pop();
 							return (
 								<div
 									key={i}

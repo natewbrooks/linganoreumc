@@ -34,7 +34,7 @@ function EventItem({ event }) {
 
 	return (
 		<Link
-			to={`/events/${event.id}`}
+			to={`${import.meta.env.VITE_ADMIN_BASE_URL}/events/${event.id}`}
 			className='font-dm w-full clickable   '>
 			{/* Date/Time row */}
 			<div className='text-xs md:text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] relative flex items-center space-x-2'>

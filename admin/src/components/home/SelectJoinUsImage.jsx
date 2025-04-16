@@ -6,8 +6,8 @@ export default function SelectJoinUsImage({ joinUsSermonImageURL = '', onChangeI
 	const [availableUploads, setAvailableUploads] = useState([]);
 	const { uploadHeaderImage } = useHomePageSettings();
 
-	const folderFilter = '/api/media/images/';
-	const mediaBasePath = '/api/media/images/';
+	const folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/`;
+	const mediaBasePath = `${import.meta.env.VITE_API_BASE_URL}/media/images/`;
 
 	useEffect(() => {
 		fetch(folderFilter)

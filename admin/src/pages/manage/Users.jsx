@@ -29,7 +29,7 @@ function Users() {
 	useEffect(() => {
 		if (user?.role === 'admin') {
 			axios
-				.get('http://localhost:5000/api/admin/users', { withCredentials: true })
+				.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users`, { withCredentials: true })
 				.then((res) => setUsers(res.data))
 				.catch((err) => console.error(err));
 		}
@@ -50,14 +50,14 @@ function Users() {
 	const handleCreateUser = async () => {
 		try {
 			const res = await axios.post(
-				'http://localhost:5000/api/admin/users',
+				`${import.meta.env.VITE_API_BASE_URL}/admin/users`,
 				{ ...newUser, role: newUser.role.toLowerCase() },
 				{ withCredentials: true }
 			);
 			setFeedback(res.data.message);
 			setNewUser({ username: '', password: '', role: 'user' });
 
-			const updated = await axios.get('http://localhost:5000/api/admin/users', {
+			const updated = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users`, {
 				withCredentials: true,
 			});
 			setUsers(updated.data);
@@ -71,7 +71,9 @@ function Users() {
 	const handleDeleteUser = async (id) => {
 		if (!window.confirm('Are you sure you want to delete this user?')) return;
 		try {
-			await axios.delete(`http://localhost:5000/api/admin/users/${id}`, { withCredentials: true });
+			await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/users/${id}`, {
+				withCredentials: true,
+			});
 			setFeedback('User deleted');
 			setUsers(users.filter((u) => u.id !== id));
 		} catch (err) {
@@ -300,16 +302,19 @@ function Users() {
 
 										try {
 											await axios.put(
-												`http://localhost:5000/api/admin/users/${editNameModal.id}`,
+												`${import.meta.env.VITE_API_BASE_URL}/admin/users/${editNameModal.id}`,
 												{
 													username: editedUsername,
 													role: users.find((u) => u.id === editNameModal.id)?.role,
 												},
 												{ withCredentials: true }
 											);
-											const updated = await axios.get('http://localhost:5000/api/admin/users', {
-												withCredentials: true,
-											});
+											const updated = await axios.get(
+												`${import.meta.env.VITE_API_BASE_URL}/admin/users`,
+												{
+													withCredentials: true,
+												}
+											);
 											setUsers(updated.data);
 											setFeedback('Username updated');
 											setEditNameModal(null);

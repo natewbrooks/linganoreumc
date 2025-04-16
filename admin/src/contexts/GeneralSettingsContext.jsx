@@ -8,7 +8,7 @@ export const GeneralSettingsProvider = ({ children }) => {
 
 	// Fetch settings on mount
 	useEffect(() => {
-		fetch('/api/settings/general')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/settings/general`)
 			.then((res) => res.json())
 			.then((data) => {
 				setGeneralSettings(data);
@@ -20,7 +20,7 @@ export const GeneralSettingsProvider = ({ children }) => {
 	// Update settings API
 	const updateGeneralSettings = (newSettings) => {
 		setGeneralSettings(newSettings);
-		fetch('/api/admin/settings/general', {
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/settings/general`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(newSettings),

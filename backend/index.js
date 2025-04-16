@@ -47,7 +47,7 @@ app.use(
 
 app.use(cookieParser());
 
-app.use('/api/admin/media', adminMediaRouter);
+app.use('/admin/media', adminMediaRouter);
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -62,15 +62,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Public API Routes (No Authentication Needed)
-app.use('/api/events/', publicEventsRouter);
-app.use('/api/sermons/', publicSermonsRouter);
-app.use('/api/settings/', publicSettingsRouter);
-app.use('/api/media/', publicMediaRouter);
+app.use('/events/', publicEventsRouter);
+app.use('/sermons/', publicSermonsRouter);
+app.use('/settings/', publicSettingsRouter);
+app.use('/media/', publicMediaRouter);
 
 // Admin login (unprotected)
-app.use('/api/admin/login/', adminLoginRouter);
+app.use('/admin/login/', adminLoginRouter);
 
-// JWT middleware protection for all /api/admin routes
+// JWT middleware protection for all /admin routes
 app.use((req, res, next) => {
 	if (req.originalUrl.includes('/admin')) {
 		verifyJWT(req, res, (err) => {
@@ -89,12 +89,12 @@ app.use((req, res, next) => {
 });
 
 // Admin Protected Routes (JWT Required)
-app.use('/api/admin/events/', adminEventsRoute);
-app.use('/api/admin/sermons/', adminSermonsRouter);
-app.use('/api/admin/settings/', adminSettingsRouter);
+app.use('/admin/events/', adminEventsRoute);
+app.use('/admin/sermons/', adminSermonsRouter);
+app.use('/admin/settings/', adminSettingsRouter);
 
 // Requires the admin role as well
-app.use('/api/admin/users/', adminUsersRouter);
+app.use('/admin/users/', adminUsersRouter);
 
 // Global error handler for multer and other uncaught errors
 app.use((err, req, res, next) => {

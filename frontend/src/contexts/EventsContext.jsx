@@ -10,7 +10,7 @@ export const EventsProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch('/api/events/all/')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all/`)
 			.then((res) => res.json())
 			.then((data) => {
 				const filtered = data.filter((event) => !event.isArchived);
@@ -22,14 +22,14 @@ export const EventsProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		fetch('/api/events/dates/all/')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/all/`)
 			.then((res) => res.json())
 			.then((data) => setEventDates(data))
 			.catch((err) => setError(err.message));
 	}, []);
 
 	useEffect(() => {
-		fetch('/api/events/times/all/')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/all/`)
 			.then((res) => res.json())
 			.then((data) => setEventTimes(data))
 			.catch((err) => setError(err.message));
@@ -37,7 +37,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventById = async (eventId) => {
 		try {
-			const res = await fetch(`/api/events/${eventId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${eventId}/`);
 			if (!res.ok) throw new Error('Failed to fetch event');
 			return await res.json();
 		} catch (err) {
@@ -48,7 +48,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventDatesById = async (eventId) => {
 		try {
-			const res = await fetch(`/api/events/dates/${eventId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/${eventId}/`);
 			if (!res.ok) throw new Error('Failed to fetch event dates');
 			return await res.json();
 		} catch (err) {
@@ -59,7 +59,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventTimesByDateId = async (eventDateId) => {
 		try {
-			const res = await fetch(`/api/events/times/${eventDateId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/${eventDateId}/`);
 			if (!res.ok) throw new Error('Failed to fetch event times');
 			return await res.json();
 		} catch (err) {
@@ -72,13 +72,13 @@ export const EventsProvider = ({ children }) => {
 	const fetchEventTimesByEventId = async (eventId) => {
 		try {
 			// First, get all event dates associated with this event
-			const dateRes = await fetch(`/api/events/dates/${eventId}/`);
+			const dateRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/${eventId}/`);
 			if (!dateRes.ok) throw new Error('Failed to fetch event dates');
 			const eventDates = await dateRes.json();
 
 			// For each date, fetch times
 			const timeFetches = eventDates.map((date) =>
-				fetch(`/api/events/times/${date.id}/`).then((res) => {
+				fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/${date.id}/`).then((res) => {
 					if (!res.ok) throw new Error(`Failed to fetch times for date ID ${date.id}`);
 					return res.json();
 				})
@@ -103,7 +103,9 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventImages = async (eventID) => {
 		try {
-			const res = await fetch(`/api/media/images/events/${eventID}`);
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/media/images/events/${eventID}`
+			);
 			if (!res.ok) throw new Error('Failed to fetch event images');
 			const data = await res.json();
 

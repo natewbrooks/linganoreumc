@@ -7,7 +7,7 @@ export const useSermons = () => useContext(SermonsContext);
 // Fetch all sermons from API
 const fetchSermons = async () => {
 	try {
-		const response = await fetch('http://localhost:5000/api/sermons/all/');
+		const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/sermons/all/`);
 		if (!response.ok) {
 			throw new Error('Failed to fetch sermons');
 		}

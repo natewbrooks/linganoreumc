@@ -7,7 +7,7 @@ export const useSettings = () => useContext(SettingsContext);
 // Fetch settings dynamically
 const fetchSettings = async (endpoint) => {
 	try {
-		const response = await fetch(`http://localhost:5000/api/settings/${endpoint}`);
+		const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/settings/${endpoint}`);
 		if (!response.ok) {
 			throw new Error(`Failed to fetch ${endpoint} settings`);
 		}

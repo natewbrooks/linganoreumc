@@ -6,8 +6,8 @@ export default function SelectHeaderImages({ headerImages = [], onChangeHeaderIm
 	const [availableUploads, setAvailableUploads] = useState([]);
 	const { uploadHeaderImage } = useHomePageSettings();
 
-	const folderFilter = '/api/media/images/header/';
-	const mediaBasePath = '/api/media/images/';
+	const folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/header/`;
+	const mediaBasePath = `${import.meta.env.VITE_API_BASE_URL}/media/images/`;
 
 	useEffect(() => {
 		fetch(folderFilter)

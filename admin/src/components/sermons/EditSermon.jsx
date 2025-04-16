@@ -9,7 +9,7 @@ function EditSermon() {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch(`/api/sermons/${id}`)
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/sermons/${id}`)
 			.then((res) => {
 				if (!res.ok) throw new Error('Failed to fetch sermon');
 				return res.json();

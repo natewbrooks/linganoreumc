@@ -16,7 +16,7 @@ const Sermon = () => {
 		const fetchSermon = async () => {
 			try {
 				setLoading(true);
-				const res = await fetch(`http://localhost:5000/api/sermons/${sermonID}`);
+				const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/sermons/${sermonID}`);
 				if (!res.ok) throw new Error('Sermon not found');
 				const data = await res.json();
 				setSermon(data);

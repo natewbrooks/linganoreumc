@@ -19,7 +19,7 @@ function FeaturedEventItem({ event }) {
 			const thumbnail = images.find((img) => img.isThumbnail);
 			setThumbnailUrl(
 				thumbnail
-					? `http://localhost:5000/api/media/images/${thumbnail.url.split('/').pop()}`
+					? `${import.meta.env.VITE_API_BASE_URL}/media/images/${thumbnail.url.split('/').pop()}`
 					: null
 			);
 		};
@@ -31,7 +31,7 @@ function FeaturedEventItem({ event }) {
 
 	return (
 		// <Link
-		// 	to={`/events/${event.id}`}
+		// 	to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
 		// 	className={`flex flex-col w-full h-[180px] skew-x-[10deg] hover:scale-[1.02] hover:opacity-50 active:scale-[1]     ${
 		// 		hasBackground ? 'bg-contain object-center object-contain bg-center' : 'bg-tp'
 		// 	}`}
@@ -47,7 +47,7 @@ function FeaturedEventItem({ event }) {
 		// 	)}
 		// </Link>
 		<Link
-			to={`/events/${event.id}`}
+			to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
 			className={`relative flex flex-col w-full h-[180px] hover:scale-[1.02] hover:opacity-50 active:scale-[1]`}>
 			{/* Common wrapper to keep sizing consistent */}
 			<div className='w-full h-full'>

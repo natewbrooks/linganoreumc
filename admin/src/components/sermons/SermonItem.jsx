@@ -23,7 +23,7 @@ function SermonItem({ sermon }) {
 
 	return (
 		<Link
-			to={`/sermons/${sermon.id}`}
+			to={`${import.meta.env.VITE_ADMIN_BASE_URL}/sermons/${sermon.id}`}
 			className='font-dm w-full outline-0 clickable'>
 			{/* Top Info Panel */}
 			<div className='text-xs md:text-sm text-darkred bg-accent px-4 py-0.5 w-fit -skew-x-[30deg] flex flex-col md:flex-row md:items-center md:space-x-4'>

@@ -12,7 +12,7 @@ function CalendarGridItemEvent({ event, date, time, isPast }) {
 		<>
 			<Link
 				key={time}
-				to={`/events/${event.id}`}
+				to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
 				className={`flex ${
 					event.isCancelled
 						? 'flex-col space-y-1 bg-darkred text-bkg text-center clickable'

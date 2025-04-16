@@ -3,13 +3,13 @@ import { tryLogin, getLogin, logout } from '../../api/auth/loginAPI.js';
 
 const router = express.Router();
 
-// GET /api/admin/login
+// GET /admin/login
 router.get('/', getLogin);
 
-// POST /api/admin/login
+// POST /admin/login
 router.post('/', tryLogin);
 
-// POST /api/admin/login/logout/
+// POST /admin/login/logout/
 router.post('/logout', logout);
 
 export default router;

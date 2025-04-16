@@ -9,7 +9,7 @@ export default function SelectImageSingle({
 	setAvailableUploads,
 	uploadEndpoint,
 	customUploadFunction,
-	folderFilter = '/api/media/images/',
+	folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/`,
 }) {
 	const [imageFile, setImageFile] = useState(null);
 	const [uploadError, setUploadError] = useState('');
@@ -63,9 +63,12 @@ export default function SelectImageSingle({
 
 	const handleDeleteImage = async (filename) => {
 		try {
-			const response = await fetch(`/api/admin/media/images/${filename}`, {
-				method: 'DELETE',
-			});
+			const response = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/${filename}`,
+				{
+					method: 'DELETE',
+				}
+			);
 			if (!response.ok) throw new Error('Failed to delete image');
 			setAvailableUploads((prev) =>
 				prev.filter((item) => {
@@ -86,7 +89,9 @@ export default function SelectImageSingle({
 				availableUploads={availableUploads}
 				images={[image]}
 				initialSelectedImage={
-					image.url?.split('/').pop() ? `/api/media/images/${image.url.split('/').pop()}` : ''
+					image.url?.split('/').pop()
+						? `${import.meta.env.VITE_API_BASE_URL}/media/images/${image.url.split('/').pop()}`
+						: ''
 				}
 				onSelectedImageChange={(selectedUrl) => onChangeImage({ ...image, url: selectedUrl })}
 				onRemoveImage={() => onChangeImage({ url: '', active: false })}

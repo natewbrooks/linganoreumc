@@ -185,7 +185,7 @@ export default function SelectImageDropdown({
 							<div className='grid grid-cols-3 gap-1 overflow-y-auto '>
 								{filteredUploads.map((item, idx) => {
 									const filename = getFilename(item);
-									const filePath = `/api/media/images/${filename}`;
+									const filePath = `${import.meta.env.VITE_API_BASE_URL}/media/images/${filename}`;
 
 									return (
 										<div

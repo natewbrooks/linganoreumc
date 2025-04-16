@@ -9,7 +9,7 @@ export const EventsProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch('/api/events/all/')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all/`)
 			.then((res) => res.json())
 			.then((data) => {
 				setEvents(data);
@@ -19,7 +19,7 @@ export const EventsProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		fetch('/api/events/dates/all/')
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/all/`)
 			.then((res) => res.json())
 			.then((data) => setEventDates(data))
 			.catch((err) => setError(err.message));
@@ -27,8 +27,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventById = async (eventId) => {
 		try {
-			const res = await fetch(`/api/events/${eventId}/`);
-			if (!res.ok) throw new Error('Failed to fetch event');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${eventId}/`);
+			if (!res.ok) throw new Error(`Failed to fetch event`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -38,8 +38,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventDatesById = async (eventId) => {
 		try {
-			const res = await fetch(`/api/events/dates/${eventId}/`);
-			if (!res.ok) throw new Error('Failed to fetch event dates');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/${eventId}/`);
+			if (!res.ok) throw new Error(`Failed to fetch event dates`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -49,8 +49,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventTimesByDateId = async (eventDateId) => {
 		try {
-			const res = await fetch(`/api/events/times/${eventDateId}/`);
-			if (!res.ok) throw new Error('Failed to fetch event times');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/${eventDateId}/`);
+			if (!res.ok) throw new Error(`Failed to fetch event times`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -60,9 +60,11 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventImages = async (eventID) => {
 		try {
-			if (!eventID) throw new Error('Missing eventID');
-			const res = await fetch(`/api/media/images/events/${eventID}`);
-			if (!res.ok) throw new Error('Failed to fetch event images');
+			if (!eventID) throw new Error(`Missing eventID`);
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/media/images/events/${eventID}`
+			);
+			if (!res.ok) throw new Error(`Failed to fetch event images`);
 			const data = await res.json();
 
 			// Sanitize structure
@@ -73,7 +75,7 @@ export const EventsProvider = ({ children }) => {
 				  }))
 				: [];
 		} catch (err) {
-			console.error('Error fetching event images:', err);
+			console.error(`Error fetching event images:`, err);
 			setError(err.message);
 			return [];
 		}
@@ -84,10 +86,13 @@ export const EventsProvider = ({ children }) => {
 			const formData = new FormData();
 			formData.append('image', file);
 
-			const res = await fetch(`/api/admin/media/images/events/${eventID}`, {
-				method: 'POST',
-				body: formData,
-			});
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/events/${eventID}`,
+				{
+					method: 'POST',
+					body: formData,
+				}
+			);
 
 			const data = await res.json();
 			if (!res.ok) {
@@ -104,12 +109,12 @@ export const EventsProvider = ({ children }) => {
 
 	const createEvent = async (eventData) => {
 		try {
-			const res = await fetch('/api/admin/events/new/', {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/new/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(eventData),
 			});
-			if (!res.ok) throw new Error('Failed to create event');
+			if (!res.ok) throw new Error(`Failed to create event`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -119,13 +124,16 @@ export const EventsProvider = ({ children }) => {
 
 	const updateEvent = async (eventId, updatedData) => {
 		try {
-			const res = await fetch(`/api/admin/events/update/${eventId}/`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(updatedData),
-			});
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}/`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(updatedData),
+				}
+			);
 
-			if (!res.ok) throw new Error('Failed to update event');
+			if (!res.ok) throw new Error(`Failed to update event`);
 
 			setEvents((prevEvents) =>
 				prevEvents.map((event) => (event.id === eventId ? { ...event, ...updatedData } : event))
@@ -138,11 +146,14 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEvent = async (eventId) => {
 		try {
-			const res = await fetch(`/api/admin/events/delete/${eventId}/`, {
-				method: 'DELETE',
-			});
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/delete/${eventId}/`,
+				{
+					method: 'DELETE',
+				}
+			);
 
-			if (!res.ok) throw new Error('Failed to delete event');
+			if (!res.ok) throw new Error(`Failed to delete event`);
 
 			setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
 		} catch (err) {
@@ -153,8 +164,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchRecurringEvents = async () => {
 		try {
-			const res = await fetch('/api/events/recurring/');
-			if (!res.ok) throw new Error('Failed to fetch recurring events');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/recurring/`);
+			if (!res.ok) throw new Error(`Failed to fetch recurring events`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -165,8 +176,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchFeaturedEvents = async () => {
 		try {
-			const res = await fetch('/api/events/featured/');
-			if (!res.ok) throw new Error('Failed to fetch featured events');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/featured/`);
+			if (!res.ok) throw new Error(`Failed to fetch featured events`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -177,8 +188,8 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchArchivedEvents = async () => {
 		try {
-			const res = await fetch('/api/admin/events/archived/');
-			if (!res.ok) throw new Error('Failed to fetch archived events');
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/archived/`);
+			if (!res.ok) throw new Error(`Failed to fetch archived events`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -193,13 +204,16 @@ export const EventsProvider = ({ children }) => {
 				prevEvents.map((event) => (event.id === eventId ? { ...event, isFeatured } : event))
 			);
 
-			const res = await fetch(`/api/admin/events/update/${eventId}/`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ isFeatured }),
-			});
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}/`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ isFeatured }),
+				}
+			);
 
-			if (!res.ok) throw new Error('Failed to toggle event featured status');
+			if (!res.ok) throw new Error(`Failed to toggle event featured status`);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -208,12 +222,12 @@ export const EventsProvider = ({ children }) => {
 
 	const createEventDate = async (eventID, date, isCancelled = false) => {
 		if (!eventID || !date) {
-			console.error('createEventDate: Missing eventID or date');
+			console.error(`createEventDate: Missing eventID or date`);
 			return null;
 		}
 
 		try {
-			const res = await fetch('/api/admin/events/dates/new/', {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/new/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ eventID, date, isCancelled }),
@@ -221,12 +235,12 @@ export const EventsProvider = ({ children }) => {
 
 			if (!res.ok) {
 				const errorData = await res.json();
-				throw new Error(errorData.error || 'Failed to create event date');
+				throw new Error(errorData.error || `Failed to create event date`);
 			}
 
 			return await res.json();
 		} catch (err) {
-			console.error('Error in createEventDate:', err.message);
+			console.error(`Error in createEventDate:`, err.message);
 			setError(err.message);
 			return null;
 		}
@@ -234,13 +248,16 @@ export const EventsProvider = ({ children }) => {
 
 	const updateEventDate = async (eventDateID, date, isCancelled = false) => {
 		try {
-			console.log('Sending update to API:', { eventDateID, date, isCancelled });
-			const res = await fetch(`/api/admin/events/dates/update/${eventDateID}/`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ date, isCancelled }),
-			});
-			if (!res.ok) throw new Error('Failed to update event date');
+			console.log(`Sending update to API:`, { eventDateID, date, isCancelled });
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/update/${eventDateID}/`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ date, isCancelled }),
+				}
+			);
+			if (!res.ok) throw new Error(`Failed to update event date`);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -249,9 +266,12 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEventDate = async (eventDateID) => {
 		try {
-			await fetch(`/api/admin/events/dates/delete/${eventDateID}/`, {
-				method: 'DELETE',
-			});
+			await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/delete/${eventDateID}/`,
+				{
+					method: 'DELETE',
+				}
+			);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -260,12 +280,12 @@ export const EventsProvider = ({ children }) => {
 
 	const createEventTime = async (eventDateID, time) => {
 		try {
-			const res = await fetch('/api/admin/events/times/new/', {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/new/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ eventDateID, time }),
 			});
-			if (!res.ok) throw new Error('Failed to create event time');
+			if (!res.ok) throw new Error(`Failed to create event time`);
 			return await res.json();
 		} catch (err) {
 			console.error(err);
@@ -275,12 +295,15 @@ export const EventsProvider = ({ children }) => {
 
 	const updateEventTime = async (eventTimeID, time) => {
 		try {
-			const res = await fetch(`/api/admin/events/times/update/${eventTimeID}/`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ time }),
-			});
-			if (!res.ok) throw new Error('Failed to update event time');
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/update/${eventTimeID}/`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ time }),
+				}
+			);
+			if (!res.ok) throw new Error(`Failed to update event time`);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -289,9 +312,12 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEventTimes = async (eventDateID) => {
 		try {
-			await fetch(`/api/admin/events/times/delete/${eventDateID}/`, {
-				method: 'DELETE',
-			});
+			await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/delete/${eventDateID}/`,
+				{
+					method: 'DELETE',
+				}
+			);
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -300,12 +326,15 @@ export const EventsProvider = ({ children }) => {
 
 	async function setThumbnailImage(eventID, filename) {
 		try {
-			const res = await fetch(`/api/admin/events/${eventID}/thumbnail`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ filename }),
-			});
-			if (!res.ok) throw new Error('Failed to set thumbnail');
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/${eventID}/thumbnail`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ filename }),
+				}
+			);
+			if (!res.ok) throw new Error(`Failed to set thumbnail`);
 		} catch (err) {
 			console.error('Error setting thumbnail:', err);
 		}
@@ -313,10 +342,13 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEventImage = async (filename) => {
 		try {
-			const res = await fetch(`/api/admin/media/images/${filename}`, {
-				method: 'DELETE',
-			});
-			if (!res.ok) throw new Error('Failed to delete image');
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/${filename}`,
+				{
+					method: 'DELETE',
+				}
+			);
+			if (!res.ok) throw new Error(`Failed to delete image`);
 			return true;
 		} catch (err) {
 			console.error('Error deleting image:', err);
@@ -325,13 +357,13 @@ export const EventsProvider = ({ children }) => {
 	};
 
 	const getShortDayOfWeek = (dateStr) => {
-		const [year, month, day] = dateStr.split('-').map(Number);
+		const [year, month, day] = dateStr.split(`-`).map(Number);
 		const date = new Date(year, month - 1, day); // Local time
 		return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()];
 	};
 
 	const getLongDayOfWeek = (dateStr) => {
-		const [year, month, day] = dateStr.split('-').map(Number);
+		const [year, month, day] = dateStr.split(`-`).map(Number);
 		const date = new Date(year, month - 1, day); // Local time
 		return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'][
 			date.getDay()

@@ -10,7 +10,7 @@ export default function SelectImageGrid({
 	setAvailableUploads,
 	uploadEndpoint,
 	customUploadFunction,
-	folderFilter = '/api/media/images/',
+	folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/`,
 	toggleableActive = false,
 	showDeleteButton = true,
 	onToggleActive,
@@ -101,9 +101,12 @@ export default function SelectImageGrid({
 
 	const handleDeleteImage = async (filename) => {
 		try {
-			const response = await fetch(`/api/admin/media/images/${filename}`, {
-				method: 'DELETE',
-			});
+			const response = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/${filename}`,
+				{
+					method: 'DELETE',
+				}
+			);
 			if (!response.ok) throw new Error('Failed to delete image');
 
 			const cleanName = filename.split('/').pop();
@@ -134,7 +137,9 @@ export default function SelectImageGrid({
 						images={images}
 						toggleableActive={toggleableActive}
 						initialSelectedImage={
-							image.url?.split('/').pop() ? `/api/media/images/${image.url.split('/').pop()}` : ''
+							image.url?.split('/').pop()
+								? `${import.meta.env.VITE_API_BASE_URL}/media/images/${image.url.split('/').pop()}`
+								: ''
 						}
 						onSelectedImageChange={(selectedUrl) => {
 							const updated = [...images];

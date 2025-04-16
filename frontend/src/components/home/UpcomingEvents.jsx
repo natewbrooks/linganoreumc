@@ -38,7 +38,9 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 					const images = await fetchEventImages(event.id);
 					const thumbnail = images.find((img) => img.isThumbnail);
 					if (thumbnail) {
-						map[event.id] = `/api/media/images/${thumbnail.url.split('/').pop()}`;
+						map[event.id] = `${import.meta.env.VITE_API_BASE_URL}/media/images/${thumbnail.url
+							.split('/')
+							.pop()}`;
 					}
 				} catch (err) {
 					console.error(`Failed to fetch thumbnail for event ${event.id}`, err);
@@ -72,7 +74,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 					<div className='relative flex space-x-2 w-full text-bkg font-dm mx-auto '>
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
-								to={`${placeholder ? '/' : `/events/${event.id}`}`}
+								to={`${import.meta.env.VITE_BASE_URL}${placeholder ? '/' : `/events/${event.id}`}`}
 								key={event.id || index}
 								className='relative w-[200px] lg:w-[250px] flex justify-center group'>
 								<div
@@ -119,7 +121,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 						<div className='flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => (
 								<Link
-									to={`/events/${event.id}`}
+									to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
 									key={event.id || index}
 									className={`relative flex w-full justify-center clickable  `}>
 									<div
@@ -162,7 +164,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 								<div className='relative top-23 flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 									{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
 										<Link
-											to={`/events/${event.id}`}
+											to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
 											key={event.id || index}
 											className={`relative flex w-full justify-center clickable  `}>
 											<div

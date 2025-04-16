@@ -12,34 +12,34 @@ function App() {
 		<Routes>
 			{/* Landing Page */}
 			<Route
-				path='/'
+				path={`${import.meta.env.VITE_BASE_URL}/`}
 				element={<Home />}
 			/>
 
 			{/* Events Page */}
 			<Route
-				path='/events/'
+				path={`${import.meta.env.VITE_BASE_URL}/events/`}
 				element={<Events />}
 			/>
 
 			<Route
-				path='/events/:eventID'
+				path={`${import.meta.env.VITE_BASE_URL}/events/:eventID`}
 				element={<Event />}
 			/>
 
 			<Route
-				path='/sermons/'
+				path={`${import.meta.env.VITE_BASE_URL}/sermons/`}
 				element={<Sermons />}
 			/>
 
 			<Route
-				path='/sermons/:sermonID'
+				path={`${import.meta.env.VITE_BASE_URL}/sermons/:sermonID`}
 				element={<Sermon />}
 			/>
 
 			{/* Calendar Page */}
 			<Route
-				path='/calendar/'
+				path={`${import.meta.env.VITE_BASE_URL}/calendar/`}
 				element={<Calendar />}
 			/>
 		</Routes>
