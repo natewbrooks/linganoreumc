@@ -19,6 +19,6 @@ export default defineConfig({
 			protocol: 'ws',
 			host: 'localhost',
 		},
-		allowedHosts: ['localhost', 'admin', 'frontend'],
+		allowedHosts: ['localhost', 'admin.linganoreumc.com', 'linganoreumc.com'],
 	},
 });

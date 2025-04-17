@@ -35,7 +35,6 @@ const Event = () => {
 		const loadEvent = async () => {
 			try {
 				setLoading(true);
-				console.log('Fetching data for event ID:', eventID);
 
 				const [eventData, dateData, timeData, imageData] = await Promise.all([
 					fetchEventById(eventID),
@@ -43,11 +42,6 @@ const Event = () => {
 					fetchEventTimesByEventId(eventID),
 					fetchEventImages(eventID),
 				]);
-
-				console.log('Event:', eventData);
-				console.log('Dates:', dateData);
-				console.log('Times:', timeData);
-				console.log('Images:', imageData);
 
 				setEvent(eventData);
 				setDates(dateData);
@@ -102,7 +96,6 @@ const Event = () => {
 											<li className='italic text-sm text-gray-400'>No times scheduled</li>
 										)}
 										{matchedTimes.map((t, i) => {
-											console.log('Rendering time:', t.time);
 											return (
 												<li
 													key={i}

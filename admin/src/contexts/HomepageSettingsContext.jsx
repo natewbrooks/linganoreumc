@@ -7,7 +7,7 @@ export const HomePageSettingsProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/settings/pages/home`)
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/settings/home`)
 			.then((res) => res.json())
 			.then((data) => {
 				// Safely map server data into the new JSON structure:
@@ -60,7 +60,7 @@ export const HomePageSettingsProvider = ({ children }) => {
 		setHomepageSettings(newSettings);
 
 		// Also persist to server
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/settings/pages/home`, {
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/settings/home`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(newSettings),
@@ -79,7 +79,7 @@ export const HomePageSettingsProvider = ({ children }) => {
 		formData.append('image', file);
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/header/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/header`, {
 				method: 'POST',
 				body: formData,
 			});
@@ -102,7 +102,7 @@ export const HomePageSettingsProvider = ({ children }) => {
 
 		try {
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/stained-glass/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/media/images/stained-glass`,
 				{
 					method: 'POST',
 					body: formData,

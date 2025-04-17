@@ -17,11 +17,11 @@ function Navigation() {
 
 	const isAdmin = user?.role === 'admin'; // Customize this based on your auth system
 
-	const manageLinks = isAdmin ? [{ title: 'Users', to: '/manage/users/' }] : [];
+	const manageLinks = isAdmin ? [{ title: 'Users', to: '/manage/users' }] : [];
 
 	const settingsLinks = [
-		{ title: 'General', to: '/settings/general/' },
-		{ title: 'Home', to: '/settings/home/' },
+		{ title: 'General', to: '/settings/general' },
+		{ title: 'Home', to: '/settings/home' },
 	];
 
 	const accountLinks = [
@@ -42,7 +42,7 @@ function Navigation() {
 					<div
 						className={`z-10 relative -top-4 bg-red outline-4 outline-bkg -skew-x-[30deg] w-fit px-6 py-1`}>
 						<Link
-							to={`${import.meta.env.VITE_ADMIN_BASE_URL}/settings/general/`}
+							to={`/settings/general`}
 							className={`group`}>
 							<Logo
 								width={250}
@@ -59,11 +59,11 @@ function Navigation() {
 						<>
 							<NavLink
 								onHover={() => setActiveDropdown(null)}
-								link={{ title: 'Events', to: '/events/' }}
+								link={{ title: 'Events', to: '/events' }}
 							/>
 							<NavLink
 								onHover={() => setActiveDropdown(null)}
-								link={{ title: 'Sermons', to: '/sermons/' }}
+								link={{ title: 'Sermons', to: '/sermons' }}
 							/>
 
 							<NavLinkDropdown
@@ -95,14 +95,14 @@ function Navigation() {
 									</div>
 								}
 								doUnderline={false}
-								links={[{ title: 'Account', to: '/manage/account/' }, ...accountLinks]}
+								links={[{ title: 'Account', to: '/manage/account' }, ...accountLinks]}
 								isActive={activeDropdown === 'Account'}
 								onHover={() => setActiveDropdown('Account')}
 							/>
 						</>
 					) : (
 						<Link
-							to='http://localhost'
+							to={`/`}
 							className='font-dm text-bkg clickable'>
 							<span className={`text-xl`}>E</span>
 							<span className={`text-lg`}>

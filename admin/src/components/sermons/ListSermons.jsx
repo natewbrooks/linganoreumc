@@ -123,7 +123,7 @@ function ListSermons() {
 								</div>
 							</div>
 							<Link
-								to={'/sermons/new/'}
+								to={'/sermons/new'}
 								className='clickable-r-skew    font-dm text-bkg text-md text-end h-full w-fit bg-red px-3 py-1'>
 								<div className='flex space-x-1 skew-l items-center'>
 									<FaPlus size={16} />

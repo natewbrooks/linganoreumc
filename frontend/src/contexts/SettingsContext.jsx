@@ -46,25 +46,17 @@ function formatTime(timeStr) {
 export const SettingsProvider = ({ children }) => {
 	const [settings, setSettings] = useState({
 		general: null,
-		pages: {
-			home: null,
-			// Future pages
-		},
+		home: null,
+		// Future pages
 	});
 
 	useEffect(() => {
 		const fetchAllSettings = async () => {
-			const [general, home] = await Promise.all([
-				fetchSettings('general'),
-				fetchSettings('pages/home'),
-			]);
+			const [general, home] = await Promise.all([fetchSettings('general'), fetchSettings('home')]);
 
 			setSettings({
 				general,
-				pages: {
-					home,
-					// Future pages
-				},
+				home,
 			});
 		};
 

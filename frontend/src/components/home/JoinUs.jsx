@@ -55,7 +55,7 @@ function JoinUs({ title, subtext, eventIDs, locationName, address, picture }) {
 
 						return (
 							<Link
-								to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+								to={`/events/${event.id}`}
 								key={eventID}
 								className='flex text-lg justify-between clickable'>
 								<div className={` leading-4 w-fit   `}>{event.title}</div>

@@ -14,7 +14,7 @@ function Login() {
 		e.preventDefault();
 		try {
 			await axios.post(
-				'http://localhost:5000/api/admin/login/',
+				`${import.meta.env.VITE_API_BASE_URL}/admin/auth/login`,
 				{ username, password },
 				{ withCredentials: true }
 			);

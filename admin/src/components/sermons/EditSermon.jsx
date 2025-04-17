@@ -25,7 +25,6 @@ function EditSermon() {
 					lastEditDate: data.lastEditDate,
 					isArchived: data.isArchived,
 				});
-				console.log(editData);
 			})
 			.catch((err) => {
 				console.error('Error fetching sermon:', err);

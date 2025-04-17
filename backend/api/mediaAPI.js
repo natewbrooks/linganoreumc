@@ -1,8 +1,8 @@
-import pool from '../database.js';
-
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import pool from '../database.js';
+import { fetchVideoMetadata, fetchTranscript } from '../middleware/youtubeScraper.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,46 +13,50 @@ const headerImagesDir = path.join(imagesDir, 'header');
 const stainedGlassDir = path.join(imagesDir, 'stained-glass');
 const eventImagesDir = path.join(imagesDir, 'events');
 
-import { fetchVideoMetadata, fetchTranscript } from '../middleware/youtubeScraper.js';
+// In-memory cache
+const imagePathMap = new Map();
+let cacheBuilt = false;
 
-// Helper: Recursively get all file paths
-function getAllFilesRecursively(dir) {
-	let results = [];
-	const list = fs.readdirSync(dir, { withFileTypes: true });
-
-	for (const entry of list) {
-		const fullPath = path.join(dir, entry.name);
-		if (entry.isDirectory()) {
-			results = results.concat(getAllFilesRecursively(fullPath));
-		} else {
-			results.push(fullPath);
-		}
+export function buildImagePathCacheOnce() {
+	if (cacheBuilt) return;
+	if (!fs.existsSync(imagesDir)) {
+		fs.mkdirSync(imagesDir, { recursive: true });
+		console.log(`[INIT] Created missing image directory: ${imagesDir}`);
 	}
-	return results;
+	cacheBuilt = true;
+	_recursiveCache(imagesDir);
+	console.log(`Image path cache built: ${imagePathMap.size} files`);
 }
 
-// Helper: Recursively find file by filename
-function findFileRecursively(dir, targetFilename) {
+function _recursiveCache(dir) {
 	const entries = fs.readdirSync(dir, { withFileTypes: true });
-
 	for (const entry of entries) {
 		const fullPath = path.join(dir, entry.name);
 		if (entry.isDirectory()) {
-			const found = findFileRecursively(fullPath, targetFilename);
-			if (found) return found;
-		} else if (entry.name === targetFilename) {
-			return fullPath;
+			_recursiveCache(fullPath);
+		} else {
+			imagePathMap.set(entry.name, fullPath);
 		}
 	}
-	return null;
+}
+
+// Unified GET helper for static images
+function serveImageDir(res, baseDir, subDir) {
+	try {
+		const dir = path.join(baseDir, subDir);
+		const files = fs.readdirSync(dir);
+		const paths = files.map((file) => `${process.env.BASE_API_URL}/media/images/${subDir}/${file}`);
+		res.json(paths);
+	} catch (err) {
+		res.status(500).json({ error: `Failed to fetch ${subDir} images.` });
+	}
 }
 
 // GET /media/images/
-export const getAllImages = (req, res) => {
+export const getAllImages = (_, res) => {
 	try {
-		const allFiles = getAllFilesRecursively(imagesDir);
-		const paths = allFiles.map(
-			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
+		const paths = Array.from(imagePathMap.entries()).map(
+			([filename]) => `${process.env.BASE_API_URL}/media/images/${filename}`
 		);
 		res.json(paths);
 	} catch (err) {
@@ -60,81 +64,23 @@ export const getAllImages = (req, res) => {
 	}
 };
 
-// GET /media/images/header/
-export const getAllHeaderImages = (req, res) => {
-	try {
-		const headerFiles = getAllFilesRecursively(headerImagesDir);
-		const paths = headerFiles.map(
-			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-		);
-		res.json(paths);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
-};
+export const getAllHeaderImages = (_, res) => serveImageDir(res, imagesDir, 'header');
+export const getAllStainedGlassImages = (_, res) => serveImageDir(res, imagesDir, 'stained-glass');
 
-// GET /media/images/stained-glass/
-export const getAllStainedGlassImages = (req, res) => {
-	try {
-		const files = getAllFilesRecursively(stainedGlassDir);
-		const paths = files.map(
-			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-		);
-		res.json(paths);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
-};
-
-// GET /media/images/events/
-// export const getAllEventsImages = (req, res) => {
-// 	try {
-// 		const eventImageFiles = getAllFilesRecursively(eventImagesDir);
-// 		const paths = eventImageFiles.map(
-// 			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-// 		);
-// 		res.json(paths);
-// 	} catch (err) {
-// 		res.status(500).json({ error: err.message });
-// 	}
-// };
-export const getAllEventsImages = async (req, res) => {
+export const getAllEventsImages = async (_, res) => {
 	try {
 		const [rows] = await pool.execute('SELECT * FROM EventPhotos');
 		res.status(200).json(rows);
 	} catch (err) {
-		console.error('Error fetching all event images from EventPhotos table:', err);
+		console.error('Error fetching all event images:', err);
 		res.status(500).json({ error: err.message });
 	}
 };
 
-// GET /media/images/events/:eventID
-// export const getAllEventImages = (req, res) => {
-// 	try {
-// 		const eventID = req.params.eventID;
-// 		const eventPath = path.join(eventImagesDir, eventID);
-
-// 		if (!fs.existsSync(eventPath)) {
-// 			return res.json([]); // No images yet, return empty list
-// 		}
-
-// 		const eventImageFiles = getAllFilesRecursively(eventPath);
-// 		const paths = eventImageFiles.map(
-// 			(file) => '/media/images/' + path.relative(imagesDir, file).replace(/\\/g, '/')
-// 		);
-
-// 		res.json(paths);
-// 	} catch (err) {
-// 		console.error(`Error fetching images for event ${req.params.eventID}:`, err);
-// 		res.status(500).json({ error: err.message });
-// 	}
-// };
 export const getAllEventImages = async (req, res) => {
 	try {
 		const { eventID } = req.params;
-
 		const [rows] = await pool.execute('SELECT * FROM EventPhotos WHERE eventID = ?', [eventID]);
-
 		res.status(200).json(rows);
 	} catch (err) {
 		console.error(`Error fetching images for event ${req.params.eventID}:`, err);
@@ -142,99 +88,98 @@ export const getAllEventImages = async (req, res) => {
 	}
 };
 
-// GET /media/images/:filename
 export const getImage = (req, res) => {
 	const { filename } = req.params;
-	const fileLocation = findFileRecursively(imagesDir, filename);
-	if (!fileLocation) {
+	const fileLocation = imagePathMap.get(filename);
+	if (!fileLocation || !fs.existsSync(fileLocation)) {
 		return res.status(404).json({ error: 'Image not found.' });
 	}
 	return res.sendFile(fileLocation);
 };
 
-// DELETE /media/images/:filename
-// deletes relevant EventPhoto from database if applicable
 export const deleteImage = async (req, res) => {
 	const { filename } = req.params;
+	const fileLocation = imagePathMap.get(filename);
 
-	const fileLocation = findFileRecursively(imagesDir, filename);
 	if (!fileLocation || !fs.existsSync(fileLocation)) {
 		return res.status(404).json({ error: 'Image not found.' });
 	}
 
 	fs.unlink(fileLocation, async (err) => {
 		if (err) return res.status(500).json({ error: 'Failed to delete image.' });
+		imagePathMap.delete(filename);
 
 		try {
-			// Check if path contains "events/{eventID}/filename"
-			const relativePath = path.relative(imagesDir, fileLocation).replace(/\\/g, '/'); // cross-platform
+			const relativePath = path.relative(imagesDir, fileLocation).replace(/\\/g, '/');
 			const match = relativePath.match(/^events\/(\d+)\/.+$/);
-
 			if (match) {
 				const eventID = match[1];
 				const photoURL = `/media/images/${relativePath}`;
-
 				await pool.execute('DELETE FROM EventPhotos WHERE eventID = ? AND photoURL = ?', [
 					eventID,
 					photoURL,
 				]);
 			}
-
 			res.json({ message: 'Image deleted successfully.' });
-		} catch (dbErr) {
-			console.error('Error deleting EventPhotos entry:', dbErr);
+		} catch (err) {
 			res.status(500).json({ error: 'Image deleted but failed to update database.' });
 		}
 	});
 };
 
-// POST /admin/media/images/
+const saveToCache = (filename, fullPath) => {
+	imagePathMap.set(filename, fullPath);
+};
+
 export const uploadImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
+	const fullPath = path.join(imagesDir, sanitized);
+	saveToCache(sanitized, fullPath);
 
-	res.json({ filePath: '/media/images/' + sanitized });
+	res.json({ filePath: `${process.env.BASE_API_URL}/media/images/${sanitized}` });
 };
 
-// POST /admin/media/images/header/
 export const uploadHeaderImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
+	const filePath = `/media/images/header/${sanitized}`;
+	const fullPath = path.join(headerImagesDir, sanitized);
+	saveToCache(sanitized, fullPath);
 
-	res.json({ filePath: '/media/images/header/' + sanitized });
+	res.json({ filePath });
 };
 
-// POST /admin/media/images/stained-glass/
 export const uploadStainedGlassImage = (req, res) => {
 	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const sanitized = req.file.originalname.replace(/\s+/g, '-');
-	res.json({ filePath: '/media/images/stained-glass/' + sanitized });
+	const filePath = `/media/images/stained-glass/${sanitized}`;
+	const fullPath = path.join(stainedGlassDir, sanitized);
+	saveToCache(sanitized, fullPath);
+
+	res.json({ filePath });
 };
 
-// POST /admin/media/images/events/:eventID
 export const uploadEventImage = async (req, res) => {
-	if (!req.file) {
-		return res.status(400).json({ error: 'No file uploaded.' });
-	}
+	if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
 	const eventID = req.params.eventID;
-	if (!eventID) {
-		return res.status(400).json({ error: 'Missing eventID in route params.' });
-	}
+	if (!eventID) return res.status(400).json({ error: 'Missing eventID in route params.' });
 
 	try {
 		const sanitized = req.file.originalname.replace(/\s+/g, '-');
 		const filePath = `/media/images/events/${eventID}/${sanitized}`;
+		const fullPath = path.join(eventImagesDir, eventID, sanitized);
 
-		// Insert image into EventPhotos table
 		await pool.execute(
 			'INSERT INTO EventPhotos (eventID, photoURL, isThumbnail) VALUES (?, ?, ?)',
 			[eventID, filePath, false]
 		);
 
+		saveToCache(sanitized, fullPath);
 		res.status(200).json({ filePath });
 	} catch (err) {
 		console.error('Error uploading event image:', err);
@@ -243,12 +188,8 @@ export const uploadEventImage = async (req, res) => {
 };
 
 export const scrapeYouTubeVideo = async (req, res) => {
-	console.log(req.body);
 	const { videoURL } = req.body;
-
-	if (!videoURL) {
-		return res.status(400).json({ error: 'YouTube video URL must be provided' });
-	}
+	if (!videoURL) return res.status(400).json({ error: 'YouTube video URL must be provided' });
 
 	try {
 		const metadata = await fetchVideoMetadata(videoURL);
@@ -268,7 +209,6 @@ export const scrapeYouTubeVideo = async (req, res) => {
 			publishDate: metadata.publishDate,
 		});
 	} catch (err) {
-		console.error('Error scraping video:', err);
 		res.status(500).json({ error: err.message });
 	}
 };
@@ -279,16 +219,10 @@ export const setEventPhotoThumbnail = async (req, res) => {
 
 	if (!filename) return res.status(400).json({ error: 'Missing filename' });
 
-	console.log('Setting eventID: ', eventID, ' thumbnail to: ', filename);
-
-	// Rebuild photoURL from known path structure
 	const photoURL = `/media/images/events/${eventID}/${filename}`;
 
 	try {
-		// Unset all current thumbnails for the event
 		await pool.execute('UPDATE EventPhotos SET isThumbnail = false WHERE eventID = ?', [eventID]);
-
-		// Set the selected image as the new thumbnail
 		await pool.execute(
 			'UPDATE EventPhotos SET isThumbnail = true WHERE eventID = ? AND photoURL = ?',
 			[eventID, photoURL]

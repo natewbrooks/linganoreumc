@@ -74,7 +74,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 					<div className='relative flex space-x-2 w-full text-bkg font-dm mx-auto '>
 						{displayEvents.map(({ event, date, placeholder }, index) => (
 							<Link
-								to={`${import.meta.env.VITE_BASE_URL}${placeholder ? '/' : `/events/${event.id}`}`}
+								to={`${placeholder ? '/' : `/events/${event.id}`}`}
 								key={event.id || index}
 								className='relative w-[200px] lg:w-[250px] flex justify-center group'>
 								<div
@@ -121,7 +121,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 						<div className='flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => (
 								<Link
-									to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+									to={`/events/${event.id}`}
 									key={event.id || index}
 									className={`relative flex w-full justify-center clickable  `}>
 									<div
@@ -164,7 +164,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 								<div className='relative top-23 flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 									{displayEvents.slice(2).map(({ event, date, placeholder }, index) => (
 										<Link
-											to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+											to={`/events/${event.id}`}
 											key={event.id || index}
 											className={`relative flex w-full justify-center clickable  `}>
 											<div

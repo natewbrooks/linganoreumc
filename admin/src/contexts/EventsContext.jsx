@@ -9,7 +9,7 @@ export const EventsProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all/`)
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`)
 			.then((res) => res.json())
 			.then((data) => {
 				setEvents(data);
@@ -19,7 +19,7 @@ export const EventsProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/all/`)
+		fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/all`)
 			.then((res) => res.json())
 			.then((data) => setEventDates(data))
 			.catch((err) => setError(err.message));
@@ -27,7 +27,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventById = async (eventId) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${eventId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`);
 			if (!res.ok) throw new Error(`Failed to fetch event`);
 			return await res.json();
 		} catch (err) {
@@ -38,7 +38,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventDatesById = async (eventId) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/${eventId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/dates/${eventId}`);
 			if (!res.ok) throw new Error(`Failed to fetch event dates`);
 			return await res.json();
 		} catch (err) {
@@ -49,7 +49,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventTimesByDateId = async (eventDateId) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/${eventDateId}/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/times/${eventDateId}`);
 			if (!res.ok) throw new Error(`Failed to fetch event times`);
 			return await res.json();
 		} catch (err) {
@@ -109,7 +109,7 @@ export const EventsProvider = ({ children }) => {
 
 	const createEvent = async (eventData) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/new/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/new`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(eventData),
@@ -125,7 +125,7 @@ export const EventsProvider = ({ children }) => {
 	const updateEvent = async (eventId, updatedData) => {
 		try {
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -147,7 +147,7 @@ export const EventsProvider = ({ children }) => {
 	const deleteEvent = async (eventId) => {
 		try {
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/delete/${eventId}/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/delete/${eventId}`,
 				{
 					method: 'DELETE',
 				}
@@ -164,7 +164,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchRecurringEvents = async () => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/recurring/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/recurring`);
 			if (!res.ok) throw new Error(`Failed to fetch recurring events`);
 			return await res.json();
 		} catch (err) {
@@ -176,7 +176,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchFeaturedEvents = async () => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/featured/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/featured`);
 			if (!res.ok) throw new Error(`Failed to fetch featured events`);
 			return await res.json();
 		} catch (err) {
@@ -188,7 +188,7 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchArchivedEvents = async () => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/archived/`);
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/archived`);
 			if (!res.ok) throw new Error(`Failed to fetch archived events`);
 			return await res.json();
 		} catch (err) {
@@ -205,7 +205,7 @@ export const EventsProvider = ({ children }) => {
 			);
 
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/update/${eventId}`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -227,7 +227,7 @@ export const EventsProvider = ({ children }) => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/new/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/new`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ eventID, date, isCancelled }),
@@ -248,9 +248,8 @@ export const EventsProvider = ({ children }) => {
 
 	const updateEventDate = async (eventDateID, date, isCancelled = false) => {
 		try {
-			console.log(`Sending update to API:`, { eventDateID, date, isCancelled });
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/update/${eventDateID}/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/update/${eventDateID}`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -266,12 +265,9 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEventDate = async (eventDateID) => {
 		try {
-			await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/delete/${eventDateID}/`,
-				{
-					method: 'DELETE',
-				}
-			);
+			await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/dates/delete/${eventDateID}`, {
+				method: 'DELETE',
+			});
 		} catch (err) {
 			console.error(err);
 			setError(err.message);
@@ -280,7 +276,7 @@ export const EventsProvider = ({ children }) => {
 
 	const createEventTime = async (eventDateID, time) => {
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/new/`, {
+			const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/new`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ eventDateID, time }),
@@ -296,7 +292,7 @@ export const EventsProvider = ({ children }) => {
 	const updateEventTime = async (eventTimeID, time) => {
 		try {
 			const res = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/update/${eventTimeID}/`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/update/${eventTimeID}`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -312,12 +308,9 @@ export const EventsProvider = ({ children }) => {
 
 	const deleteEventTimes = async (eventDateID) => {
 		try {
-			await fetch(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/delete/${eventDateID}/`,
-				{
-					method: 'DELETE',
-				}
-			);
+			await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/events/times/delete/${eventDateID}`, {
+				method: 'DELETE',
+			});
 		} catch (err) {
 			console.error(err);
 			setError(err.message);

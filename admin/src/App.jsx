@@ -22,7 +22,7 @@ function App() {
 	return (
 		<Routes>
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/login/`}
+				path={`/login`}
 				element={<Login />}
 			/>
 
@@ -30,61 +30,61 @@ function App() {
 
 			{/* website.com/admin/ */}
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/settings/general/`}
+				path={`/settings/general`}
 				element={<General />}
 			/>
 
 			{/* Edit Home Page */}
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/settings/home/`}
+				path={`/settings/home`}
 				element={<Home />}
 			/>
 
 			{/* Edit Events Page */}
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/events/`}
+				path={`/events`}
 				element={<Events />}
 			/>
 
 			{/* Edit a specific event */}
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/events/:id/`}
+				path={`/events/:id`}
 				element={<EditEvent />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/events/new/`}
+				path={`/events/new`}
 				element={<CreateEvent />}
 			/>
 
 			{/* Sermons Page */}
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/sermons/`}
+				path={`/sermons`}
 				element={<Sermons />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/sermons/new/`}
+				path={`/sermons/new`}
 				element={<CreateSermon />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/sermons/:id/`}
+				path={`/sermons/:id`}
 				element={<EditSermon />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/manage/users`}
+				path={`/manage/users`}
 				element={<Users />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}/manage/account`}
+				path={`/manage/account`}
 				element={<Account />}
 			/>
 
 			<Route
-				path={`${import.meta.env.VITE_ADMIN_BASE_URL}*`}
+				path={`/*`}
 				element={<NotFound />}
 			/>
 		</Routes>

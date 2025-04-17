@@ -6,7 +6,7 @@ function SermonItem({ sermon, index }) {
 		<div className='w-full clickable transition-transform'>
 			<div className='flex flex-row w-full pl-4 -skew-x-[30deg] font-dm text-sm z-10 relative'>
 				<Link
-					to={`${import.meta.env.VITE_BASE_URL}/sermons/${sermon.id}`}
+					to={`/sermons/${sermon.id}`}
 					className='flex flex-row items-stretch w-full relative skew-x-[30deg]'>
 					<div className={`absolute bg-tp w-screen h-full`}>{` `}</div>
 

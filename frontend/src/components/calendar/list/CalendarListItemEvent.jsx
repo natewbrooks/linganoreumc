@@ -7,7 +7,7 @@ function CalendarListItemEvent({ event, date, time, isPast }) {
 
 	return (
 		<Link
-			to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+			to={`/events/${event.id}`}
 			className={`flex w-full items-center justify-between font-dm px-2 py-3 border-l-4 clickable ${
 				event.isCancelled
 					? 'bg-darkred text-bkg border-darkred'

@@ -6,13 +6,11 @@ import { useSettings } from '../../../contexts/SettingsContext';
 function CalendarGridItemEvent({ event, date, time, isPast }) {
 	const { formatTime } = useSettings();
 
-	console.log(event);
-
 	return (
 		<>
 			<Link
 				key={time}
-				to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+				to={`/events/${event.id}`}
 				className={`flex ${
 					event.isCancelled
 						? 'flex-col space-y-1 bg-darkred text-bkg text-center clickable'

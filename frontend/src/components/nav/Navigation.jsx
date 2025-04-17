@@ -25,7 +25,7 @@ function Navigation() {
 					<div
 						className={`z-10 relative select-none -top-5 bg-red outline-4 outline-bkg -skew-x-[30deg] w-fit px-6 py-1`}>
 						<Link
-							to={`${import.meta.env.VITE_BASE_URL}/`}
+							to={`/`}
 							className={`group `}>
 							<Logo
 								width={250}

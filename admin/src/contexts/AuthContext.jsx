@@ -36,7 +36,11 @@ export const AuthProvider = ({ children }) => {
 				if (error.response?.status === 401) {
 					setIsAuthenticated(false);
 					setSessionExpired(true);
-					// Optionally, navigate('/login');
+
+					const onLoginPage = location.pathname === '/login';
+					if (!onLoginPage) {
+						navigate('/login');
+					}
 				}
 				return Promise.reject(error);
 			}
@@ -45,19 +49,17 @@ export const AuthProvider = ({ children }) => {
 		return () => {
 			axios.interceptors.response.eject(interceptor);
 		};
-	}, []);
+	}, [location.pathname, navigate]);
 
 	useEffect(() => {
 		if (loading) return;
 
 		const onLoginPage = location.pathname === '/login';
 
-		// If not logged in and not on login page, redirect
 		if (!isAuthenticated && !onLoginPage) {
 			navigate('/login');
 		}
 
-		// If logged in and on login page, delay redirect
 		if (isAuthenticated && onLoginPage) {
 			navigate('/settings/general/');
 		}
@@ -77,7 +79,6 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	// API: user changing their own password
 	const updateOwnPassword = async (currentPassword, newPassword) => {
 		try {
 			const res = await axios.put(
@@ -94,7 +95,6 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	// API: user changing their own username
 	const updateOwnUsername = async (username) => {
 		try {
 			const res = await axios.put(
@@ -102,7 +102,7 @@ export const AuthProvider = ({ children }) => {
 				{ username },
 				{ withCredentials: true }
 			);
-			await checkAuth(); // Refresh local user state
+			await checkAuth();
 			return { success: true, message: res.data.message };
 		} catch (err) {
 			return {

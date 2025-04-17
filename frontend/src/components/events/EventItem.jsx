@@ -63,7 +63,7 @@ function EventItem({ event, previous }) {
 			</div>
 
 			<Link
-				to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+				to={`/events/${event.id}`}
 				className='relative flex flex-row items-stretch w-full font-dm'>
 				<div className={`absolute bg-tp w-screen h-full`}>{` `}</div>
 				{/* Title Block */}

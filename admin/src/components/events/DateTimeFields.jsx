@@ -15,7 +15,6 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 		if (entry.eventDateID) {
 			try {
 				await deleteEventDate(entry.eventDateID);
-				console.log(`Deleted eventDateID: ${entry.eventDateID}`);
 			} catch (err) {
 				console.error('Failed to delete event date:', err);
 				return; // Don't update state if deletion fails
@@ -62,7 +61,6 @@ function DateTimeFields({ dateTimeData, setDateTimeData, deleteEventDate }) {
 	const handleCancelToggle = (index) => {
 		const updated = [...dateTimeData];
 		updated[index].isCancelled = !updated[index].isCancelled;
-		console.log(`Toggled isCancelled for date #${index + 1}:`, updated[index].isCancelled);
 		setDateTimeData(updated);
 	};
 

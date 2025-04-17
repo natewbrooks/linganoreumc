@@ -13,7 +13,7 @@ function Home() {
 	const { settings } = useSettings();
 
 	const generalSettings = settings.general || {};
-	const homeSettings = settings.pages?.home || {};
+	const homeSettings = settings.home || {};
 
 	// Active Header Image
 	const activeHeaderImage =
@@ -24,12 +24,12 @@ function Home() {
 	const mottoSubtext = homeSettings.mottoBanner?.text?.subtext || '';
 
 	// Livestream Details
-	const ytChannelID = homeSettings.livestream?.youtubeChannelID || 'default_channel_id';
-	const ytAPIKey = homeSettings.livestream?.youtubeAPIKey || '';
-	const livestreamText = homeSettings.livestream?.text || {};
+	// const ytChannelID = homeSettings.livestream?.youtubeChannelID || 'default_channel_id';
+	// const ytAPIKey = homeSettings.livestream?.youtubeAPIKey || '';
+	// const livestreamText = homeSettings.livestream?.text || {};
 
-	// Displayed Sermons & Events
-	const displayedSermons = homeSettings.displayedSermons?.associatedRecurringEvents || [];
+	// // Displayed Sermons & Events
+	// const displayedSermons = homeSettings.displayedSermons?.associatedRecurringEvents || [];
 
 	// Join Us Settings
 	const joinUsSettings = {
@@ -42,7 +42,7 @@ function Home() {
 	};
 
 	// General Settings Social Media Links
-	const socialMediaLinks = generalSettings.socialMediaLinks || [];
+	// const socialMediaLinks = generalSettings.socialMediaLinks || [];
 
 	const getUpcomingEventDate = (eventID, requireFutureOnly = false) => {
 		const today = new Date();
@@ -87,7 +87,7 @@ function Home() {
 
 	// --- UPCOMING EVENTS LOGIC ---
 	const upcomingEventsFromSettings = homeSettings.upcomingEvents?.events || [];
-	const isOverridden = upcomingEventsFromSettings.length > 0;
+	// const isOverridden = upcomingEventsFromSettings.length > 0;
 
 	// Get preset events from settings (shown regardless of date)
 	const presetEvents = upcomingEventsFromSettings

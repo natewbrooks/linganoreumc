@@ -28,27 +28,27 @@ function Footer() {
 				<div
 					className={`sm:flex grid grid-cols-2 gap-2 w-fit items-center text-center space-x-0 sm:space-y-0 sm:space-x-10 sm:flex-row text-xl`}>
 					<Link
-						to={`${import.meta.env.VITE_BASE_URL}/`}
+						to={``}
 						className={`text-bkg`}>
 						H<span className={`text-lg`}>OME</span>
 					</Link>
 					<Link
-						to={`${import.meta.env.VITE_BASE_URL}/calendar/`}
+						to={`/calendar`}
 						className={`text-bkg`}>
 						C<span className={`text-lg`}>ALENDAR</span>
 					</Link>
 					<Link
-						to={`${import.meta.env.VITE_BASE_URL}/sermons/`}
+						to={`/sermons`}
 						className={`text-bkg`}>
 						S<span className={`text-lg`}>ERMONS</span>
 					</Link>
 					<Link
-						to={`${import.meta.env.VITE_BASE_URL}/events/`}
+						to={`/events`}
 						className={`text-bkg`}>
 						E<span className={`text-lg`}>VENTS</span>
 					</Link>
 					{/* <Link
-						to={`${import.meta.env.VITE_BASE_URL}/`}
+						to={`/`}
 						className={`text-bkg`}>
 						G<span className={`text-lg`}>IVE</span>
 					</Link> */}

@@ -28,7 +28,7 @@ function MobileNavigation() {
 		<>
 			{/* Header Bar */}
 			<div className='relative w-full flex items-center justify-between px-4 bg-red border-b-4 border-bkg h-[80px]'>
-				<Link to={`${import.meta.env.VITE_ADMIN_BASE_URL}/`}>
+				<Link to={`/`}>
 					<Logo
 						width={250}
 						className='group- h-full select-none'
@@ -67,14 +67,14 @@ function MobileNavigation() {
 								<div className={`flex flex-col space-y-4`}>
 									<div className={`w-full text-left border-b-1 pb-2 text-lg`}>Maintenance</div>
 									<Link
-										to='/events/'
-										onClick={() => handleCloseAndNavigate('/events/')}
+										to='/events'
+										onClick={() => handleCloseAndNavigate('/events')}
 										className='text-3xl font-dm'>
 										Events
 									</Link>
 									<Link
-										to='/sermons/'
-										onClick={() => handleCloseAndNavigate('/sermons/')}
+										to='/sermons'
+										onClick={() => handleCloseAndNavigate('/sermons')}
 										className='text-3xl font-dm'>
 										Sermons
 									</Link>
@@ -83,14 +83,14 @@ function MobileNavigation() {
 								<div className={`flex flex-col space-y-4`}>
 									<div className={`w-full text-left border-b-1 pb-2 text-lg`}>Settings</div>
 									<Link
-										to='/settings/general/'
-										onClick={() => handleCloseAndNavigate('/settings/general/')}
+										to='/settings/general'
+										onClick={() => handleCloseAndNavigate('/settings/general')}
 										className='text-3xl font-dm block'>
 										General
 									</Link>
 									<Link
-										to='/settings/home/'
-										onClick={() => handleCloseAndNavigate('/settings/home/')}
+										to='/settings/home'
+										onClick={() => handleCloseAndNavigate('/settings/home')}
 										className='text-3xl font-dm block'>
 										Home
 									</Link>
@@ -102,8 +102,8 @@ function MobileNavigation() {
 											<span>Manage</span> <span className={`italic`}>(admin)</span>
 										</div>
 										<Link
-											to='/manage/users/'
-											onClick={() => handleCloseAndNavigate('/manage/users/')}
+											to='/manage/users'
+											onClick={() => handleCloseAndNavigate('/manage/users')}
 											className='text-3xl font-dm block'>
 											Users
 										</Link>
@@ -114,7 +114,7 @@ function MobileNavigation() {
 							{/* Account + Logout */}
 							<div className='flex justify-between items-center'>
 								<button
-									onClick={() => handleCloseAndNavigate('/manage/account/')}
+									onClick={() => handleCloseAndNavigate('/manage/account')}
 									className='flex items-center space-x-2 text-xl font-dm'>
 									<FaUserCircle size={24} />
 									<span>{user.username}</span>
@@ -130,7 +130,7 @@ function MobileNavigation() {
 						// Not logged in → show only Exit to Home
 						<div className='w-full h-full flex items-center justify-center'>
 							<Link
-								to='http://localhost'
+								to={`/`}
 								onClick={() => setOpen(false)}
 								className='font-dm text-bkg text-center text-3xl'>
 								<span className={`text-4xl`}>E</span>

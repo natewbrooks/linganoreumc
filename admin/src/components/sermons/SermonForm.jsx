@@ -49,8 +49,6 @@ function SermonForm({ mode = 'create', initialData = null }) {
 			if (data.publishDate) {
 				const formattedDate = new Date(data.publishDate).toISOString().split('T')[0];
 				setPublishDate(formattedDate);
-				console.log('Scraped publish date:', data.publishDate);
-				console.log('Formatted for input:', formattedDate);
 			}
 		} catch (err) {
 			console.error(err);
@@ -85,7 +83,7 @@ function SermonForm({ mode = 'create', initialData = null }) {
 			}
 
 			alert('Sermon saved successfully');
-			navigate('/sermons/');
+			navigate('/sermons');
 			window.location.reload();
 		} catch (err) {
 			console.error(err);

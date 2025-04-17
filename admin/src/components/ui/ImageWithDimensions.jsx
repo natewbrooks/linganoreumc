@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 export default function ImageWithDimensions({ src, alt, imgClassName }) {
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-	console.log(src);
-
 	const handleImageLoad = (e) => {
 		setDimensions({
 			width: e.target.naturalWidth,

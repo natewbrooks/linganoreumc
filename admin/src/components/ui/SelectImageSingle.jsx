@@ -9,7 +9,7 @@ export default function SelectImageSingle({
 	setAvailableUploads,
 	uploadEndpoint,
 	customUploadFunction,
-	folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images/`,
+	folderFilter = `${import.meta.env.VITE_API_BASE_URL}/media/images`,
 }) {
 	const [imageFile, setImageFile] = useState(null);
 	const [uploadError, setUploadError] = useState('');

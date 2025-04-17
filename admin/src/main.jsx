@@ -38,7 +38,7 @@ function Layout() {
 }
 
 createRoot(document.getElementById('root')).render(
-	<BrowserRouter basename='/admin/'>
+	<BrowserRouter>
 		<AuthProvider>
 			<EventsProvider>
 				<SermonsProvider>

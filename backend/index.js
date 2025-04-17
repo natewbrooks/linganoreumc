@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { createAdminUserIfMissing } from './middleware/createUser.js';
 
 import verifyJWT from './middleware/verifyJWT.js';
 // import guard from 'express-jwt-permissions';
@@ -12,14 +12,16 @@ import verifyJWT from './middleware/verifyJWT.js';
 import publicEventsRouter from './routes/public/events.js';
 import publicSermonsRouter from './routes/public/sermons.js';
 import publicSettingsRouter from './routes/public/settings.js';
+
 import adminSettingsRouter from './routes/admin/settings.js';
 import adminEventsRoute from './routes/admin/events.js';
 import adminSermonsRouter from './routes/admin/sermons.js';
-import adminLoginRouter from './routes/admin/login.js';
+import adminAuthRouter from './routes/admin/auth.js';
 import adminUsersRouter from './routes/admin/users.js';
 
 import publicMediaRouter from './routes/public/media.js';
 import adminMediaRouter from './routes/admin/media.js';
+import { buildImagePathCacheOnce } from './api/mediaAPI.js';
 
 dotenv.config();
 const app = express();
@@ -28,18 +30,16 @@ const app = express();
 app.use(
 	cors({
 		origin: function (origin, callback) {
-			const allowedOrigins = ['http://localhost', 'http://localhost:5173'];
-
-			// Allow server-to-server or Postman with no origin
-			if (!origin) {
-				return callback(null, allowedOrigins[0]); // or pick your default trusted origin
+			const allowedOrigins = [
+				process.env.BASE_URL,
+				process.env.ADMIN_BASE_URL,
+				process.env.API_BASE_URL,
+			];
+			if (!origin || allowedOrigins.includes(origin)) {
+				return callback(null, origin || true);
 			}
-
-			if (allowedOrigins.includes(origin)) {
-				return callback(null, origin);
-			}
-
-			callback(new Error('Not allowed by CORS'));
+			console.warn(`CORS blocked origin: ${origin}`);
+			return callback(new Error('Not allowed by CORS'));
 		},
 		credentials: true,
 	})
@@ -51,35 +51,25 @@ app.use('/admin/media', adminMediaRouter);
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
-// Permissions guard instance
-// const permissionsGuard = guard({
-
-// 	permissionsProperty: 'permissions',
-// });
-
-// Directory context
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+(async () => {
+	await createAdminUserIfMissing();
+})();
 
 // Public API Routes (No Authentication Needed)
-app.use('/events/', publicEventsRouter);
-app.use('/sermons/', publicSermonsRouter);
-app.use('/settings/', publicSettingsRouter);
-app.use('/media/', publicMediaRouter);
+app.use('/events', publicEventsRouter);
+app.use('/sermons', publicSermonsRouter);
+app.use('/settings', publicSettingsRouter);
+app.use('/media', publicMediaRouter);
 
 // Admin login (unprotected)
-app.use('/admin/login/', adminLoginRouter);
+app.use('/admin/auth', adminAuthRouter);
 
 // JWT middleware protection for all /admin routes
 app.use((req, res, next) => {
-	if (req.originalUrl.includes('/admin')) {
+	if (req.originalUrl.startsWith('/admin') && !req.originalUrl.startsWith('/admin/auth')) {
 		verifyJWT(req, res, (err) => {
 			if (err) {
-				if (req.accepts('html')) {
-					return res.redirect('http://localhost:5173/admin/login');
-				} else {
-					return res.status(401).json({ error: 'Unauthorized' });
-				}
+				return res.status(401).json({ error: 'Unauthorized' });
 			}
 			next();
 		});
@@ -89,12 +79,12 @@ app.use((req, res, next) => {
 });
 
 // Admin Protected Routes (JWT Required)
-app.use('/admin/events/', adminEventsRoute);
-app.use('/admin/sermons/', adminSermonsRouter);
-app.use('/admin/settings/', adminSettingsRouter);
+app.use('/admin/events', adminEventsRoute);
+app.use('/admin/sermons', adminSermonsRouter);
+app.use('/admin/settings', adminSettingsRouter);
 
 // Requires the admin role as well
-app.use('/admin/users/', adminUsersRouter);
+app.use('/admin/users', adminUsersRouter);
 
 // Global error handler for multer and other uncaught errors
 app.use((err, req, res, next) => {
@@ -106,4 +96,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
+	buildImagePathCacheOnce();
+});

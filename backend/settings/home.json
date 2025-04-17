@@ -2,11 +2,11 @@
 	"header": {
 		"images": [
 			{
-				"url": "/media/images/linganore-bright-pic-upscale.webp",
+				"url": "https://api.linganoreumc.com/media/images/linganore-bright-pic-upscale.webp",
 				"active": true
 			},
 			{
-				"url": "/media/images/CEM46806669_117962812740.jpg",
+				"url": "https://api.linganoreumc.com/media/images/CEM46806669_117962812740.jpg",
 				"active": false
 			}
 		]
@@ -22,15 +22,8 @@
 			"title": "JOIN US FOR WORSHIP",
 			"subtext": "Sundays"
 		},
-		"sermonImageURL": "/media/images/DSC_8272-Edit.jpg",
-		"events": [
-			{
-				"eventID": 16
-			},
-			{
-				"eventID": 25
-			}
-		]
+		"sermonImageURL": "https://api.linganoreumc.com/media/images/DSC_8272-Edit.jpg",
+		"events": []
 	},
 	"livestream": {
 		"youtubeAPIKey": "X",
@@ -55,45 +48,32 @@
 			"subtext": "Our upcoming events",
 			"seeMore": "VIEW ALL EVENTS"
 		},
-		"events": [
-			{
-				"eventID": ""
-			},
-			{
-				"eventID": ""
-			},
-			{
-				"eventID": ""
-			},
-			{
-				"eventID": ""
-			}
-		]
+		"events": []
 	},
 	"stainedGlassDisplay": {
 		"images": [
 			{
-				"url": "/media/images/stained-glass-1.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-1.png",
 				"active": false
 			},
 			{
-				"url": "/media/images/stained-glass-2.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-2.png",
 				"active": false
 			},
 			{
-				"url": "/media/images/stained-glass-3.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-3.png",
 				"active": false
 			},
 			{
-				"url": "/media/images/stained-glass-4.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-4.png",
 				"active": false
 			},
 			{
-				"url": "/media/images/stained-glass-5.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-5.png",
 				"active": false
 			},
 			{
-				"url": "/media/images/stained-glass-6.png",
+				"url": "https://api.linganoreumc.com/media/images/stained-glass-6.png",
 				"active": false
 			}
 		]

@@ -50,7 +50,7 @@ createRoot(document.getElementById('root')).render(
 		<SettingsProvider>
 			<SermonsProvider>
 				<EventsProvider>
-					<BrowserRouter basename='/'>
+					<BrowserRouter>
 						<Layout />
 					</BrowserRouter>
 				</EventsProvider>

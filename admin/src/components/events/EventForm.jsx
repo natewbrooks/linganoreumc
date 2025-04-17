@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEvents } from '../../contexts/EventsContext';
-import DateTimeFields from './DAteTimeFields';
+import DateTimeFields from './DateTimeFields';
 import TextInput from '../ui/TextInput';
 import BodyTextInput from '../ui/BodyTextInput';
 import SelectEventImages from './SelectEventImages';
@@ -203,7 +203,7 @@ function EventForm({ mode = 'create', initialData = null, setParentEventID = nul
 			}
 
 			alert(mode === 'create' ? 'Event created successfully!' : 'Event updated successfully!');
-			navigate('/events/', { replace: true });
+			navigate('/events', { replace: true });
 			window.location.reload();
 		} catch (err) {
 			console.error(err);

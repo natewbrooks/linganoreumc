@@ -6,7 +6,7 @@ import svgr from 'vite-plugin-svgr';
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [react(), svgr(), tailwindcss()],
-	base: '/admin/',
+	base: '/',
 	server: {
 		host: '0.0.0.0', // Allow access from Nginx/Docker
 		port: 5173,
@@ -19,6 +19,6 @@ export default defineConfig({
 		watch: {
 			usePolling: true,
 		},
-		allowedHosts: ['localhost', 'admin', 'frontend'],
+		allowedHosts: ['localhost', 'admin.linganoreumc.com', 'linganoreumc.com'],
 	},
 });

@@ -8,13 +8,11 @@ function FeaturedEventItem({ event }) {
 	const { fetchEventImages } = useEvents();
 	const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
-	console.log(event);
 	useEffect(() => {
 		const loadThumbnail = async () => {
 			if (!event?.id) return;
 
 			const images = await fetchEventImages(event.id);
-			console.log('Fetched images:', images);
 
 			const thumbnail = images.find((img) => img.isThumbnail);
 			setThumbnailUrl(
@@ -31,7 +29,7 @@ function FeaturedEventItem({ event }) {
 
 	return (
 		// <Link
-		// 	to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+		// 	to={`/events/${event.id}`}
 		// 	className={`flex flex-col w-full h-[180px] skew-x-[10deg] hover:scale-[1.02] hover:opacity-50 active:scale-[1]     ${
 		// 		hasBackground ? 'bg-contain object-center object-contain bg-center' : 'bg-tp'
 		// 	}`}
@@ -47,7 +45,7 @@ function FeaturedEventItem({ event }) {
 		// 	)}
 		// </Link>
 		<Link
-			to={`${import.meta.env.VITE_BASE_URL}/events/${event.id}`}
+			to={`/events/${event.id}`}
 			className={`relative flex flex-col w-full h-[180px] hover:scale-[1.02] hover:opacity-50 active:scale-[1]`}>
 			{/* Common wrapper to keep sizing consistent */}
 			<div className='w-full h-full'>
