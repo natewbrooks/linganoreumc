@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSettings } from '@/contexts/SettingsContext';
 import getFormat from '@/lib/getFormat';
 import { useEvents } from '@/contexts/EventsContext';
 
 function EventItem({ event, previous }) {
 	const { eventDates, eventTimes } = useEvents();
-	const { getShortDayOfWeek } = getFormat;
-	const { formatDate, formatTime } = useSettings();
+	const { getShortDayOfWeek, formatDate, formatTime } = getFormat;
 	const [timesMap, setTimesMap] = useState({});
 
 	useEffect(() => {
