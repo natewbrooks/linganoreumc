@@ -34,6 +34,8 @@ app.use(
 				process.env.BASE_URL,
 				process.env.ADMIN_BASE_URL,
 				process.env.API_BASE_URL,
+				'http://localhost:3000',
+				'http://localhost',
 			];
 			if (!origin || allowedOrigins.includes(origin)) {
 				return callback(null, origin || true);
@@ -66,7 +68,7 @@ app.use('/admin/auth', adminAuthRouter);
 
 // JWT middleware protection for all /admin routes
 app.use((req, res, next) => {
-	if (req.originalUrl.startsWith('/admin') && !req.originalUrl.startsWith('/admin/auth')) {
+	if (req.originalUrl.startsWith('/admin')) {
 		verifyJWT(req, res, (err) => {
 			if (err) {
 				return res.status(401).json({ error: 'Unauthorized' });

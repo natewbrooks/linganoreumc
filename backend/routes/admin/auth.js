@@ -9,7 +9,7 @@ router.get('/login', getLogin);
 // POST /admin/auth/login
 router.post('/login', tryLogin);
 
-// POST /admin/auth/logout/
+// POST /admin/auth/logout
 router.post('/logout', logout);
 
 export default router;

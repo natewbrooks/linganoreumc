@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: Newborough;
-  src: url(./assets/fonts/NEWBOROU.TTF);
+  src: url(/fonts/NEWBOROU.TTF);
 }
 
 @import "tailwindcss";

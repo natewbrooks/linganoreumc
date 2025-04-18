@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 	// Check login status
 	const checkAuth = async () => {
 		try {
-			const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/login`, {
+			const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/auth/login`, {
 				withCredentials: true,
 			});
 			setIsAuthenticated(true);
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 	const logout = async () => {
 		try {
 			await axios.post(
-				`${import.meta.env.VITE_API_BASE_URL}/admin/login/logout`,
+				`${import.meta.env.VITE_API_BASE_URL}/admin/auth/logout`,
 				{},
 				{ withCredentials: true }
 			);
