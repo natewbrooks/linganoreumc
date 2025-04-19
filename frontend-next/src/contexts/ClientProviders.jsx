@@ -4,11 +4,11 @@ import { SermonsProvider } from '@/contexts/SermonsContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import LayoutWrapper from '@/contexts/LayoutWrapper';
 
-export default function ClientProviders({ settings, events, sermons, children }) {
+export default function ClientProviders({ children }) {
 	return (
-		<SettingsProvider initialSettings={settings}>
-			<SermonsProvider initialData={sermons}>
-				<EventsProvider initialData={events}>
+		<SettingsProvider>
+			<SermonsProvider>
+				<EventsProvider>
 					<LayoutWrapper>{children}</LayoutWrapper>
 				</EventsProvider>
 			</SermonsProvider>

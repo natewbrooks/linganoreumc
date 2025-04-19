@@ -2,8 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 import getFormat from '@/lib/getFormat';
 
-function CalendarListItemEvent({ event, date, time, isPast }) {
+function CalendarListItemEvent({ event, date, startTime, endTime, isPast }) {
 	const { formatTime } = getFormat;
+
+	const formattedTime = event.isCancelled
+		? 'EVENT CANCELLED'
+		: `${formatTime(startTime)}${endTime ? ` – ${formatTime(endTime)}` : ''}`;
 
 	return (
 		<Link
@@ -16,9 +20,7 @@ function CalendarListItemEvent({ event, date, time, isPast }) {
 					: 'border-red bg-tp'
 			}`}>
 			{/* Time */}
-			<div className='text-md flex-shrink-0 pr-4'>
-				{event.isCancelled ? 'EVENT CANCELLED' : formatTime(time)}
-			</div>
+			<div className='text-md flex-shrink-0 pr-4'>{formattedTime}</div>
 
 			{/* Title */}
 			<div

@@ -39,18 +39,17 @@ export const getEventTime = async (req, res) => {
 
 // Admin: Create a new EventTime associated with an EventDate via it's eventDateID
 export const createEventTime = async (req, res) => {
-	const { eventDateID, time } = req.body;
+	const { eventDateID, startTime, endTime } = req.body;
 
-	if (!eventDateID || !time) {
-		return res.status(400).json({ error: 'EventDateID and time are required' });
+	if (!eventDateID || !startTime) {
+		return res.status(400).json({ error: 'eventDateID and startTime are required' });
 	}
 
 	try {
-		// Insert the new event time
-		const [result] = await pool.query('INSERT INTO EventTimes (eventDateID, time) VALUES (?, ?)', [
-			eventDateID,
-			time,
-		]);
+		const [result] = await pool.query(
+			'INSERT INTO EventTimes (eventDateID, startTime, endTime) VALUES (?, ?, ?)',
+			[eventDateID, startTime, endTime || null]
+		);
 
 		res.status(201).json({
 			message: 'Event time created',
@@ -64,18 +63,17 @@ export const createEventTime = async (req, res) => {
 // Admin: Update an EventTime via it's id
 export const updateEventTime = async (req, res) => {
 	const { eventTimeID } = req.params;
-	const { time } = req.body;
+	const { startTime, endTime } = req.body;
 
-	if (!time) {
-		return res.status(400).json({ error: 'Time is required' });
+	if (!startTime) {
+		return res.status(400).json({ error: 'startTime is required' });
 	}
 
 	try {
-		// Update the event time in the EventTimes table
-		const [result] = await pool.query('UPDATE EventTimes SET `time` = ? WHERE id = ?', [
-			time,
-			eventTimeID,
-		]);
+		const [result] = await pool.query(
+			'UPDATE EventTimes SET startTime = ?, endTime = ? WHERE id = ?',
+			[startTime, endTime || null, eventTimeID]
+		);
 
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ error: 'Event time not found' });

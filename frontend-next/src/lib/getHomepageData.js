@@ -1,12 +1,12 @@
 export async function getHomepageData() {
 	const base = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-	const generalRes = await fetch(`${base}/settings/general`);
-	const homeRes = await fetch(`${base}/settings/home`);
-	const eventsRes = await fetch(`${base}/events/all`);
-	const datesRes = await fetch(`${base}/events/dates/all`);
-	const timesRes = await fetch(`${base}/events/times/all`);
-	const sermonsRes = await fetch(`${base}/sermons/all`);
+	const generalRes = await fetch(`${base}/settings/general`, { cache: 'no-store' });
+	const homeRes = await fetch(`${base}/settings/home`, { cache: 'no-store' });
+	const eventsRes = await fetch(`${base}/events/all`, { cache: 'no-store' });
+	const datesRes = await fetch(`${base}/events/dates/all`, { cache: 'no-store' });
+	const timesRes = await fetch(`${base}/events/times/all`, { cache: 'no-store' });
+	const sermonsRes = await fetch(`${base}/sermons/all`, { cache: 'no-store' });
 
 	if (
 		!generalRes.ok ||
@@ -33,6 +33,8 @@ export async function getHomepageData() {
 	const eventDates = await datesRes.json();
 	const eventTimes = await timesRes.json();
 	const rawSermons = await sermonsRes.json();
+
+	console.log(home);
 
 	const events = rawEvents.filter((e) => !e.isArchived);
 	const sermons = rawSermons.filter((s) => !s.isArchived);

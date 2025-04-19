@@ -123,7 +123,7 @@ function ListEvents() {
 		});
 
 	return (
-		<div className='flex flex-col space-y-6 px-4'>
+		<div className='flex flex-col space-y-6 px-4 pb-8'>
 			{/* Header */}
 			<div className='flex flex-col space-y-4 relative'>
 				<div className='flex flex-row items-center justify-between'>

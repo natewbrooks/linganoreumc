@@ -39,13 +39,15 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 			const timesForEvent = eventTimes
 				.filter((t) => t.eventDateID === d.id)
 				.map((t) => {
-					const [hours, minutes] = t.time.split(':').map(Number);
+					const [hours, minutes] = t.startTime?.split(':').map(Number) || [0, 0];
 					const timeDate = new Date(date);
 					timeDate.setHours(hours, minutes, 0, 0);
 
 					return {
 						...event,
-						time: t.time,
+						startTime: t.startTime,
+						endTime: t.endTime,
+						time: t.startTime, // keep legacy 'time' for display compatibility
 						timeDate,
 						isCancelled: d.isCancelled,
 					};
@@ -75,13 +77,15 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 				const timesForRecurring = eventTimes
 					.filter((t) => t.eventDateID === recurringDateEntry.id)
 					.map((t) => {
-						const [hours, minutes] = t.time.split(':').map(Number);
+						const [hours, minutes] = t.startTime?.split(':').map(Number) || [0, 0];
 						const timeDate = new Date(date);
 						timeDate.setHours(hours, minutes, 0, 0);
 
 						return {
 							...event,
-							time: t.time,
+							startTime: t.startTime,
+							endTime: t.endTime,
+							time: t.startTime,
 							timeDate,
 							isCancelled: recurringDateEntry.isCancelled,
 						};
@@ -130,8 +134,8 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 					<CalendarGridItemEvent
 						key={`${e.id}-${index}`}
 						event={e}
-						date={date}
-						time={e.time}
+						// date={date}
+						// time={e.time}
 						isPast={isPast}
 					/>
 				))}

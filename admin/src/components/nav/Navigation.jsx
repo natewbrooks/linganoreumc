@@ -10,6 +10,8 @@ function Navigation() {
 	const { isAuthenticated, logout, user } = useAuth();
 	const [activeDropdown, setActiveDropdown] = useState(null);
 
+	console.log(user);
+
 	const handleLogoutClick = () => {
 		const confirmed = window.confirm('Are you sure you want to log out?');
 		if (confirmed) logout();
@@ -84,21 +86,23 @@ function Navigation() {
 							)}
 							<span className={`text-darkred px-2`}>|</span>
 
-							<NavLinkDropdown
-								title={
-									<div className='flex items-center space-x-2 text-darkred'>
-										<FaUserCircle
-											size={20}
-											className={``}
-										/>
-										<span>{user.username}</span>
-									</div>
-								}
-								doUnderline={false}
-								links={[{ title: 'Account', to: '/manage/account' }, ...accountLinks]}
-								isActive={activeDropdown === 'Account'}
-								onHover={() => setActiveDropdown('Account')}
-							/>
+							{user && (
+								<NavLinkDropdown
+									title={
+										<div className='flex items-center space-x-2 text-darkred'>
+											<FaUserCircle
+												size={20}
+												className={``}
+											/>
+											<span>{user.username}</span>
+										</div>
+									}
+									doUnderline={false}
+									links={[{ title: 'Account', to: '/manage/account' }, ...accountLinks]}
+									isActive={activeDropdown === 'Account'}
+									onHover={() => setActiveDropdown('Account')}
+								/>
+							)}
 						</>
 					) : (
 						<Link

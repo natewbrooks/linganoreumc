@@ -31,7 +31,7 @@ function EventItem({ event, previous }) {
 	return (
 		<div className='flex flex-col w-full hover:scale-[1.02] hover:opacity-50 active:scale-[1] '>
 			<div
-				className={`flex flex-row w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 font-dm text-sm z-10 relative sm:-left-2 -top-0 min-w-[200px] ${
+				className={`flex flex-row flex-wrap leading-none py-1 w-fit pl-4 sm:px-4 -skew-x-[30deg] gap-x-3 gap-y-1 font-dm text-sm z-10 relative -left-2 -top-0 min-w-[200px] ${
 					previous ? 'text-darkred' : 'text-darkred bg-accent'
 				}`}>
 				{!previous
@@ -49,7 +49,7 @@ function EventItem({ event, previous }) {
 									? getShortDayOfWeek(dateObj.date)
 									: formatDate(dateObj.date);
 
-								const timeString = times.map((t) => formatTime(t.time)).join(', ');
+								const timeString = times.map((t) => formatTime(t.startTime)).join(', ');
 
 								return (
 									<React.Fragment key={dateObj.id}>

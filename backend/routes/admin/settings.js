@@ -6,6 +6,6 @@ const router = express.Router();
 // PUT /admin/settings/general/ - Update general settings (admin only)
 router.put('/general/', updateGeneralSettings);
 // PUT /admin/settings/general/ - Update homepage settings (admin only)
-router.put('/pages/home/', updateHomepageSettings);
+router.put('/home/', updateHomepageSettings);
 
 export default router;

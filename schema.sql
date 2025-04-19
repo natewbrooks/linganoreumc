@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS EventDates (
 CREATE TABLE IF NOT EXISTS EventTimes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     eventDateID INT NOT NULL,
-    time TIME NOT NULL,
+    startTime TIME NOT NULL,
+    endTime TIME NULL,
     FOREIGN KEY (eventDateID) REFERENCES EventDates(id) ON DELETE CASCADE
 );
 

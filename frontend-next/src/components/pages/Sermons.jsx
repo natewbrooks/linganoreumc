@@ -43,7 +43,7 @@ export default function Sermons() {
 	}, [filteredAndSortedSermons]);
 
 	return (
-		<div className='flex flex-col'>
+		<div className='flex flex-col pb-8'>
 			<div className='flex flex-col space-y-4 items-center w-full page-wrapper px-4 py-4 md:py-10'>
 				<div className='font-dm text-lg text-darkred w-full'>SERMONS ({sermons.length})</div>
 				<div className='flex flex-row items-center w-full gap-2 sm:gap-1 px-2'>

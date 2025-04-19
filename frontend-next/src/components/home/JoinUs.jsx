@@ -5,14 +5,34 @@ import { SiGooglemaps } from 'react-icons/si';
 import Image from 'next/image';
 import getFormat from '@/lib/getFormat';
 
-function JoinUs({ title, subtext, events, eventTimes, eventIDs, locationName, address, picture }) {
+function JoinUs({
+	title,
+	subtext,
+	events,
+	eventDates,
+	eventTimes,
+	eventIDs,
+	locationName,
+	address,
+	picture,
+}) {
 	const { formatTime } = getFormat;
+
+	console.log({ title, subtext, events, eventTimes, eventIDs, locationName, address, picture });
 
 	// Prebuild timesMap for eventIDs
 	const timesMap = {};
 	for (const eventID of eventIDs) {
-		timesMap[eventID] = eventTimes.filter((t) => t.eventID === eventID || t.eventId === eventID);
+		// Get all date IDs for this event
+		const dateIDs = eventDates
+			.filter((d) => d.eventID === eventID || d.eventId === eventID)
+			.map((d) => d.id);
+
+		// Match times that reference those date IDs
+		timesMap[eventID] = eventTimes.filter((t) => dateIDs.includes(t.eventDateID));
 	}
+
+	console.log(timesMap);
 
 	const combinedAddress = address.replace(/\n/g, ' ');
 	const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -28,8 +48,9 @@ function JoinUs({ title, subtext, events, eventTimes, eventIDs, locationName, ad
 				</div>
 
 				<div className='flex flex-col space-y-4 w-full px-8'>
-					{eventIDs.map(({ eventID }) => {
+					{eventIDs.map((eventID) => {
 						const event = events.find((e) => e.id === eventID);
+						console.log(event);
 						if (!event) return null;
 
 						const times = timesMap[eventID] || [];
@@ -45,7 +66,7 @@ function JoinUs({ title, subtext, events, eventTimes, eventIDs, locationName, ad
 										? times.map((t, index) => (
 												<span key={index}>
 													{index > 0 && ' | '}
-													{formatTime(t.time)}
+													{formatTime(t.startTime)}
 												</span>
 										  ))
 										: 'No times available'}

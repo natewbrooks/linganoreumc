@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 function FeaturedEventItem({ event }) {
 	// const { eventDates, eventTimes } = useEvents();
-	const { fetchEventImagesById } = useEvents();
+	const { fetchEventImages } = useEvents();
 	const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
 	useEffect(() => {
 		const loadThumbnail = async () => {
 			if (!event?.id) return;
 
-			const images = await fetchEventImagesById(event.id);
+			const images = await fetchEventImages(event.id);
 
 			const thumbnail = images.find((img) => img.isThumbnail);
 			setThumbnailUrl(
@@ -22,7 +22,7 @@ function FeaturedEventItem({ event }) {
 		};
 
 		loadThumbnail();
-	}, [event?.id, fetchEventImagesById]);
+	}, [event?.id, fetchEventImages]);
 
 	const hasBackground = !!thumbnailUrl;
 

@@ -64,7 +64,7 @@ function Events() {
 	}, [events, eventDateMap, searchTerm]);
 
 	return (
-		<div className='flex flex-col'>
+		<div className='flex flex-col pb-8'>
 			<div className={`flex flex-col `}>
 				<div className={`flex flex-col items-center w-full  px-4 py-4 md:py-10`}>
 					<div className={`flex flex-col space-y-2 md:flex-row w-full page-wrapper`}>

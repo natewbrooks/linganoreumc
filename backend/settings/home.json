@@ -1,15 +1,6 @@
 {
 	"header": {
-		"images": [
-			{
-				"url": "https://api.linganoreumc.com/media/images/linganore-bright-pic-upscale.webp",
-				"active": true
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/CEM46806669_117962812740.jpg",
-				"active": false
-			}
-		]
+		"images": []
 	},
 	"mottoBanner": {
 		"text": {
@@ -22,7 +13,7 @@
 			"title": "JOIN US FOR WORSHIP",
 			"subtext": "Sundays"
 		},
-		"sermonImageURL": "https://api.linganoreumc.com/media/images/DSC_8272-Edit.jpg",
+		"sermonImageURL": "",
 		"events": []
 	},
 	"livestream": {
@@ -51,31 +42,6 @@
 		"events": []
 	},
 	"stainedGlassDisplay": {
-		"images": [
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-1.png",
-				"active": false
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-2.png",
-				"active": false
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-3.png",
-				"active": false
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-4.png",
-				"active": false
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-5.png",
-				"active": false
-			},
-			{
-				"url": "https://api.linganoreumc.com/media/images/stained-glass-6.png",
-				"active": false
-			}
-		]
+		"images": []
 	}
 }

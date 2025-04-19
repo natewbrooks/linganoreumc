@@ -1,41 +1,53 @@
-'use client';
-
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getSermons } from '@/lib/getSermons'; // adjust path as needed
 
 const SermonsContext = createContext();
 
 export const useSermons = () => useContext(SermonsContext);
 
-export const SermonsProvider = ({ children, initialData = [] }) => {
-	const [sermons, setSermons] = useState(initialData);
-	const [loading, setLoading] = useState(initialData.length === 0);
-	const [error, setError] = useState(null);
+// Fetch all sermons from API
+const fetchSermons = async () => {
+	try {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sermons/all`);
+		if (!response.ok) {
+			throw new Error('Failed to fetch sermons');
+		}
+		return await response.json();
+	} catch (error) {
+		console.error('Error fetching sermons:', error);
+		return [];
+	}
+};
+
+// Manage state
+export const SermonsProvider = ({ children }) => {
+	const [sermons, setSermons] = useState([]);
 
 	useEffect(() => {
-		// Skip fetch if SSR data was provided
-		if (initialData.length > 0) {
-			setLoading(false);
-			return;
-		}
-
 		const loadSermons = async () => {
-			try {
-				const fetched = await getSermons();
-				setSermons(fetched);
-			} catch (err) {
-				console.error('Failed to load sermons via client fetch:', err);
-				setError(err.message);
-			} finally {
-				setLoading(false);
-			}
+			const sermonsData = await fetchSermons();
+			const activeSermons = sermonsData.filter((sermon) => !sermon.isArchived);
+			setSermons(activeSermons);
 		};
 
 		loadSermons();
-	}, [initialData]);
+	}, []);
+
+	// Fetch a single sermon by ID
+	const fetchSermonById = async (id) => {
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sermons/${id}`);
+			if (!response.ok) {
+				throw new Error('Failed to fetch sermon');
+			}
+			return await response.json();
+		} catch (error) {
+			console.error(`Error fetching sermon with ID ${id}:`, error);
+			return null;
+		}
+	};
 
 	return (
-		<SermonsContext.Provider value={{ sermons, loading, error }}>
+		<SermonsContext.Provider value={{ sermons, fetchSermonById }}>
 			{children}
 		</SermonsContext.Provider>
 	);

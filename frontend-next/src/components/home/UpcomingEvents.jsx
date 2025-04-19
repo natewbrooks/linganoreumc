@@ -1,12 +1,10 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useEvents } from '../../contexts/EventsContext';
 import Image from 'next/image';
 
-export default function UpcomingEvents({ title, subtext, events = [] }) {
+export default function UpcomingEvents({ title, subtext, events = [], eventImages }) {
 	const [displayEvents, setDisplayEvents] = useState([]);
-	const { eventImages } = useEvents();
 
 	const fallbackImage = '/assets/linganore-bright-pic-upscale.webp';
 
@@ -32,7 +30,7 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 		const map = {};
 		for (const { event, placeholder } of events) {
 			if (placeholder) continue;
-			const images = eventImages[event.id] || [];
+			const images = eventImages?.[event.id] || [];
 			const thumbnail = images.find((img) => img.isThumbnail);
 			if (thumbnail) {
 				map[event.id] = `${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/${thumbnail.url
@@ -242,8 +240,8 @@ export default function UpcomingEvents({ title, subtext, events = [] }) {
 
 				{/* View All Button */}
 				<div
-					className={`w-full relative left-[50%] md:left-[80%] h-[40px] ${
-						secondRowOnlyPlaceholders ? 'bottom-0 md:top-2' : '-top-64'
+					className={`w-full relative left-[60%] md:left-[80%] h-[40px] ${
+						secondRowOnlyPlaceholders ? 'bottom-0 md:top-2' : ''
 					}`}>
 					<div className={`bg-red py-5 skew-r left-0 top-10`} />
 					<Link href='/events/'>

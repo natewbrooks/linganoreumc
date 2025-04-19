@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import YouTubeEmbed from '@/components/media/YouTubeEmbed';
 import MarkdownText from '@/components/ui/MarkdownText';
 import getFormat from '@/lib/getFormat';
-import { getSermons } from '@/lib/getSermons';
+import { useSermons } from '@/contexts/SermonsContext';
 
 export default function Sermon({ sermonID }) {
 	const { formatLongDate } = getFormat;
+
+	const { fetchSermonById } = useSermons();
 
 	const [sermon, setSermon] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -15,9 +17,8 @@ export default function Sermon({ sermonID }) {
 		const loadSermon = async () => {
 			try {
 				setLoading(true);
-				const sermons = await getSermons();
-				const selected = sermons.find((s) => s.id === sermonID);
-				setSermon(selected || null);
+				const data = await fetchSermonById(sermonID);
+				setSermon(data || null);
 			} catch (err) {
 				console.error('Error loading sermon:', err);
 			} finally {
@@ -28,6 +29,11 @@ export default function Sermon({ sermonID }) {
 		loadSermon();
 	}, [sermonID]);
 
+	function parseDateAsLocal(dateStr) {
+		const [year, month, day] = dateStr.split('-').map(Number);
+		return new Date(year, month - 1, day);
+	}
+
 	const extractYouTubeId = (url) => {
 		if (url) {
 			const match = url.match(/(?:youtu\.be\/|youtube\.com.*v=)([a-zA-Z0-9_-]+)/);
@@ -36,8 +42,16 @@ export default function Sermon({ sermonID }) {
 		return null;
 	};
 
-	if (loading) return <div className='p-8 font-dm'>Loading sermon...</div>;
-	if (!sermon) return <div className='p-8 font-dm text-darkred'>Sermon not found.</div>;
+	if (loading)
+		return (
+			<div className='p-8 font-dm min-h-screen text-center italic text-sm text-darkred'>
+				Loading sermon...
+			</div>
+		);
+	if (!sermon)
+		return (
+			<div className='p-8 font-dm text-sm italic text-center text-darkred'>Sermon not found.</div>
+		);
 
 	const videoId = extractYouTubeId(sermon.videoURL);
 
@@ -48,7 +62,7 @@ export default function Sermon({ sermonID }) {
 					<h1 className='text-3xl font-dm'>{sermon.title}</h1>
 					<div className='w-fit bg px-4 -skew-x-[30deg]'>
 						<div className='text-lg font-dm skew-x-[30deg]'>
-							{formatLongDate(sermon.publishDate)}
+							{formatLongDate(parseDateAsLocal(sermon.publishDate))}
 						</div>
 					</div>
 				</div>
@@ -67,7 +81,7 @@ export default function Sermon({ sermonID }) {
 					<div className='flex w-full justify-between py-1 bg-red px-4 text-bkg skew-x-[30deg]'>
 						<div className='text-lg -skew-x-[30deg]'>Transcript</div>
 						<div className='text-lg -skew-x-[30deg]'>
-							Last edited: {formatLongDate(sermon.lastEditDate)}
+							Last edited: {formatLongDate(parseDateAsLocal(sermon.lastEditDate))}
 						</div>
 					</div>
 					<div className='text-md md:text-lg'>

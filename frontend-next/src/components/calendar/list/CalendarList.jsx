@@ -13,7 +13,7 @@ function CalendarList({ month, year }) {
 		// Step 1: One-off events
 		eventDates.forEach((dateObj) => {
 			const [y, m, d] = dateObj.date.split('-').map(Number);
-			const eventDate = new Date(y, m - 1, d); // ✅ local date parsing
+			const eventDate = new Date(y, m - 1, d);
 
 			if (eventDate.getMonth() !== month || eventDate.getFullYear() !== year) return;
 
@@ -23,14 +23,16 @@ function CalendarList({ month, year }) {
 			const times = eventTimes
 				.filter((t) => t.eventDateID === dateObj.id)
 				.map((t) => {
-					const [hours, minutes] = t.time.split(':').map(Number);
+					const [hours, minutes] = t.startTime?.split(':').map(Number) || [0, 0];
 					const fullDateTime = new Date(eventDate);
 					fullDateTime.setHours(hours, minutes, 0, 0);
 
 					return {
 						id: event.id,
 						title: event.title,
-						time: t.time, // ❗ leave as-is
+						startTime: t.startTime,
+						endTime: t.endTime,
+						time: t.startTime,
 						date: eventDate,
 						dateTime: fullDateTime,
 						isCancelled: dateObj.isCancelled,
@@ -47,7 +49,7 @@ function CalendarList({ month, year }) {
 			const dateKey = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(
 				2,
 				'0'
-			)}-${String(eventDate.getDate()).padStart(2, '0')}`; // ✅ local-safe dateKey
+			)}-${String(eventDate.getDate()).padStart(2, '0')}`;
 			if (!dailyMap[dateKey]) dailyMap[dateKey] = [];
 			dailyMap[dateKey].push(...uniqueTimes);
 		});
@@ -69,7 +71,6 @@ function CalendarList({ month, year }) {
 
 					const dayOfWeek = thisDate.getDay();
 
-					// Find the eventDate for this weekday
 					const dateObj = recurringDateEntries.find((d) => {
 						const [dy, dm, dd] = d.date.split('-').map(Number);
 						const dDate = new Date(dy, dm - 1, dd);
@@ -81,14 +82,16 @@ function CalendarList({ month, year }) {
 					const times = eventTimes
 						.filter((t) => t.eventDateID === dateObj.id)
 						.map((t) => {
-							const [hours, minutes] = t.time.split(':').map(Number);
+							const [hours, minutes] = t.startTime?.split(':').map(Number) || [0, 0];
 							const fullDateTime = new Date(thisDate);
 							fullDateTime.setHours(hours, minutes, 0, 0);
 
 							return {
 								id: event.id,
 								title: event.title,
-								time: t.time,
+								startTime: t.startTime,
+								endTime: t.endTime,
+								time: t.startTime,
 								date: thisDate,
 								dateTime: fullDateTime,
 								isCancelled: dateObj.isCancelled,
@@ -118,7 +121,6 @@ function CalendarList({ month, year }) {
 			})
 			.sort((a, b) => new Date(a[0]) - new Date(b[0]));
 
-		// Deduplicate final entries per dateKey (event.id + time)
 		const deduped = sorted.map(([dateKey, entries]) => {
 			const seen = new Set();
 			const uniqueEntries = entries.filter((entry) => {
@@ -134,7 +136,7 @@ function CalendarList({ month, year }) {
 	}, [month, year, events, eventDates, eventTimes]);
 
 	function formatHeader(dateStr) {
-		const [y, m, d] = dateStr.split('-').map(Number); // ✅ local-safe parsing
+		const [y, m, d] = dateStr.split('-').map(Number);
 		const date = new Date(y, m - 1, d);
 		const weekday = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
 		const month = date.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
@@ -161,7 +163,8 @@ function CalendarList({ month, year }) {
 									key={`${entry.id}-${index}`}
 									event={entry}
 									date={entry.date}
-									time={entry.time}
+									startTime={entry.startTime}
+									endTime={entry.endTime}
 									isPast={isPast}
 								/>
 							);

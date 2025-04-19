@@ -145,7 +145,7 @@ export default function SelectImageDropdown({
 				/>
 				{/* Dropdown list */}
 				{enabled && (
-					<div className='absolute w-[360px] max-h-[200px] left-1/2 -translate-x-1/2 md:left-auto translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg border-l-4 border-red pb-2  px-4'>
+					<div className='absolute w-[360px] max-h-[200px] left-1/2 -translate-x-1/2 md:left-auto md:translate-y-[100px] z-30 overflow-hidden flex flex-col space-y-2 bg-bkg border-l-4 border-red pb-2  px-4'>
 						<div className='sticky top-0 z-10 border-b-4 border-darkred/10 flex-col items-center space-y-2 py-2  bg-bkg'>
 							<div className='flex flex-row w-full justify-between'>
 								<span className='font-dm text-sm text-black'>{label}</span>

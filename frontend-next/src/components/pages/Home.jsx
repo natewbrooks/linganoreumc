@@ -7,7 +7,7 @@ import { getHomepageData } from '@/lib/getHomepageData';
 import { getEvents } from '@/lib/getEvents';
 
 export default async function Home() {
-	const { general, home, events, eventDates, sermons } = await getHomepageData();
+	const { general, home, events, eventDates } = await getHomepageData();
 	const { eventTimes, eventImages } = await getEvents(); // image + time hydration
 
 	console.log(JSON.stringify(eventImages));
@@ -23,6 +23,7 @@ export default async function Home() {
 		subtext: home.joinUs?.text?.subtext || '',
 		eventIDs: (home.joinUs?.events || []).map((e) => e.eventID), // ← explicitly extract eventIDs
 		events, // pass all events for lookup
+		eventDates,
 		eventTimes, // for filtering times
 		locationName: general.contactInformation?.locationName || '',
 		address: general.contactInformation?.address || '',
@@ -79,6 +80,7 @@ export default async function Home() {
 					title={home.upcomingEvents?.text?.title || 'Upcoming Events'}
 					subtext={home.upcomingEvents?.text?.subtext || ''}
 					events={upcomingEvents}
+					eventImages={eventImages}
 				/>
 				<StainedGlassDisplay stainedGlassImages={home.stainedGlassDisplay?.images || []} />
 			</div>

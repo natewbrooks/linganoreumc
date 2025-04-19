@@ -1,15 +1,8 @@
 import './globals.css';
-import { getSettings } from '@/lib/getSettings';
-import { getEvents } from '@/lib/getEvents';
-import { getSermons } from '@/lib/getSermons';
 import ClientProviders from '@/contexts/ClientProviders';
 import Head from 'next/head';
 
 export default async function RootLayout({ children }) {
-	const settings = await getSettings();
-	const events = await getEvents();
-	const sermons = await getSermons();
-
 	return (
 		<html lang='en'>
 			<Head>
@@ -42,12 +35,7 @@ export default async function RootLayout({ children }) {
 				/>
 			</Head>
 			<body>
-				<ClientProviders
-					settings={settings}
-					events={events}
-					sermons={sermons}>
-					{children}
-				</ClientProviders>
+				<ClientProviders>{children}</ClientProviders>
 			</body>
 		</html>
 	);

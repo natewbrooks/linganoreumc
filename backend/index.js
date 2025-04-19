@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import path from 'path';
 import { createAdminUserIfMissing } from './middleware/createUser.js';
 
 import verifyJWT from './middleware/verifyJWT.js';
@@ -34,13 +33,11 @@ app.use(
 				process.env.BASE_URL,
 				process.env.ADMIN_BASE_URL,
 				process.env.API_BASE_URL,
-				'http://localhost:3000',
-				'http://localhost',
 			];
 			if (!origin || allowedOrigins.includes(origin)) {
 				return callback(null, origin || true);
 			}
-			console.warn(`CORS blocked origin: ${origin}`);
+			console.warn(`Blocked by CORS: ${origin}`);
 			return callback(new Error('Not allowed by CORS'));
 		},
 		credentials: true,
@@ -66,9 +63,9 @@ app.use('/media', publicMediaRouter);
 // Admin login (unprotected)
 app.use('/admin/auth', adminAuthRouter);
 
-// JWT middleware protection for all /admin routes
+// JWT middleware protection for all /admin routes EXCEPT /admin/auth/**
 app.use((req, res, next) => {
-	if (req.originalUrl.startsWith('/admin')) {
+	if (req.originalUrl.startsWith('/admin') && !req.originalUrl.startsWith('/admin/auth')) {
 		verifyJWT(req, res, (err) => {
 			if (err) {
 				return res.status(401).json({ error: 'Unauthorized' });

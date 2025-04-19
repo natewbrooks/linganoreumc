@@ -112,19 +112,21 @@ function MobileNavigation() {
 							</div>
 
 							{/* Account + Logout */}
-							<div className='flex justify-between items-center'>
-								<button
-									onClick={() => handleCloseAndNavigate('/manage/account')}
-									className='flex items-center space-x-2 text-xl font-dm'>
-									<FaUserCircle size={24} />
-									<span>{user.username}</span>
-								</button>
-								<button
-									onClick={handleLogoutClick}
-									className='text-xl font-dm text-bkg'>
-									Logout
-								</button>
-							</div>
+							{user && (
+								<div className='flex justify-between items-center'>
+									<button
+										onClick={() => handleCloseAndNavigate('/manage/account')}
+										className='flex items-center space-x-2 text-xl font-dm'>
+										<FaUserCircle size={24} />
+										<span>{user.username}</span>
+									</button>
+									<button
+										onClick={handleLogoutClick}
+										className='text-xl font-dm text-bkg'>
+										Logout
+									</button>
+								</div>
+							)}
 						</>
 					) : (
 						// Not logged in → show only Exit to Home

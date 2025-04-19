@@ -1,10 +1,10 @@
 export async function getEvents() {
 	const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-	const eventsRes = await fetch(`${baseUrl}/events/all`);
-	const datesRes = await fetch(`${baseUrl}/events/dates/all`);
-	const timesRes = await fetch(`${baseUrl}/events/times/all`);
-	const imagesRes = await fetch(`${baseUrl}/media/images/events/`);
+	const eventsRes = await fetch(`${baseUrl}/events/all`, { cache: 'no-store' });
+	const datesRes = await fetch(`${baseUrl}/events/dates/all`, { cache: 'no-store' });
+	const timesRes = await fetch(`${baseUrl}/events/times/all`, { cache: 'no-store' });
+	const imagesRes = await fetch(`${baseUrl}/media/images/events/`, { cache: 'no-store' });
 
 	if (!eventsRes.ok || !datesRes.ok || !timesRes.ok || !imagesRes.ok) {
 		console.error({
