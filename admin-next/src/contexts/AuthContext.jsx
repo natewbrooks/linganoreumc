@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
 
@@ -9,6 +10,9 @@ export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [sessionExpired, setSessionExpired] = useState(false);
+	const [wasAuthenticatedOnce, setWasAuthenticatedOnce] = useState(false);
+
+	const router = useRouter();
 
 	const checkAuth = async () => {
 		try {
@@ -21,6 +25,7 @@ export const AuthProvider = ({ children }) => {
 			if (res.data && res.data.user) {
 				setIsAuthenticated(true);
 				setUser(res.data.user);
+				setWasAuthenticatedOnce(true);
 			} else {
 				setIsAuthenticated(false);
 				setUser(null);
@@ -28,13 +33,12 @@ export const AuthProvider = ({ children }) => {
 		} catch (err) {
 			setIsAuthenticated(false);
 			setUser(null);
-			console.log('NOT LOGGED IN :(');
 
 			// Check if it's a session expired error
-			if (err.response && err.response.status === 401) {
+			if (err.response && err.response.status === 401 && wasAuthenticatedOnce) {
 				setSessionExpired(true);
-				// Hide the message after 5 seconds
 				setTimeout(() => setSessionExpired(false), 5000);
+				router.replace('/login');
 			}
 		} finally {
 			setLoading(false);
@@ -47,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
 	const login = async (username, password) => {
 		try {
-			const res = await axios.post(
+			await axios.post(
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/auth/login`,
 				{ username, password },
 				{ withCredentials: true }
@@ -112,8 +116,8 @@ export const AuthProvider = ({ children }) => {
 
 	return (
 		<>
-			{sessionExpired && (
-				<div className='fixed top-4 right-4 z-50 bg-red-500 text-white p-4 rounded shadow-lg'>
+			{sessionExpired && wasAuthenticatedOnce && (
+				<div className='fixed top-4 right-4 z-50 bg-red outline-4 outline-bkg text-bkg p-4 rounded shadow-lg'>
 					Session expired. Please log in again.
 				</div>
 			)}

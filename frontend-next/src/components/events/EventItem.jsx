@@ -74,11 +74,13 @@ function EventItem({ event, previous }) {
 				</div>
 
 				{/* Description Block */}
-				<div className='flex-1 p-2 px-4 text-darkred text-lg -skew-x-[30deg]'>
-					<div
-						className='line-clamp-1 whitespace-nowrap overflow-hidden skew-x-[30deg]'
-						dangerouslySetInnerHTML={{ __html: event.description }}
-					/>
+				<div className='flex-1 p-2 px-4 text-darkred text-lg -skew-x-[30deg] overflow-hidden'>
+					<p
+						className='truncate whitespace-nowrap skew-x-[30deg] md:overflow-hidden text-ellipsis'
+						title={event.description.replace(/<[^>]*>/g, '')} // optional: for hover tooltip
+					>
+						{event.description.replace(/<[^>]*>/g, '')}
+					</p>
 				</div>
 			</Link>
 		</div>

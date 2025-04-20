@@ -18,8 +18,6 @@ function JoinUs({
 }) {
 	const { formatTime } = getFormat;
 
-	console.log({ title, subtext, events, eventTimes, eventIDs, locationName, address, picture });
-
 	// Prebuild timesMap for eventIDs
 	const timesMap = {};
 	for (const eventID of eventIDs) {
@@ -31,8 +29,6 @@ function JoinUs({
 		// Match times that reference those date IDs
 		timesMap[eventID] = eventTimes.filter((t) => dateIDs.includes(t.eventDateID));
 	}
-
-	console.log(timesMap);
 
 	const combinedAddress = address.replace(/\n/g, ' ');
 	const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -50,7 +46,6 @@ function JoinUs({
 				<div className='flex flex-col space-y-4 w-full px-8'>
 					{eventIDs.map((eventID) => {
 						const event = events.find((e) => e.id === eventID);
-						console.log(event);
 						if (!event) return null;
 
 						const times = timesMap[eventID] || [];
@@ -96,9 +91,12 @@ function JoinUs({
 					href={googleMapsLink}
 					target='_blank'
 					rel='noopener noreferrer'
-					className='outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap pl-20'>
-					<SiGooglemaps size={32} />
-					<div className='flex flex-col group'>
+					className='outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap pl-20 group'>
+					<SiGooglemaps
+						size={32}
+						className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}
+					/>
+					<div className='flex flex-col '>
 						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
 							{locationName}
 						</span>
@@ -109,14 +107,17 @@ function JoinUs({
 				</Link>
 			</div>
 
-			<div className='flex md:hidden w-full text-start px-4 bg-red text-bkg py-3 group'>
+			<div className='flex md:hidden w-full px-4 bg-red text-bkg py-3 group'>
 				<Link
 					href={googleMapsLink}
 					target='_blank'
 					rel='noopener noreferrer'
-					className='outline-none flex items-center space-x-4'>
-					<SiGooglemaps size={32} />
-					<div className='flex flex-col group'>
+					className='outline-none flex items-center space-x-4 group'>
+					<SiGooglemaps
+						size={32}
+						className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}
+					/>
+					<div className='flex flex-col'>
 						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
 							{locationName}
 						</span>

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import EditSermon from '@/components/pages/maintenance/sermons/EditSermon';
 
 export default async function EditSermonPage({ params }) {

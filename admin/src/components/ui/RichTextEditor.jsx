@@ -173,7 +173,7 @@ const RichTextEditor = ({ value, onChange, title }) => {
 
 			{/* Editor content area */}
 			<div
-				className='border-l-4 border-red flex-grow p-4 prose list-outside list-disc marker:text-darkred h-[200px] max-w-none bg-bkg-tp cursor-text select-none overflow-auto'
+				className='border-l-4 border-red flex-grow p-4 prose list-outside list-disc marker:text-darkred min-h-[200px] max-h-[500px] max-w-none bg-bkg-tp cursor-text select-none overflow-auto'
 				onClick={() => editor?.chain().focus().run()}>
 				<EditorContent
 					editor={editor}

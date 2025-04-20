@@ -1,3 +1,4 @@
+'use client';
 import { EventsProvider } from '@/contexts/EventsContext';
 import { SermonsProvider } from '@/contexts/SermonsContext';
 import LayoutWrapper from '@/contexts/LayoutWrapper';

@@ -1,3 +1,4 @@
+import VisibilityRefresher from '@/contexts/VisibilityRefresher';
 import './globals.css';
 import ClientProviders from '@/contexts/ClientProviders';
 
@@ -10,6 +11,7 @@ export default async function RootLayout({ children }) {
 	return (
 		<html lang='en'>
 			<body>
+				<VisibilityRefresher />
 				<ClientProviders>{children}</ClientProviders>
 			</body>
 		</html>

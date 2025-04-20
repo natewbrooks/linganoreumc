@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Home from '@/components/pages/Home';
 
 export const metadata = {

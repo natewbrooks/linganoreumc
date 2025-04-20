@@ -72,7 +72,6 @@ const Event = ({ eventID }) => {
 		if (!dateObj || !timeObj) return;
 
 		const startDate = parseDateAsLocal(dateObj.date);
-		console.log(startDate);
 		const [sh, sm] = timeObj.startTime.split(':').map(Number);
 		startDate.setHours(sh, sm);
 
@@ -173,15 +172,15 @@ const Event = ({ eventID }) => {
 
 								{/* Dropdown Panel */}
 								<div
-									className={`absolute top-8 right-0 w-[20rem] outline-4 outline-darkred md:outline-bkg z-20 transform transition-all duration-200 ease-out ${
+									className={`absolute top-8 right-0 w-[20rem] outline-4 outline-bkg z-20 transform transition-all duration-200 ease-out ${
 										showCalendarDropdown
 											? 'opacity-100 translate-y-0 pointer-events-auto'
 											: 'opacity-0 -translate-y-4 pointer-events-none'
-									} bg-bkg-tp shadow-lg text-sm `}>
+									} bg-bkg shadow-lg text-sm `}>
 									<div className='px-4 py-2 bg-red text-bkg'>
 										<div className='text-lg'>Select Event Date & Time</div>
 
-										<div className='text-darkred py-1 px-2 mx-4 bg-bkg-tp text-xs mt-1 skew-r'>
+										<div className='text-darkred py-1 px-2 mx-4 bg-bkg text-sm mt-1 skew-r'>
 											<p className={`skew-l`}>
 												{event.isRecurring
 													? 'This is a recurring event. Select a day and time to add to your calendar.'
@@ -191,7 +190,7 @@ const Event = ({ eventID }) => {
 									</div>
 
 									{/* Date Selections */}
-									<div className='px-4 py-2 relative overflow-y-auto max-h-40'>
+									<div className='px-4 py-2 relative overflow-y-auto min-h-20 max-h-40'>
 										<div className={`flex flex-col w-full space-y-2`}>
 											{dates.map((date) => {
 												const dateTimes = times.filter(
@@ -252,7 +251,7 @@ const Event = ({ eventID }) => {
 														{isExpanded && (
 															<div className='ml-6 mt-1 space-y-1'>
 																{dateTimes.length === 0 ? (
-																	<div className='text-gray-400 italic text-xs'>
+																	<div className='text-darkred italic text-sm'>
 																		No times scheduled
 																	</div>
 																) : (
@@ -278,8 +277,8 @@ const Event = ({ eventID }) => {
 																			/>
 																			<label
 																				htmlFor={`time-${time.id}`}
-																				className={`text-xs cursor-pointer ${
-																					date.isCancelled ? 'text-gray-400' : ''
+																				className={`text-sm cursor-pointer ${
+																					date.isCancelled ? 'text-darkred' : ''
 																				}`}>
 																				{formatTime(time.startTime)}
 																				{time.endTime ? ` – ${formatTime(time.endTime)}` : ''}
@@ -299,7 +298,7 @@ const Event = ({ eventID }) => {
 									<div className='px-4 py-2 bg-tp '>
 										<div
 											onClick={handleAddToGoogleCalendar}
-											className='w-full bg-red text-white py-2 clickable-l-skew transition cursor-pointer'>
+											className='w-full bg-red text-bkg py-2 clickable-l-skew transition cursor-pointer'>
 											<p className={`skew-r`}>Add to Calendar</p>
 										</div>
 									</div>

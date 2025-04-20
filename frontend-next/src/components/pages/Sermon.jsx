@@ -80,9 +80,9 @@ export default function Sermon({ sermonID }) {
 				<div className='flex flex-col space-y-4 font-dm w-full px-4'>
 					<div className='flex w-full justify-between py-1 bg-red px-4 text-bkg skew-x-[30deg]'>
 						<div className='text-lg -skew-x-[30deg]'>Transcript</div>
-						<div className='text-lg -skew-x-[30deg]'>
+						{/* <div className='text-lg -skew-x-[30deg]'>
 							Last edited: {formatLongDate(parseDateAsLocal(sermon.lastEditDate))}
-						</div>
+						</div> */}
 					</div>
 					<div className='text-md md:text-lg'>
 						<MarkdownText html={sermon.body} />

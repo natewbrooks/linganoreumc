@@ -10,9 +10,6 @@ export default async function Home() {
 	const { general, home, events, eventDates } = await getHomepageData();
 	const { eventTimes, eventImages } = await getEvents(); // image + time hydration
 
-	console.log(JSON.stringify(eventImages));
-	console.log(JSON.stringify(events));
-
 	const activeHeaderImage = (home.header?.images || []).find((img) => img.active)?.url || null;
 
 	const mottoTitle = home.mottoBanner?.text?.title || 'LINGANORE UNITED METHODIST CHURCH';

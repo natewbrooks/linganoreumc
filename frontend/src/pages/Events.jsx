@@ -71,7 +71,8 @@ function Events() {
 						<div className={`font-dm text-lg text-darkred w-full `}>
 							{featured.length > 0 ? `FEATURED EVENTS (${featured.length})` : 'EVENTS'}
 						</div>
-						<div className={`bg-tp md:w-[300px] px-2 -skew-x-[30deg]`}>
+						<div
+							className={`flex items-center h-full w-full bg-tp md:w-[300px] px-2 -skew-x-[30deg]`}>
 							<input
 								type='text'
 								placeholder='Search all events...'

@@ -49,11 +49,11 @@ function FeaturedEventItem({ event }) {
 			{/* Common wrapper to keep sizing consistent */}
 			<div className='w-full h-full'>
 				{!hasBackground ? (
-					<div className='font-dm text-center w-full h-full -skew-x-[10deg] text-lg flex items-center justify-center text-darkred'>
-						{event.title}
+					<div className='font-dm text-center w-full h-full skew-x-[10deg] text-lg flex items-center justify-center bg-red text-bkg'>
+						<div className={`-skew-x-[10deg]`}>{event.title}</div>
 					</div>
 				) : (
-					<div className='relative w-full h-full bg-red skew-x-[10deg] overflow-hidden border-4 border-red'>
+					<div className='relative w-full h-full bg-red skew-x-[10deg] overflow-hidden'>
 						<img
 							src={thumbnailUrl}
 							alt='Event'

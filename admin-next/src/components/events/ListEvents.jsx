@@ -199,7 +199,7 @@ function ListEvents() {
 			</div>
 
 			{/* Event List */}
-			<div className='my-2 flex flex-col space-y-4 min-h-[800px] w-full relative'>
+			<div className='my-2 flex flex-col space-y-4 min-h-[800px] w-full relative pl-[10px] pr-[30px]'>
 				{filteredEvents.length > 0 ? (
 					filteredEvents.map((event) => (
 						<div

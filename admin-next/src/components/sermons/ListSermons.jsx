@@ -159,7 +159,7 @@ function ListSermons() {
 			</div>
 
 			{/* Sermon List */}
-			<div className='my-2 flex flex-col space-y-4 min-h-[800px]'>
+			<div className='my-2 flex flex-col space-y-4 min-h-[800px] pl-[10px] pr-[30px]'>
 				{filteredSermons.length > 0 ? (
 					filteredSermons.map((sermon) => (
 						<div

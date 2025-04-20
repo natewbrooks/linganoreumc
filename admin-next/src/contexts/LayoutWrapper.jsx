@@ -18,7 +18,9 @@ export default function LayoutWrapper({ children }) {
 
 			<div className={`flex flex-row overflow-hidden px-2`}>
 				<div className={`justify-center flex w-full h-full`}>
-					<div className={`  w-full h-full max-w-[800px] mx-auto`}>{children}</div>
+					<div className={`  w-full h-full max-w-[800px] 2xl:max-w-[1000px] px-4 mx-auto`}>
+						{children}
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,15 +1,17 @@
+import { fetchWithRetry } from './fetchWithRetry.js';
+
 export async function getSettings() {
 	const base = process.env.NEXT_PUBLIC_API_BASE_URL;
-	const [generalRes, homeRes] = await Promise.all([
-		fetch(`${base}/settings/general`, { cache: 'force-cache' }),
-		fetch(`${base}/settings/home`, { cache: 'force-cache' }),
-	]);
 
-	const general = generalRes.ok ? await generalRes.json() : null;
-	const home = homeRes.ok ? await homeRes.json() : null;
+	try {
+		const [general, home] = await Promise.all([
+			fetchWithRetry(`${base}/settings/general`, { cache: 'force-cache' }),
+			fetchWithRetry(`${base}/settings/home`, { cache: 'force-cache' }),
+		]);
 
-	return {
-		general,
-		home,
-	};
+		return { general, home };
+	} catch (error) {
+		console.error('Failed to fetch settings:', error);
+		return { general: null, home: null };
+	}
 }

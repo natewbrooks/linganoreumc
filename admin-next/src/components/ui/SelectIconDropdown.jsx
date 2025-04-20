@@ -58,7 +58,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 		<div
 			ref={dropdownRef}
 			className='md:relative flex flex-col'>
-			{/* Clickable field */}
+			{/* clickable field */}
 			<div className='font-dm  border-l-4 border-red bg-tp clickable px-2 py-1 h-[64px] w-[100px] flex items-center'>
 				{selectedIcon ? (
 					<div

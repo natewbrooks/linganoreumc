@@ -58,7 +58,7 @@ function SelectEventDropdown({
 		<div
 			ref={dropdownRef}
 			className='relative flex flex-col w-full'>
-			{/* Clickable field */}
+			{/* clickable field */}
 			<div className='font-dm relative border-l-4 border-red bg-tp clickable px-2 py-1 h-[32px]'>
 				{selectedEventID ? (
 					<p

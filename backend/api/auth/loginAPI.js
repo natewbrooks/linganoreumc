@@ -5,8 +5,6 @@ import pool from '../../database.js';
 export const getLogin = (req, res) => {
 	const token = req.cookies?.token;
 
-	console.log('TOKEN FROM COOKIES: ' + token);
-
 	if (!token) {
 		console.log('NO TOKEN PROVIDED 401');
 		return res.status(401).json({ error: 'No token provided' });

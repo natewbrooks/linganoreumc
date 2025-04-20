@@ -81,7 +81,7 @@ function GeneralSettingsAdmin() {
 	}
 
 	return (
-		<div className='flex flex-col mb-12'>
+		<div className='flex flex-col mb-12 px-2'>
 			<h2 className='font-dm text-2xl'>General Settings</h2>
 
 			<div className='flex flex-col space-y-8 pt-4'>

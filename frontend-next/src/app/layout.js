@@ -1,5 +1,6 @@
 import './globals.css';
 import ClientProviders from '@/contexts/ClientProviders';
+import VisibilityRefresher from '@/contexts/VisibilityRefresher';
 import Head from 'next/head';
 
 export default async function RootLayout({ children }) {

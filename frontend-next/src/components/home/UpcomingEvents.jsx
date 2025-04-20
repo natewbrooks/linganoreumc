@@ -73,7 +73,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 										</p>
 									</div>
 									<div
-										className={`absolute right-0 top-[70px] skew-x-[5deg] ${
+										className={`absolute right-0 top-[85px] skew-x-[5deg] ${
 											!placeholder
 												? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 												: ''
@@ -117,7 +117,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 				{/* Mobile View */}
 				<div
 					className={`block md:hidden ${secondRowOnlyPlaceholders ? ' h-[200px]' : ' h-[450px]'}`}>
-					<div className={`absolute top-0 right-0 w-screen z-10 bg-red py-8`} />
+					<div className={`absolute top-0 right-0 w-screen bg-red py-8`} />
 					<div className={`flex flex-col `}>
 						<div className='flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 							{displayEvents.slice(0, 2).map(({ event, date, placeholder }, index) => {
@@ -135,7 +135,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 											</p>
 										</div>
 										<div
-											className={`relative w-full right-0 top-[60px] skew-x-[5deg] ${
+											className={`relative w-full right-0 top-[68px] skew-x-[5deg] ${
 												!placeholder
 													? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 													: ''
@@ -177,7 +177,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 
 						{!secondRowOnlyPlaceholders && (
 							<>
-								<div className={`absolute top-60 w-full z-10 bg-red py-8`} />
+								<div className={`absolute top-60 w-full bg-red py-8`} />
 								<div className='relative top-23 flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
 									{displayEvents.slice(2).map(({ event, date, placeholder }, index) => {
 										const content = (
@@ -194,7 +194,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 													</p>
 												</div>
 												<div
-													className={`relative w-full right-0 top-[60px] skew-x-[5deg] ${
+													className={`relative w-full right-0 top-[66px] skew-x-[5deg] ${
 														!placeholder
 															? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
 															: ''
@@ -240,7 +240,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 
 				{/* View All Button */}
 				<div
-					className={`w-full relative left-[60%] md:left-[80%] h-[40px] ${
+					className={`w-full relative left-[45%] md:left-[80%] h-[40px] ${
 						secondRowOnlyPlaceholders ? 'bottom-0 md:top-2' : ''
 					}`}>
 					<div className={`bg-red py-5 skew-r left-0 top-10`} />

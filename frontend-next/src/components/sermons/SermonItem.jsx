@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 function SermonItem({ sermon, index }) {
 	return (
-		<div className='w-full clickable transition-transform'>
+		<div className='w-full flex justify-center items-center  font-dm clickable transition-transform'>
 			<div className='flex flex-row w-full pl-4 -skew-x-[30deg] font-dm text-sm z-10 relative'>
 				<Link
 					href={`/sermons/${sermon.id}`}
@@ -19,8 +19,8 @@ function SermonItem({ sermon, index }) {
 					</div>
 
 					{/* Description Block */}
-					<div className='flex-1 p-2 px-2 text-darkred text-lg -skew-x-[30deg]'>
-						<p className='skew-x-[30deg] whitespace-nowrap'>{sermon.description}</p>
+					<div className='flex-1 p-2 px-2 text-darkred text-lg -skew-x-[30deg] overflow-hidden'>
+						<p className='skew-x-[30deg] truncate whitespace-nowrap w-full'>{sermon.description}</p>
 					</div>
 				</Link>
 			</div>

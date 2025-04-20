@@ -55,7 +55,7 @@ function Navigation() {
 							/>
 						</Link>
 					</div>
-					<h3 className='absolute -bottom-12 -left-8 text-darkred font-newb text-xl bg-bkg'>
+					<h3 className='absolute -bottom-14 -left-8 text-darkred font-newb text-xl bg-bkg'>
 						Admin Dashboard
 					</h3>
 				</div>
@@ -110,7 +110,7 @@ function Navigation() {
 						</>
 					) : (
 						<Link
-							href={`/`}
+							href={`${process.env.NEXT_PUBLIC_BASE_URL}/`}
 							className='font-dm text-bkg clickable'>
 							<span className='text-xl'>E</span>
 							<span className='text-lg'>

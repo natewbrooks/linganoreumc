@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import EditEvent from '@/components/pages/maintenance/events/EditEvent';
 
 export default async function EditEventPage({ params }) {

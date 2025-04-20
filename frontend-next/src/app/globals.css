@@ -33,6 +33,25 @@
   /* 1080p displays and up (optional) */
 }
 
+@media (max-width: 800px) {
+  .clickable {
+    cursor: default;
+    transform: scale(1) !important;
+    opacity: 1 !important;
+  }
+
+  .clickable-l-skew {
+    cursor: default;
+    transform: skewX(-30deg) scale(1) !important;
+    opacity: 1 !important;
+  }
+
+  .clickable-r-skew {
+    cursor: default;
+    transform: skewX(30deg) scale(1) !important;
+    opacity: 1 !important;
+  }
+}
 
 :root {
   background-color: #FFF8EF;

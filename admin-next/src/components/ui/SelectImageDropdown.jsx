@@ -65,7 +65,7 @@ export default function SelectImageDropdown({
 				className={`${
 					enabled ? '' : 'relative'
 				} flex flex-col w-full items-center justify-center text-center`}>
-				{/* Clickable image preview */}
+				{/* clickable image preview */}
 				<div
 					className='font-dm relative border-l-4 border-red bg-tp clickable h-[100px] w-full items-center justify-center flex'
 					onClick={() => setEnabled(true)}>
