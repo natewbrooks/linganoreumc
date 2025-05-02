@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { fetchWithRetry } from '@/lib/fetchWithRetry';
 
 const EventsContext = createContext();
 
@@ -11,94 +12,114 @@ export const EventsProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/all`)
-			.then((res) => res.json())
-			.then((data) => {
+		const fetchEvents = async () => {
+			try {
+				const data = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/all`);
 				const filtered = data.filter((event) => !event.isArchived);
 				setEvents(filtered);
+			} catch (err) {
+				console.error('Failed to fetch events:', err);
+				setError(err.message);
+			} finally {
 				setLoading(false);
-			})
+			}
+		};
 
-			.catch((err) => setError(err.message));
+		fetchEvents();
 	}, []);
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/all`)
-			.then((res) => res.json())
-			.then((data) => setEventDates(data))
-			.catch((err) => setError(err.message));
+		const fetchAllDates = async () => {
+			try {
+				const data = await fetchWithRetry(
+					`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/all`
+				);
+				setEventDates(Array.isArray(data) ? data : []);
+			} catch (err) {
+				console.error('Failed to fetch event dates:', err);
+				setError(err.message);
+			}
+		};
+
+		fetchAllDates();
 	}, []);
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/times/all`)
-			.then((res) => res.json())
-			.then((data) => setEventTimes(data))
-			.catch((err) => setError(err.message));
+		const fetchAllTimes = async () => {
+			try {
+				const data = await fetchWithRetry(
+					`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/times/all`
+				);
+				setEventTimes(Array.isArray(data) ? data : []);
+			} catch (err) {
+				console.error('Failed to fetch event times:', err);
+				setError(err.message);
+			}
+		};
+
+		fetchAllTimes();
 	}, []);
 
 	const fetchEventById = async (eventId) => {
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${eventId}`);
-			if (!res.ok) throw new Error('Failed to fetch event');
-			return await res.json();
+			return await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${eventId}`);
 		} catch (err) {
-			console.error(err);
+			console.error(`Error fetching event ${eventId}:`, err);
 			setError(err.message);
+			return null;
 		}
 	};
 
 	const fetchEventDatesById = async (eventId) => {
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/${eventId}`);
-			if (!res.ok) throw new Error('Failed to fetch event dates');
-			return await res.json();
+			const data = await fetchWithRetry(
+				`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/${eventId}`
+			);
+			return Array.isArray(data) ? data : [];
 		} catch (err) {
-			console.error(err);
+			console.error(`Error fetching dates for event ${eventId}:`, err);
 			setError(err.message);
+			return [];
 		}
 	};
 
 	const fetchEventTimesByDateId = async (eventDateId) => {
 		try {
-			const res = await fetch(
+			const data = await fetchWithRetry(
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/times/${eventDateId}`
 			);
-			if (!res.ok) throw new Error('Failed to fetch event times');
-			return await res.json();
+			return Array.isArray(data) ? data : [];
 		} catch (err) {
-			console.error(err);
+			console.error(`Error fetching times for date ${eventDateId}:`, err);
 			setError(err.message);
+			return [];
 		}
 	};
 
-	// Find all event dates associated with this event ID
 	const fetchEventTimesByEventId = async (eventId) => {
 		try {
-			// First, get all event dates associated with this event
-			const dateRes = await fetch(
-				`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/${eventId}`
-			);
-			if (!dateRes.ok) throw new Error('Failed to fetch event dates');
-			const eventDates = await dateRes.json();
+			const eventDates = await fetchEventDatesById(eventId);
+			if (!eventDates.length) return [];
 
-			// For each date, fetch times
-			const timeFetches = eventDates.map((date) =>
-				fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/times/${date.id}`).then((res) => {
-					if (!res.ok) throw new Error(`Failed to fetch times for date ID ${date.id}`);
-					return res.json();
-				})
-			);
+			const timeFetches = eventDates.map(async (date) => {
+				try {
+					return await fetchEventTimesByDateId(date.id);
+				} catch (err) {
+					console.error(`Failed to fetch times for date ID ${date.id}:`, err);
+					return [];
+				}
+			});
 
-			// Resolve all time fetches in parallel
 			const allTimes = await Promise.all(timeFetches);
-
-			// Flatten and annotate times with eventDateID
-			const mergedTimes = allTimes.flat().map((t) => ({
-				id: t.id,
-				eventDateID: t.eventDateID,
-				startTime: t.startTime,
-				endTime: t.endTime,
-			}));
+			const mergedTimes = allTimes
+				.flat()
+				.filter((t) => t)
+				.map((t) => ({
+					id: t.id,
+					eventDateID: t.eventDateID,
+					startTime: t.startTime,
+					endTime: t.endTime,
+				}));
 
 			return mergedTimes;
 		} catch (err) {
@@ -110,12 +131,9 @@ export const EventsProvider = ({ children }) => {
 
 	const fetchEventImages = async (eventID) => {
 		try {
-			const res = await fetch(
+			const data = await fetchWithRetry(
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/events/${eventID}`
 			);
-			if (!res.ok) throw new Error('Failed to fetch event images');
-			const data = await res.json();
-
 			return data.map((img) => ({
 				url: img.photoURL || img.url,
 				isThumbnail: img.isThumbnail === 1 || img.isThumbnail === true,

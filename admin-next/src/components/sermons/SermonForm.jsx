@@ -117,18 +117,18 @@ function SermonForm({ mode = 'create', initialData = null }) {
 							placeholder='YouTube Video URL'
 						/>
 					</div>
-					{videoURL && (
+					{/* {videoURL && (
 						<button
 							type='button'
 							onClick={handleScrape}
 							className='bg-darkred skew-l clickable-r-skew    text-white px-3'>
 							<div className={`skew-l`}>Scrape</div>
 						</button>
-					)}
+					)} */}
 				</div>
-				<div className={`font-dm pl-4 text-sm text-darkred`}>
+				{/* <div className={`font-dm pl-4 text-sm text-darkred`}>
 					Scrape information from a YouTube video, or manually input sermon information.
-				</div>
+				</div> */}
 			</div>
 
 			<>

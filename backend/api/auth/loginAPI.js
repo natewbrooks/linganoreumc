@@ -6,7 +6,6 @@ export const getLogin = (req, res) => {
 	const token = req.cookies?.token;
 
 	if (!token) {
-		console.log('NO TOKEN PROVIDED 401');
 		return res.status(401).json({ error: 'No token provided' });
 	}
 
@@ -14,7 +13,6 @@ export const getLogin = (req, res) => {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
 		return res.status(200).json({ message: 'Authenticated', user: decoded });
 	} catch (err) {
-		console.log('TOKEN DECODE FAILED 401');
 		return res.status(401).json({ error: 'Invalid or expired token' });
 	}
 };

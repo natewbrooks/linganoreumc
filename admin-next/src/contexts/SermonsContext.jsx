@@ -47,7 +47,7 @@ export const SermonsProvider = ({ children }) => {
 	const scrapeSermonDataFromURL = async (videoURL) => {
 		try {
 			const res = await axios.post(
-				'/media/scrape-youtube',
+				`${base}/media/scrape-youtube`,
 				{ videoURL },
 				{ withCredentials: true }
 			);

@@ -113,6 +113,7 @@ function Events() {
 								recurring.map((event) => (
 									<EventItem
 										key={event.id}
+										previous={false}
 										event={event}
 									/>
 								))
@@ -129,6 +130,7 @@ function Events() {
 								upcoming.map((event) => (
 									<EventItem
 										key={event.id}
+										previous={false}
 										event={event}
 									/>
 								))

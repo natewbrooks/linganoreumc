@@ -286,16 +286,32 @@ export const uploadEventImage = async (req, res) => {
 
 export const scrapeYouTubeVideo = async (req, res) => {
 	const { videoURL } = req.body;
-	if (!videoURL) return res.status(400).json({ error: 'YouTube video URL must be provided' });
+	if (!videoURL) {
+		return res.status(400).json({ error: 'YouTube video URL must be provided' });
+	}
 
 	try {
 		const metadata = await fetchVideoMetadata(videoURL);
-		const transcript = await fetchTranscript(videoURL);
-
 		if (!metadata.title) {
 			return res.status(400).json({
-				error: 'Failed to extract video metadata. Ensure the YouTube URL is valid and public.',
+				error:
+					'Failed to extract video metadata. Ensure the YouTube URL is valid, public, and accessible.',
 			});
+		}
+
+		let transcript = '';
+		let transcriptAvailable = false;
+
+		try {
+			transcript = await fetchTranscript(videoURL);
+			if (transcript && transcript.trim() !== '') {
+				transcriptAvailable = true;
+			} else {
+				transcript = '[Transcript unavailable]';
+			}
+		} catch (err) {
+			console.warn(`Transcript fetch failed for ${videoURL}: ${err.message}`);
+			transcript = '[Transcript unavailable]';
 		}
 
 		return res.status(200).json({
@@ -304,10 +320,11 @@ export const scrapeYouTubeVideo = async (req, res) => {
 			body: transcript,
 			videoURL,
 			publishDate: metadata.publishDate,
+			transcriptAvailable,
 		});
 	} catch (err) {
 		console.error('YouTube scraping error:', err);
-		res.status(500).json({ error: err.message });
+		res.status(500).json({ error: 'Internal server error during YouTube scrape.' });
 	}
 };
 

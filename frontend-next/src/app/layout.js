@@ -36,6 +36,7 @@ export default async function RootLayout({ children }) {
 				/>
 			</Head>
 			<body>
+				<VisibilityRefresher />
 				<ClientProviders>{children}</ClientProviders>
 			</body>
 		</html>
