@@ -16,7 +16,7 @@ function JoinUs({
 	address,
 	picture,
 }) {
-	const { formatTime } = getFormat;
+	const { formatTime, getShortDayOfWeek } = getFormat;
 
 	// Prebuild timesMap for eventIDs
 	const timesMap = {};
@@ -26,8 +26,20 @@ function JoinUs({
 			.filter((d) => d.eventID === eventID || d.eventId === eventID)
 			.map((d) => d.id);
 
-		// Match times that reference those date IDs
-		timesMap[eventID] = eventTimes.filter((t) => dateIDs.includes(t.eventDateID));
+		// Match times that reference those date IDs and include date information
+		const times = eventTimes.filter((t) => dateIDs.includes(t.eventDateID));
+
+		// Add date information to each time
+		const timesWithDates = times.map((time) => {
+			// Find the associated event date
+			const eventDate = eventDates.find((d) => d.id === time.eventDateID);
+			return {
+				...time,
+				date: eventDate ? eventDate.date : null,
+			};
+		});
+
+		timesMap[eventID] = timesWithDates;
 	}
 
 	const combinedAddress = address.replace(/\n/g, ' ');
@@ -50,6 +62,17 @@ function JoinUs({
 
 						const times = timesMap[eventID] || [];
 
+						// Group times by date
+						const timesByDate = {};
+						times.forEach((t) => {
+							if (t.date) {
+								if (!timesByDate[t.date]) {
+									timesByDate[t.date] = [];
+								}
+								timesByDate[t.date].push(t);
+							}
+						});
+
 						return (
 							<Link
 								href={`/events/${event.id}`}
@@ -57,11 +80,17 @@ function JoinUs({
 								className='flex text-lg justify-between clickable'>
 								<div className='leading-4 w-fit'>{event.title}</div>
 								<div className='w-fit leading-4 whitespace-nowrap'>
-									{times.length > 0
-										? times.map((t, index) => (
-												<span key={index}>
-													{index > 0 && ' | '}
-													{formatTime(t.startTime)}
+									{times.length > 0 && Object.keys(timesByDate).length > 0
+										? Object.entries(timesByDate).map(([date, dateTimes], dateIndex) => (
+												<span key={date}>
+													{dateIndex > 0 && ' | '}
+													{getShortDayOfWeek(date)}{' '}
+													{dateTimes.map((t, timeIndex) => (
+														<span key={`${date}-${timeIndex}`}>
+															{timeIndex > 0 && ', '}
+															{formatTime(t.startTime)}
+														</span>
+													))}
 												</span>
 										  ))
 										: 'No times available'}

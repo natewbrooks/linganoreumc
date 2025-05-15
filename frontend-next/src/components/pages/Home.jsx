@@ -60,14 +60,9 @@ export default async function Home() {
 		.filter((e) => e.date !== null)
 		.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-	const upcomingEvents = [...presetEvents, ...futureEvents]
-		.filter(
-			(entry, index, self) =>
-				self.findIndex((e) => e.event.id === entry.event.id) === index &&
-				entry.date !== null &&
-				new Date(entry.date) >= today // exclude past events
-		)
-		.sort((a, b) => new Date(a.date) - new Date(b.date)) // sort by soonest first
+	const upcomingEvents = [...presetEvents, ...futureEvents.filter((e) => new Date(e.date) >= today)]
+		.filter((entry, index, self) => self.findIndex((e) => e.event.id === entry.event.id) === index)
+		.sort((a, b) => new Date(a.date) - new Date(b.date))
 		.slice(0, 4);
 
 	return (

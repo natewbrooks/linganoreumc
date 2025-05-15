@@ -21,7 +21,7 @@ function CalendarGridItemEvent({ event, isPast }) {
 	return (
 		<Link
 			href={`/events/${event.id}`}
-			className={`flex ${
+			className={`flex ${endTime !== '' ? 'flex-col' : ''} ${
 				event.isCancelled
 					? 'flex-col space-y-1 bg-darkred text-bkg text-center clickable'
 					: isPast
@@ -33,7 +33,10 @@ function CalendarGridItemEvent({ event, isPast }) {
 					? 'EVENT CANCELLED'
 					: `${formatTime(startTime)}${endTime ? ` – ${formatTime(endTime)}` : ''}`}
 			</div>
-			<div className={`${event.isCancelled ? 'line-through' : 'text-end'} text-[14px] leading-3`}>
+			<div
+				className={`${
+					event.isCancelled ? 'line-through' : endTime ? 'text-center' : 'text-end'
+				} text-[14px] leading-3`}>
 				{event.title}
 			</div>
 		</Link>
