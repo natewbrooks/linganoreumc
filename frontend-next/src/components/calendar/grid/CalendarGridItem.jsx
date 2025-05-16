@@ -123,7 +123,7 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 								? 'bg-red'
 								: isPast
 								? 'bg-darkred'
-								: 'text-black'
+								: 'bg-bkg-tp text-black'
 							: 'text-black opacity-50'
 					} px-2 w-full`}>
 					{day}
