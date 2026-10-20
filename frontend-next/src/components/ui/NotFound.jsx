@@ -33,9 +33,8 @@ export default function NotFound({ title, text, links = [], children }) {
 /** Empty section message styled like an `EventItem` description row */
 export const EmptyRow = ({ text }) => (
 	<div className='relative w-full font-dm'>
-		<div className='hidden sm:block absolute bg-tp w-screen h-full' />
-		<div className='relative -ml-1 -mr-3 sm:mx-0 px-4 py-1 sm:p-2 bg-tp sm:bg-transparent text-darkred text-sm sm:text-lg skew-x-[30deg] sm:skew-x-0'>
-			<p className='-skew-x-[30deg] sm:skew-x-0'>{text}</p>
+		<div className='relative -ml-1 -mr-3 px-4 py-1 sm:p-2 sm:px-6 bg-tp text-darkred text-sm sm:text-lg skew-x-[30deg]'>
+			<p className='-skew-x-[30deg]'>{text}</p>
 		</div>
 	</div>
 );
