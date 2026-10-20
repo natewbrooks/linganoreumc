@@ -1,4 +1,5 @@
 'use client';
+import getFormat from '@/lib/getFormat';
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -75,7 +76,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 									<div
 										className={`absolute right-0 top-[85px] skew-x-[5deg] ${
 											!placeholder
-												? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
+												? 'group-hover:opacity-50'
 												: ''
 										}`}>
 										<div className='relative h-[150px] w-[200px] lg:w-[250px] overflow-hidden'>
@@ -104,7 +105,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 								</div>
 							) : (
 								<Link
-									href={`/events/${event.id}`}
+									href={getFormat.eventPath(event)}
 									key={event.id || index}
 									className='relative w-[200px] lg:w-[250px] flex justify-center group'>
 									{content}
@@ -137,7 +138,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 										<div
 											className={`relative w-full right-0 top-[68px] skew-x-[5deg] ${
 												!placeholder
-													? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
+													? 'group-hover:opacity-50'
 													: ''
 											}`}>
 											<div className='relative h-[150px] w-full overflow-hidden'>
@@ -166,7 +167,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 									</div>
 								) : (
 									<Link
-										href={`/events/${event.id}`}
+										href={getFormat.eventPath(event)}
 										key={event.id || index}
 										className='relative flex w-full justify-center group clickable'>
 										{content}
@@ -177,8 +178,9 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 
 						{!secondRowOnlyPlaceholders && (
 							<>
-								<div className={`absolute top-60 w-full bg-red py-8`} />
 								<div className='relative top-23 flex space-x-2 items-center w-full px-4 text-bkg font-dm '>
+									{/* Band anchored to this row so it lines up the same as the first row */}
+									<div className={`absolute top-0 right-0 w-screen bg-red py-8`} />
 									{displayEvents.slice(2).map(({ event, date, placeholder }, index) => {
 										const content = (
 											<>
@@ -194,9 +196,9 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 													</p>
 												</div>
 												<div
-													className={`relative w-full right-0 top-[66px] skew-x-[5deg] ${
+													className={`relative w-full right-0 top-[68px] skew-x-[5deg] ${
 														!placeholder
-															? 'group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'
+															? 'group-hover:opacity-50'
 															: ''
 													}`}>
 													<div className='relative h-[150px] w-full overflow-hidden'>
@@ -225,7 +227,7 @@ export default function UpcomingEvents({ title, subtext, events = [], eventImage
 											</div>
 										) : (
 											<Link
-												href={`/events/${event.id}`}
+												href={getFormat.eventPath(event)}
 												key={event.id || index}
 												className='relative flex w-full justify-center group clickable'>
 												{content}

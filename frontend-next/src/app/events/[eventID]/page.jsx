@@ -6,7 +6,6 @@ import Event from '@/components/pages/Event';
 export async function generateMetadata({ params }) {
 	const { eventID } = await params;
 
-	// Replace with your actual fetch logic
 	const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${eventID}`);
 	const event = await res.json();
 
@@ -20,6 +19,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function EventPage({ params }) {
+	// Slug or numeric ID. The API resolves both
 	const { eventID } = await params;
 	return <Event eventID={eventID} />;
 }

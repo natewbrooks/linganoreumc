@@ -75,7 +75,7 @@ function JoinUs({
 
 						return (
 							<Link
-								href={`/events/${event.id}`}
+								href={getFormat.eventPath(event)}
 								key={eventID}
 								className='flex text-lg justify-between clickable'>
 								<div className='leading-4 w-fit'>{event.title}</div>
@@ -123,13 +123,13 @@ function JoinUs({
 					className='outline-none flex items-center space-x-4 skew-x-0 sm:skew-x-[30deg] sm:whitespace-nowrap pl-20 group'>
 					<SiGooglemaps
 						size={32}
-						className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}
+						className={`group-hover:opacity-50`}
 					/>
 					<div className='flex flex-col '>
-						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
+						<span className='group-hover:opacity-50'>
 							{locationName}
 						</span>
-						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
+						<span className='group-hover:opacity-50'>
 							{address}
 						</span>
 					</div>
@@ -144,13 +144,13 @@ function JoinUs({
 					className='outline-none flex items-center space-x-4 group'>
 					<SiGooglemaps
 						size={32}
-						className={`group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]`}
+						className={`group-hover:opacity-50`}
 					/>
 					<div className='flex flex-col'>
-						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
+						<span className='group-hover:opacity-50'>
 							{locationName}
 						</span>
-						<span className='group-hover:opacity-50 group-hover:scale-[1.02] active:scale-[1]'>
+						<span className='group-hover:opacity-50'>
 							{address}
 						</span>
 					</div>

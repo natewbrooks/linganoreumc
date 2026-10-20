@@ -5,11 +5,12 @@ import Image from 'next/image';
 function StainedGlassDisplay({ stainedGlassImages = [] }) {
 	return (
 		<div className='w-full h-fit'>
-			<div className='grid grid-cols-3 gap-4 justify-items-center xs:grid-flow-col xs:auto-cols-fr xs:grid-rows-1'>
+			{/* Mobile: side scroller running offscreen. xs and up: single row grid */}
+			<div className='flex gap-4 px-4 scroll-px-4 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] xs:grid xs:px-0 xs:overflow-visible xs:justify-items-center xs:grid-flow-col xs:auto-cols-fr xs:grid-rows-1'>
 				{stainedGlassImages.map((img, idx) => (
 					<div
 						key={idx}
-						className='relative w-full max-w-[100px] h-full max-h-[300px] aspect-[1/3] rounded-md shadow-md overflow-hidden'>
+						className='relative shrink-0 snap-start w-[100px] xs:w-full max-w-[100px] h-full max-h-[300px] aspect-[1/3] rounded-t-full rounded-b-md overflow-hidden'>
 						<Image
 							fill
 							src={img.url}

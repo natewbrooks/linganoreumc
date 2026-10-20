@@ -1,25 +1,33 @@
 'use client';
 import React, { useMemo, useState, useEffect } from 'react';
+import NotFound, { EmptyRow, ClearSearch } from '@/components/ui/NotFound';
 import EventItem from '@/components/events/EventItem';
 import EventLabel from '@/components/events/EventLabel';
 import FeaturedEventItem from '@/components/events/FeaturedEventItem';
 import { useEvents } from '@/contexts/EventsContext';
 
 function Events() {
-	const { events, eventDates } = useEvents();
+	const { events, eventDates, eventTimes } = useEvents();
 	const [searchTerm, setSearchTerm] = useState('');
 
 	const now = new Date();
 
-	// Index event dates by eventID for fast lookup
+	// Index each occurrence's end (local date + last end time) by eventID, so an event stays upcoming until it ends
 	const eventDateMap = useMemo(() => {
 		const map = {};
-		eventDates.forEach(({ date, eventID }) => {
+		eventDates.forEach(({ id, date, eventID }) => {
+			const [y, m, d] = date.slice(0, 10).split('-').map(Number);
+			const ends = eventTimes
+				.filter((t) => t.eventDateID === id)
+				.map((t) => t.endTime || t.startTime)
+				.sort();
+			// No times: treat as ending at the end of the day
+			const [h, min] = (ends.at(-1) || '23:59').split(':').map(Number);
 			if (!map[eventID]) map[eventID] = [];
-			map[eventID].push(new Date(date));
+			map[eventID].push(new Date(y, m - 1, d, h, min));
 		});
 		return map;
-	}, [eventDates]);
+	}, [eventDates, eventTimes]);
 
 	// Categorize and filter
 	const { featured, upcoming, previous, recurring } = useMemo(() => {
@@ -82,18 +90,22 @@ function Events() {
 						</div>
 					</div>
 					{featured.length > 0 && (
-						<div className={`grid grid-cols-2 sm:grid-cols-4 gap-2 p-4 w-full h-fit page-wrapper`}>
-							{[...featured, ...Array(4 - featured.length).fill(null)].map((event, index) =>
+						// Mobile: full-bleed side scroller so items clip at the right screen edge. pl-8 offsets the skewed corners.
+						// sm and up mirrors `page-wrapper`, which can't be used here since its CSS overrides utilities.
+						<div
+							className={`flex overflow-x-auto snap-x snap-mandatory scroll-pl-8 [scrollbar-width:none] gap-2 -mx-4 w-[calc(100%+2rem)] pl-8 pr-4 py-4 h-fit sm:grid sm:grid-cols-4 sm:mx-auto sm:w-full sm:max-w-[1400px] sm:px-6`}>
+							{[...featured, ...Array(Math.max(4 - featured.length, 0)).fill(null)].map((event, index) =>
 								event ? (
-									<FeaturedEventItem
+									<div
 										key={event.id}
-										event={event}
-									/>
+										className='shrink-0 w-[70%] sm:w-auto snap-start'>
+										<FeaturedEventItem event={event} />
+									</div>
 								) : (
 									// Placeholder
 									<div
 										key={'placeholder-' + index}
-										className={`flex flex-col w-full h-[180px] skew-x-[10deg] bg-tp`}>
+										className={`hidden sm:flex flex-col w-full h-[180px] skew-x-[10deg] bg-tp`}>
 										<div className='font-dm text-center w-full -skew-x-[10deg] text-lg flex items-center justify-center h-full text-darkred'>
 											{''}
 										</div>
@@ -104,11 +116,19 @@ function Events() {
 					)}
 				</div>
 
+				{searchTerm && !recurring.length && !upcoming.length && !previous.length ? (
+					<NotFound
+						title='No events found'
+						text={`Nothing matched "${searchTerm.trim()}". Try a different word, or clear your search.`}>
+						<ClearSearch onClick={() => setSearchTerm('')} />
+					</NotFound>
+				) : (
+				/* Left offset matches the header (`px-4` + centered `page-wrapper`). No right padding so bars bleed to the edge */
 				<div
-					className={`flex flex-col space-y-12 w-full mx-auto max-w-[1400px] pl-4 min-h-[800px]`}>
+					className={`flex flex-col space-y-12 w-full pl-[max(24px,calc((100%-1400px)/2+8px))] pr-[max(0px,calc((100%-1400px)/2))] min-h-[800px]`}>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`RECURRING EVENTS (${recurring.length})`} />
-						<div className={`flex flex-col space-y-2 w-full pl-4`}>
+						<div className={`flex flex-col space-y-4 w-full pl-4`}>
 							{recurring.length > 0 ? (
 								recurring.map((event) => (
 									<EventItem
@@ -118,14 +138,14 @@ function Events() {
 									/>
 								))
 							) : (
-								<p className={`font-dm text-darkred text-sm italic`}>No recurring events found.</p>
+								<EmptyRow text={searchTerm ? 'No matches here.' : 'No weekly events right now.'} />
 							)}
 						</div>
 					</div>
 
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`UPCOMING EVENTS (${upcoming.length})`} />
-						<div className={`flex flex-col space-y-2 w-full pl-4`}>
+						<div className={`flex flex-col space-y-4 w-full pl-4`}>
 							{upcoming.length > 0 ? (
 								upcoming.map((event) => (
 									<EventItem
@@ -135,13 +155,13 @@ function Events() {
 									/>
 								))
 							) : (
-								<p className={`font-dm text-darkred text-sm italic`}>No upcoming events found.</p>
+								<EmptyRow text={searchTerm ? 'No matches here.' : 'Nothing new on the schedule yet. Check back soon!'} />
 							)}
 						</div>
 					</div>
 					<div className={`flex flex-col w-full space-y-4`}>
 						<EventLabel text={`PREVIOUS EVENTS (${previous.length})`} />
-						<div className={`flex flex-col space-y-2 w-full pl-4`}>
+						<div className={`flex flex-col space-y-4 w-full pl-4`}>
 							{previous.length > 0 ? (
 								previous.map((event) => (
 									<EventItem
@@ -151,11 +171,12 @@ function Events() {
 									/>
 								))
 							) : (
-								<p className={`font-dm text-darkred text-sm italic`}>No previous events found.</p>
+								<EmptyRow text={searchTerm ? 'No matches here.' : 'No past events to show.'} />
 							)}
 						</div>
 					</div>
 				</div>
+				)}
 			</div>
 		</div>
 	);

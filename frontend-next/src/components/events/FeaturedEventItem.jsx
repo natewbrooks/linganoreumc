@@ -1,35 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import getFormat from '@/lib/getFormat';
+import React from 'react';
+import { preload } from 'react-dom';
 import { useEvents } from '@/contexts/EventsContext';
 import Link from 'next/link';
 
 function FeaturedEventItem({ event }) {
-	// const { eventDates, eventTimes } = useEvents();
-	const { fetchEventImages } = useEvents();
-	const [thumbnailUrl, setThumbnailUrl] = useState(null);
-
-	useEffect(() => {
-		const loadThumbnail = async () => {
-			if (!event?.id) return;
-
-			const images = await fetchEventImages(event.id);
-
-			const thumbnail = images.find((img) => img.isThumbnail);
-			setThumbnailUrl(
-				thumbnail
-					? `${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/${thumbnail.url.split('/').pop()}`
-					: null
-			);
-		};
-
-		loadThumbnail();
-	}, [event?.id, fetchEventImages]);
+	const { eventImages } = useEvents();
+	const thumbnail = (eventImages[event.id] || []).find((img) => img.isThumbnail);
+	const thumbnailUrl = thumbnail
+		? `${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/${thumbnail.url.split('/').pop()}`
+		: null;
 
 	const hasBackground = !!thumbnailUrl;
 
+	// Emits a <link rel=preload> in the server HTML so the image starts downloading before the <img> is parsed
+	if (thumbnailUrl) preload(thumbnailUrl, { as: 'image', fetchPriority: 'high' });
+
 	return (
 		// <Link
-		// 	href={`/events/${event.id}`}
-		// 	className={`flex flex-col w-full h-[180px] skew-x-[10deg] hover:scale-[1.02] hover:opacity-50 active:scale-[1]     ${
+		// 	href={getFormat.eventPath(event)}
+		// 	className={`flex flex-col w-full h-[180px] skew-x-[10deg] hover:opacity-50     ${
 		// 		hasBackground ? 'bg-contain object-center object-contain bg-center' : 'bg-tp'
 		// 	}`}
 		// 	style={hasBackground ? { backgroundImage: `url(${thumbnailUrl})` } : {}}>
@@ -44,8 +34,8 @@ function FeaturedEventItem({ event }) {
 		// 	)}
 		// </Link>
 		<Link
-			href={`/events/${event.id}`}
-			className={`relative flex flex-col w-full h-[180px] hover:scale-[1.02] hover:opacity-50 active:scale-[1]`}>
+			href={getFormat.eventPath(event)}
+			className={`relative flex flex-col w-full h-[180px] hover:opacity-50 transition-opacity duration-200`}>
 			{/* Common wrapper to keep sizing consistent */}
 			<div className='w-full h-full'>
 				{!hasBackground ? (
@@ -57,6 +47,9 @@ function FeaturedEventItem({ event }) {
 						<img
 							src={thumbnailUrl}
 							alt='Event'
+							loading='eager'
+							fetchPriority='high'
+							decoding='async'
 							className='w-full h-full -skew-x-[10deg] scale-115 object-cover object-center'
 						/>
 					</div>

@@ -68,7 +68,7 @@ export default async function Home() {
 	return (
 		<div className='w-full flex flex-col overflow-hidden'>
 			<Header activeHeaderImage={activeHeaderImage} />
-			<div className='flex flex-col space-y-50 lg:space-y-72'>
+			<div className='flex flex-col space-y-50 lg:space-y-56'>
 				<Motto
 					title={mottoTitle}
 					subtext={mottoSubtext}

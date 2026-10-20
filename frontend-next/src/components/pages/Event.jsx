@@ -1,28 +1,57 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useEvents } from '@/contexts/EventsContext';
 import ImageGalleryModal from '@/components/media/ImageGalleryModal';
 import MarkdownText from '@/components/ui/MarkdownText';
 import getFormat from '@/lib/getFormat';
-import { FaCalendarDay } from 'react-icons/fa6';
+import { FaCalendarPlus } from 'react-icons/fa6';
+import { useSettings } from '@/contexts/SettingsContext';
+import ShareButton from '@/components/ui/ShareButton';
+import NotFound from '@/components/ui/NotFound';
+import Loader from '@/components/ui/Loader';
 
 const Event = ({ eventID }) => {
-	const { fetchEventById, fetchEventDatesById, fetchEventTimesByEventId, fetchEventImages } =
-		useEvents();
-	const { formatLongDate, formatTime, getLongDayOfWeek } = getFormat;
+	const {
+		events,
+		eventDates,
+		eventTimes,
+		eventImages,
+		fetchEventById,
+		fetchEventDatesById,
+		fetchEventTimesByEventId,
+		fetchEventImages,
+	} = useEvents();
+	const { formatLongDate, formatTime, getLongDayOfWeek, formatDuration } = getFormat;
 
-	const [event, setEvent] = useState(null);
-	const [dates, setDates] = useState([]);
-	const [times, setTimes] = useState([]);
-	const [images, setImages] = useState([]);
-	const [loading, setLoading] = useState(true);
+	// `eventID` is a slug or ID. Context holds every event with its dates, times and images,
+	// so the page renders (or 404s) on first paint with no client fetch
+	const known = events?.find((e) => e.slug === eventID || String(e.id) === eventID);
+	const missing = events?.length > 0 && !known;
+	// Fallback data, only fetched when context is empty (server events fetch failed)
+	const [fetched, setFetched] = useState(null);
+	const [loading, setLoading] = useState(!known && !missing);
+
+	const knownDates = known ? eventDates.filter((d) => d.eventID === known.id) : [];
+	const { event, dates, times, images } = known
+		? {
+				event: known,
+				dates: knownDates,
+				times: eventTimes.filter((t) => knownDates.some((d) => d.id === t.eventDateID)),
+				images: eventImages?.[known.id] ?? [],
+		  }
+		: fetched ?? { event: null, dates: [], times: [], images: [] };
 	const [modalIndex, setModalIndex] = useState(null);
-	const [showCalendarDropdown, setShowCalendarDropdown] = useState(false);
-	const dropdownRef = useRef(null);
+	const contactInfo = useSettings()?.settings?.general?.contactInformation || {};
+	const [pickerOpen, setPickerOpen] = useState(false);
+	const pickerRef = useRef(null);
 
-	const [expandedDates, setExpandedDates] = useState({});
-	const [selectedDate, setSelectedDate] = useState(null);
-	const [selectedTime, setSelectedTime] = useState(null);
+	// Close the calendar picker on outside click
+	useEffect(() => {
+		if (!pickerOpen) return;
+		const close = (e) => !pickerRef.current?.contains(e.target) && setPickerOpen(false);
+		document.addEventListener('mousedown', close);
+		return () => document.removeEventListener('mousedown', close);
+	}, [pickerOpen]);
 
 	function parseDateAsLocal(dateStr) {
 		const [year, month, day] = dateStr.split('-').map(Number);
@@ -30,298 +59,225 @@ const Event = ({ eventID }) => {
 	}
 
 	useEffect(() => {
-		const loadEvent = async () => {
-			setLoading(true);
-			const [eventData, dateData, timeData, imageData] = await Promise.all([
-				fetchEventById(eventID),
-				fetchEventDatesById(eventID),
-				fetchEventTimesByEventId(eventID),
-				fetchEventImages(eventID),
-			]);
-			setEvent(eventData);
-			setDates(dateData);
-			setTimes(timeData);
-			setImages(imageData);
+		if (known || missing) return setLoading(false);
+		setLoading(true);
+		(async () => {
+			const id = (await fetchEventById(eventID))?.id;
+			const [eventData, dateData, timeData, imageData] = id
+				? await Promise.all([
+						fetchEventById(id),
+						fetchEventDatesById(id),
+						fetchEventTimesByEventId(id),
+						fetchEventImages(id),
+				  ])
+				: [null, [], [], []];
+			setFetched({ event: eventData, dates: dateData, times: timeData, images: imageData });
 			setLoading(false);
-		};
-		loadEvent();
-	}, [eventID]);
+		})();
+	}, [eventID, events?.length]);
 
-	useEffect(() => {
-		function handleClickOutside(event) {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-				setShowCalendarDropdown(false);
-			}
-		}
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
+	/**
+	 * Downloads an `.ics` file for one date/time. Phones and desktops open it in their own calendar app.
+	 * Times are church-local, so they're pinned to `America/New_York`. Recurring events repeat weekly
+	 */
+	function addToCalendar(date, time) {
+		const stamp = (d, t) => `${d.slice(0, 10).replace(/-/g, '')}T${t.replace(/:/g, '').padEnd(6, '0')}`;
+		const [h, m] = time.startTime.split(':').map(Number);
+		// No end time: assume 30 minutes
+		const end =
+			time.endTime ||
+			`${String(Math.min(h + Math.floor((m + 30) / 60), 23)).padStart(2, '0')}:${String((m + 30) % 60).padStart(2, '0')}`;
+		const escape = (text) =>
+			(text || '').replace(/<[^>]*>/g, '').replace(/[\;,]/g, '\\$&').replace(/\n/g, '\\n');
+		const location = [contactInfo.locationName || 'Linganore United Methodist Church', contactInfo.address]
+			.filter(Boolean)
+			.join(', ');
 
-	function toggleExpandDate(dateId, e) {
-		e.stopPropagation();
-		setExpandedDates((prev) => ({
-			...prev,
-			[dateId]: !prev[dateId],
-		}));
-	}
-	function handleAddToGoogleCalendar() {
-		if (!selectedDate || !selectedTime) return;
+		const ics = [
+			'BEGIN:VCALENDAR',
+			'VERSION:2.0',
+			'PRODID:-//Linganore UMC//Events//EN',
+			'BEGIN:VEVENT',
+			`UID:${event.id}-${date.id}-${time.id}@linganoreumc.com`,
+			`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
+			`DTSTART;TZID=America/New_York:${stamp(date.date, time.startTime)}`,
+			`DTEND;TZID=America/New_York:${stamp(date.date, end)}`,
+			...(event.isRecurring ? ['RRULE:FREQ=WEEKLY'] : []),
+			`SUMMARY:${escape(event.title)}`,
+			`DESCRIPTION:${escape(event.description)}`,
+			`LOCATION:${escape(location)}`,
+			`URL:${window.location.href}`,
+			'END:VEVENT',
+			'END:VCALENDAR',
+		].join('\r\n');
 
-		const dateObj = dates.find((d) => d.id === selectedDate);
-		const timeObj = times.find((t) => t.id === selectedTime);
-		if (!dateObj || !timeObj) return;
-
-		const startDate = parseDateAsLocal(dateObj.date);
-		const [sh, sm] = timeObj.startTime.split(':').map(Number);
-		startDate.setHours(sh, sm);
-
-		let endDate = new Date(startDate);
-		if (timeObj.endTime) {
-			const [eh, em] = timeObj.endTime.split(':').map(Number);
-			endDate.setHours(eh, em);
-		} else {
-			endDate.setMinutes(endDate.getMinutes() + 30); // fallback 30 min
-		}
-
-		const formatDateEST = (date) => {
-			const pad = (n) => String(n).padStart(2, '0');
-
-			const year = date.getFullYear();
-			const month = pad(date.getMonth() + 1);
-			const day = pad(date.getDate());
-			const hours = pad(date.getHours());
-			const minutes = pad(date.getMinutes());
-			const seconds = pad(date.getSeconds());
-
-			// Timezone offset from UTC, in minutes
-			const offsetMinutes = date.getTimezoneOffset(); // e.g. 300 or 240 (note: this is POSITIVE for UTC-)
-			const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
-			const offsetMins = Math.abs(offsetMinutes) % 60;
-			const offsetSign = offsetMinutes <= 0 ? '+' : '-'; // FLIP: browser gives +300 for EST (UTC-5)
-
-			const offset = `${offsetSign}${pad(offsetHours)}${pad(offsetMins)}`;
-
-			return `${year}${month}${day}T${hours}${minutes}${seconds}${offset}`;
-		};
-
-		const details = {
-			action: 'TEMPLATE',
-			text: event.title,
-			details: `${event.description.replace(/<\/?[^>]+(>|$)/g, '')}${
-				event.isRecurring
-					? '\n\nNote: This event recurs weekly on ' +
-					  getLongDayOfWeek(startDate) +
-					  's at ' +
-					  formatTime(timeObj.startTime)
-					: ''
-			}`,
-			location: 'Linganore United Methodist Church',
-			dates: `${formatDateEST(startDate)}/${formatDateEST(endDate)}`,
-		};
-
-		let url = new URL('https://www.google.com/calendar/render');
-		for (const key in details) {
-			url.searchParams.append(key, details[key]);
-		}
-
-		if (event.isRecurring) {
-			const dayMap = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-			const byDay = dayMap[startDate.getDay()];
-			url.searchParams.append('recur', `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`);
-		}
-
-		window.open(url.toString(), '_blank');
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+		link.download = `${event.slug || 'event'}.ics`;
+		link.click();
+		// Revoking right away cancels the download on iOS Safari
+		setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 	}
 
-	if (loading)
-		return (
-			<div className='p-8 font-dm min-h-screen text-center italic text-sm text-darkred'>
-				Loading event...
-			</div>
-		);
+	if (loading) return <Loader label='Loading event…' />;
 	if (!event)
 		return (
-			<div className='p-8 font-dm text-sm italic text-center text-darkred'>Event not found.</div>
+			<NotFound
+				title="We couldn't find this event"
+				text="It may have ended or been removed. You can see everything that's coming up below."
+				links={[
+					{ href: '/events/', label: 'See All Events' },
+					{ href: '/calendar/', label: 'View the Calendar' },
+				]}
+			/>
+		);
+
+	// Next non-cancelled occurrence. Recurring events repeat weekly from their start date
+	const now = new Date();
+	const nextStart = dates
+		.filter((d) => !d.isCancelled)
+		.flatMap((d) =>
+			times
+				.filter((t) => String(t.eventDateID) === String(d.id))
+				.map((t) => {
+					const start = parseDateAsLocal(d.date);
+					const [h, m] = t.startTime.split(':').map(Number);
+					start.setHours(h, m, 0, 0);
+					if (event.isRecurring) {
+						while (start < now) start.setDate(start.getDate() + 7);
+					}
+					return start;
+				})
+		)
+		.filter((start) => start >= now)
+		.sort((a, b) => a - b)[0];
+	const minutesUntil = nextStart ? Math.round((nextStart - now) / 60_000) : null;
+	const isToday = nextStart?.toDateString() === now.toDateString();
+	const nextTime = nextStart?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+	const nextDay = nextStart?.toLocaleDateString('en-US', {
+		weekday: 'long',
+		month: 'long',
+		day: 'numeric',
+	});
+
+	// Every addable date and time. Skips cancelled dates, and past ones for one-off events
+	const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	const calendarOptions = dates
+		.filter((d) => !d.isCancelled && (event.isRecurring || parseDateAsLocal(d.date) >= today))
+		.flatMap((date) =>
+			times
+				.filter((t) => String(t.eventDateID) === String(date.id))
+				.map((time) => ({ date, time }))
 		);
 
 	return (
-		<div className='flex flex-col px-4 py-8 max-w-[1000px] min-h-[1000px] mx-auto space-y-10 font-dm'>
+		<div className='relative flex flex-col px-4 pt-12 pb-8 max-w-[1000px] mx-auto space-y-10 font-dm'>
+			<ShareButton
+				title={event.title}
+				label='Share Event'
+				className='absolute top-3 right-4'
+			/>
 			<div className='flex flex-col space-y-8'>
-				<div className='flex flex-col items-center space-y-4'>
-					<h1 className='text-3xl'>{event.title}</h1>
-					<div className='md:px-12 md:py-2 text-lg'>
+				<div className='relative flex flex-col items-center space-y-4'>
+					{/* Next occurrence, with a countdown when it's today. Small and stacked above the title */}
+					<div className='flex flex-col items-center text-sm md:text-base text-darkred text-center px-8'>
+						{!nextStart ? (
+							<span className='text-darkred/60'>This event has already happened</span>
+						) : isToday ? (
+							<>
+								Today at {nextTime}
+								<span className='text-red'>
+									Starts in {formatDuration(minutesUntil) || 'less than a minute'}
+								</span>
+							</>
+						) : (
+							`Next: ${nextDay} at ${nextTime}`
+						)}
+					</div>
+					<h1 className='text-3xl text-center'>{event.title}</h1>
+					<div className='-mt-1 md:px-12 md:pb-2 text-base md:text-lg'>
 						<MarkdownText html={event.description} />
 					</div>
-					<div className='bg-red w-full py-2 skew-r'></div>
+					<div className='bg-red/10 w-full py-1 skew-r'></div>
 				</div>
 
 				{/* Schedule */}
 				<div>
-					<div className='font-dm text-sm mb-2 flex items-center justify-between'>
+					<div className='font-dm text-sm mb-2 px-2 flex items-center justify-between'>
 						<span>Event Schedule</span>
-						<button className='flex items-center justify-center space-x-2'>
-							{/* Schedule Section Header with Dropdown Trigger */}
+						{calendarOptions.length > 0 && (
 							<div
-								className='relative flex flex-col w-full items-end'
-								ref={dropdownRef}>
+								ref={pickerRef}
+								className='relative'>
+								<button
+									onClick={() =>
+										// One option: add it straight away, no picker
+										calendarOptions.length === 1
+											? addToCalendar(calendarOptions[0].date, calendarOptions[0].time)
+											: setPickerOpen((open) => !open)
+									}
+									className='flex items-center gap-1.5 text-red clickable'>
+									<FaCalendarPlus size={13} />
+									Add to Calendar
+								</button>
+
+								{/* Picker: each row is one date and time, tap to add */}
 								<div
-									className='flex items-center justify-center space-x-2 z-10 relative'
-									onClick={() => setShowCalendarDropdown((prev) => !prev)}>
-									<span className='font-dm text-sm text-red clickable'>Add Time to Calendar</span>
-								</div>
-
-								{/* Dropdown Panel */}
-								<div
-									className={`absolute top-8 right-0 w-[20rem] outline-4 outline-bkg z-20 transform transition-all duration-200 ease-out ${
-										showCalendarDropdown
-											? 'opacity-100 translate-y-0 pointer-events-auto'
-											: 'opacity-0 -translate-y-4 pointer-events-none'
-									} bg-bkg shadow-lg text-sm `}>
-									<div className='px-4 py-2 bg-red text-bkg'>
-										<div className='text-lg'>Select Event Date & Time</div>
-
-										<div className='text-darkred py-1 px-2 mx-4 bg-bkg text-sm mt-1 skew-r'>
-											<p className={`skew-l`}>
-												{event.isRecurring
-													? 'This is a recurring event. Select a day and time to add to your calendar.'
-													: 'Select which date and time to add to your calendar.'}
-											</p>
-										</div>
-									</div>
-
-									{/* Date Selections */}
-									<div className='px-4 py-2 relative overflow-y-auto min-h-20 max-h-40'>
-										<div className={`flex flex-col w-full space-y-2`}>
-											{dates.map((date) => {
-												const dateTimes = times.filter(
-													(t) => String(t.eventDateID) === String(date.id)
-												);
-
-												const isExpanded = expandedDates[date.id] ?? false;
-
-												return (
-													<div
-														key={date.id}
-														className=''>
-														{/* Date Row */}
-														{!date.isCancelled && (
-															<div className='flex items-center space-x-2'>
-																<input
-																	type='radio'
-																	id={`date-${date.id}`}
-																	checked={selectedDate === date.id}
-																	onChange={(e) => {
-																		setSelectedDate(date.id);
-																		setSelectedTime(dateTimes[0].id);
-																		if (!expandedDates[date.id]) {
-																			toggleExpandDate(date.id, e);
-																		}
-																	}}
-																	disabled={date.isCancelled}
-																	className='h-4 w-4 accent-red'
-																/>
-																<div
-																	className='flex-grow cursor-pointer flex items-center space-x-1'
-																	onClick={(e) => toggleExpandDate(date.id, e)}>
-																	<span className={``}>
-																		{event.isRecurring
-																			? getLongDayOfWeek(parseDateAsLocal(date.date))
-																			: formatLongDate(parseDateAsLocal(date.date))}
-																	</span>
-																	<svg
-																		xmlns='http://www.w3.org/2000/svg'
-																		className={`h-4 w-4 transition-transform ${
-																			isExpanded ? 'rotate-180' : ''
-																		}`}
-																		fill='none'
-																		viewBox='0 0 24 24'
-																		stroke='currentColor'>
-																		<path
-																			strokeLinecap='round'
-																			strokeLinejoin='round'
-																			strokeWidth={2}
-																			d='M19 9l-7 7-7-7'
-																		/>
-																	</svg>
-																</div>
-															</div>
-														)}
-
-														{/* Times */}
-														{isExpanded && (
-															<div className='ml-6 mt-1 space-y-1'>
-																{dateTimes.length === 0 ? (
-																	<div className='text-darkred italic text-sm'>
-																		No times scheduled
-																	</div>
-																) : (
-																	dateTimes.map((time) => (
-																		<div
-																			key={`date-${date.id}-time-${time.id}`}
-																			className='flex items-center space-x-2'>
-																			<input
-																				type='radio'
-																				id={`time-${time.id}`}
-																				checked={
-																					selectedTime === time.id && selectedDate === date.id
-																				}
-																				onChange={(e) => {
-																					setSelectedDate(date.id);
-																					setSelectedTime(time.id);
-																					if (!expandedDates[date.id]) {
-																						toggleExpandDate(date.id, e);
-																					}
-																				}}
-																				disabled={date.isCancelled}
-																				className='h-3 w-3'
-																			/>
-																			<label
-																				htmlFor={`time-${time.id}`}
-																				className={`text-sm cursor-pointer ${
-																					date.isCancelled ? 'text-darkred' : ''
-																				}`}>
-																				{formatTime(time.startTime)}
-																				{time.endTime ? ` – ${formatTime(time.endTime)}` : ''}
-																			</label>
-																		</div>
-																	))
-																)}
-															</div>
-														)}
-													</div>
-												);
-											})}
-										</div>
-									</div>
-
-									{/* Action Button */}
-									<div className='px-4 py-2 bg-tp '>
-										<div
-											onClick={handleAddToGoogleCalendar}
-											className='w-full bg-red text-bkg py-2 clickable-l-skew transition cursor-pointer'>
-											<p className={`skew-r`}>Add to Calendar</p>
-										</div>
+									className={`absolute right-0 top-7 z-20 w-[18rem] max-w-[calc(100vw-2rem)] bg-bkg outline-4 outline-bkg shadow-lg transition-all duration-200 ${
+										pickerOpen
+											? 'opacity-100 translate-y-0'
+											: 'opacity-0 -translate-y-2 pointer-events-none'
+									}`}>
+									<div className='bg-red text-bkg px-4 py-2 text-base'>Which time would you like to add?</div>
+									<div className='max-h-64 overflow-y-auto divide-y divide-tp'>
+										{calendarOptions.map(({ date, time }) => (
+											<button
+												key={`${date.id}-${time.id}`}
+												onClick={() => {
+													addToCalendar(date, time);
+													setPickerOpen(false);
+												}}
+												className='flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-tp'>
+												<span>
+													<span className='block text-darkred'>
+														{event.isRecurring
+															? `Every ${getLongDayOfWeek(parseDateAsLocal(date.date))}`
+															: formatLongDate(parseDateAsLocal(date.date))}
+													</span>
+													<span className='text-black'>
+														{formatTime(time.startTime)}
+														{time.endTime ? ` – ${formatTime(time.endTime)}` : ''}
+													</span>
+												</span>
+												<FaCalendarPlus
+													size={16}
+													className='shrink-0 text-red'
+												/>
+											</button>
+										))}
 									</div>
 								</div>
 							</div>
-						</button>
+						)}
 					</div>
 
-					<div className='grid gap-x-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4'>
+					<div className='grid gap-x-4 grid-cols-1 sm:grid-cols-3 md:grid-cols-4'>
 						{dates.map((date) => {
 							const matchedTimes = times.filter((t) => String(t.eventDateID) === String(date.id));
 							return (
 								<div
 									key={'date-' + date.id}
-									className={`${
-										date.isCancelled ? 'bg-darkred marker:text-bkg decoration-bkg' : ''
-									} px-4 text-bkg space-y-2 py-2`}>
-									<div className='flex w-full text-center items-center justify-center skew-l bg-red px-4'>
+									title={date.isCancelled ? 'Cancelled' : undefined}
+									className={`px-4 text-bkg space-y-2 py-2 ${date.isCancelled ? 'cursor-pointer' : ''}`}>
+									{/* Cancelled: muted gray tag, times struck through, "Cancelled" on hover */}
+									<div
+										className={`flex w-full min-w-fit text-center items-center justify-center skew-l px-4 ${
+											date.isCancelled ? 'bg-tp text-darkred/60' : 'bg-red'
+										}`}>
 										<span className='skew-r whitespace-nowrap'>
 											{event.isRecurring
 												? getLongDayOfWeek(parseDateAsLocal(date.date))
 												: formatLongDate(parseDateAsLocal(date.date))}
-											{date.isCancelled ? <span className='ml-2 text-red'>Cancelled</span> : ''}
 										</span>
 									</div>
 									<ul className='md:ml-4 list-disc'>
@@ -335,7 +291,9 @@ const Event = ({ eventID }) => {
 											matchedTimes.map((t, index) => (
 												<li
 													key={`time-${date.id}-${t.id}-${index}`}
-													className='flex items-center space-x-2 text-black whitespace-nowrap'>
+													className={`flex items-center space-x-2 text-black whitespace-nowrap ${
+														date.isCancelled ? 'line-through opacity-50' : ''
+													}`}>
 													<span className='p-0.75 bg-black'>{` `}</span>
 													<span>
 														{formatTime(t.startTime)}
