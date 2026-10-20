@@ -25,3 +25,6 @@ dist-ssr
 
 .env
 .env.production
+
+# Local test uploads. Production uploads live on the server volume
+media/images/events/
