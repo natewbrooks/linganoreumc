@@ -3,7 +3,6 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { FaArrowRight, FaArrowLeft, FaXmark } from 'react-icons/fa6';
 
 const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) => {
-	const modalRef = useRef(null);
 	const [, setIndexTick] = useState(0); // triggers re-renders
 	const currentIndexRef = useRef(currentIndex);
 
@@ -41,10 +40,9 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 	const goPrev = () => embla?.scrollPrev();
 	const goNext = () => embla?.scrollNext();
 
+	// Any click that isn't on the image or a control closes
 	const handleClickOutside = (e) => {
-		if (modalRef.current && !modalRef.current.contains(e.target)) {
-			handleClose();
-		}
+		if (!e.target.closest('img, button')) handleClose();
 	};
 
 	const handleKeyDown = (e) => {
@@ -67,6 +65,7 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 		onClose();
 	};
 
+	// Rebinds once the carousel exists so arrow keys don't call a stale `embla`
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';
 		document.addEventListener('keydown', handleKeyDown);
@@ -76,69 +75,69 @@ const ImageGalleryModal = ({ images, currentIndex, onClose, setCurrentIndex }) =
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, []);
+	}, [embla]);
 
 	return (
-		<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/80 w-screen h-screen'>
+		// Full screen: controls pinned to the screen corners and edges
+		<div className='fixed inset-0 z-50 bg-black/90'>
+			{/* Embla Carousel */}
 			<div
-				ref={modalRef}
-				className='relative flex items-center justify-center bg-bkg-tp/10 border-4 border-bkg-tp/20 w-[90vw] h-[80vh] md:w-[70vw] md:h-[80vh] overflow-hidden'>
-				{/* Embla Carousel */}
-				<div
-					className='w-full h-full overflow-hidden'
-					ref={emblaRef}>
-					<div className='flex h-full'>
-						{images.map((img, i) => {
-							const src =
-								`${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/` + img.url.split('/').pop();
-							return (
-								<div
-									key={i}
-									className='flex-[0_0_100%] h-full flex items-center justify-center px-4'>
-									{imageErrors[i] ? (
-										<div className='text-bkg text-lg'>Image failed to load</div>
-									) : (
-										<img
-											src={src}
-											alt='Preview'
-											className='max-h-full max-w-full object-contain'
-											onError={() => handleImageError(i)}
-										/>
-									)}
-								</div>
-							);
-						})}
-					</div>
-				</div>
-
-				{/* Navigation Controls */}
-				<button
-					className='absolute top-4 right-4 text-bkg z-50 clickable'
-					onClick={handleClose}>
-					<FaXmark size={32} />
-				</button>
-				{images.length > 1 && (
-					<>
-						<button
-							className='hidden md:block absolute left-4 top-1/2 -translate-y-1/2 text-bkg z-50 clickable'
-							onClick={goPrev}>
-							<FaArrowLeft size={40} />
-						</button>
-						<button
-							className='hidden md:block  absolute right-4 top-1/2 -translate-y-1/2 text-bkg z-50 clickable'
-							onClick={goNext}>
-							<FaArrowRight size={40} />
-						</button>
-					</>
-				)}
-
-				{/* Index Display */}
-				<div className='absolute top-4 left-4 text-darkred text-sm font-medium z-50 bg-bkg px-2'>
-					<div className={``}>
-						{currentIndexRef.current + 1} / {images.length}
-					</div>
+				className='w-full h-full overflow-hidden'
+				ref={emblaRef}>
+				<div className='flex h-full'>
+					{images.map((img, i) => {
+						const src =
+							`${process.env.NEXT_PUBLIC_API_BASE_URL}/media/images/` + img.url.split('/').pop();
+						return (
+							<div
+								key={i}
+								className='flex-[0_0_100%] h-full flex items-center justify-center px-4 py-20 md:px-24'>
+								{imageErrors[i] ? (
+									<div className='text-bkg text-lg'>Image failed to load</div>
+								) : (
+									<img
+										src={src}
+										alt='Preview'
+										className='max-h-full max-w-full object-contain'
+										onError={() => handleImageError(i)}
+									/>
+								)}
+							</div>
+						);
+					})}
 				</div>
 			</div>
+
+			{/* Index */}
+			{images.length > 1 && (
+				<div className='absolute top-4 left-4 bg-black text-bkg font-dm text-sm px-3 py-1.5 rounded-full'>
+					{currentIndexRef.current + 1} / {images.length}
+				</div>
+			)}
+
+			{/* Navigation Controls */}
+			<button
+				aria-label='Close'
+				className='absolute top-4 right-4 p-3 rounded-full bg-black text-bkg clickable'
+				onClick={handleClose}>
+				<FaXmark size={22} />
+			</button>
+			{images.length > 1 && (
+				<>
+					<button
+						aria-label='Previous image'
+						className='absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black text-bkg clickable'
+						onClick={goPrev}>
+						<FaArrowLeft size={22} />
+					</button>
+					<button
+						aria-label='Next image'
+						className='absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black text-bkg clickable'
+						onClick={goNext}>
+						<FaArrowRight size={22} />
+					</button>
+				</>
+			)}
 		</div>
 	);
 };
