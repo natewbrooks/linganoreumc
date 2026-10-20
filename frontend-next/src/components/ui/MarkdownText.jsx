@@ -19,6 +19,8 @@ function MarkdownText({ html }) {
 		[&_li]:pl-2
 		[&_ol]:list-decimal
 		[&_ul]:list-disc
+		[&_ul]:pl-6
+		[&_ol]:pl-6
 		[&_blockquote]:border-l-4
 		[&_blockquote]:border-darkred
 		[&_blockquote]:pl-4
