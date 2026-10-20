@@ -133,6 +133,25 @@ echo '0 4 * * 0 root docker image prune -af --filter "until=168h" && docker buil
 
 CapRover also has this built in: Settings > Disk Cleanup.
 
+**Cap each app's memory and CPU** so one runaway app restarts itself instead of starving MySQL. CapRover > Apps > `<app>` > App Configs > Service Update Override, paste, Save & Update:
+
+```
+TaskTemplate:
+  Resources:
+    Limits:
+      MemoryBytes: 629145600
+      NanoCPUs: 800000000
+```
+
+That is 600 MB and 80% of one CPU for `frontend`. Use `402653184` (384 MB) for `admin` and `backend`. Leave `mysql-db-db` uncapped.
+
+**Cap system logs and rotate backups.** Keeps the 7 newest database backups:
+
+```
+journalctl --vacuum-size=200M && sed -i 's/^#\?SystemMaxUse=.*/SystemMaxUse=200M/' /etc/systemd/journald.conf && systemctl restart systemd-journald
+echo '0 3 * * * root ls -t /root/backup-*.sql | tail -n +8 | xargs -r rm' > /etc/cron.d/backup-rotate
+```
+
 **Alerts.** DigitalOcean > Monitoring > Create Alert Policy for the droplet: CPU > 90%, Memory > 85%, Disk > 80%, emailed to you. DigitalOcean > Monitoring > Uptime > create a check for https://linganoreumc.com. Both are free.
 
 **If memory alerts keep firing,** resize the droplet to 4 GB (Droplets > Resize, CPU and RAM only, about $24/mo).
