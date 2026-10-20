@@ -3,8 +3,9 @@ import React, { useMemo, useState, useEffect } from 'react';
 import SermonMonthLabel from '@/components/sermons/SermonMonthLabel';
 import SermonItem from '@/components/sermons/SermonItem';
 
-import { IoFilter } from 'react-icons/io5';
+import { IoArrowDown } from 'react-icons/io5';
 import { useSermons } from '@/contexts/SermonsContext';
+import NotFound, { ClearSearch } from '@/components/ui/NotFound';
 
 export default function Sermons() {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -64,44 +65,52 @@ export default function Sermons() {
 							className='bg-red clickable-l-skew px-2 h-full flex items-center text-bkg text-sm font-dm '
 							onClick={() => setSortAsc((prev) => !prev)}>
 							<div className='skew-r'>
-								<IoFilter size={18} />
+								{/* Down = newest first, flips up for oldest first */}
+								<IoArrowDown
+									size={18}
+									className={`transition-transform duration-200 ${sortAsc ? 'rotate-180' : ''}`}
+								/>
 							</div>
 						</button>
-						<div className='hidden md:block font-dm text-sm'>
+						<div className='hidden md:block font-dm text-sm w-[110px]'>
 							{sortAsc ? 'Sort by: Oldest' : 'Sort by: Newest'}
 						</div>
-						<div className='block md:hidden font-dm text-sm'>{sortAsc ? 'Oldest' : 'Newest'}</div>
+						<div className='block md:hidden font-dm text-sm w-[52px]'>{sortAsc ? 'Oldest' : 'Newest'}</div>
 					</div>
 				</div>
 			</div>
 
 			<div className='relative w-full overflow-x-hidden mt-8 md:mt-0'>
-				<div className='flex flex-col space-y-4 mx-auto max-w-[1400px] pl-4 w-full  min-h-[800px]'>
+				<div className='flex flex-col space-y-8 mx-auto max-w-[1400px] pl-4 w-full  min-h-[800px]'>
 					{Object.entries(groupedByMonth).length > 0 ? (
 						Object.entries(groupedByMonth).map(([month, sermons]) => (
 							<div
 								key={month}
-								className='flex flex-col w-full space-y-2 '>
+								className='flex flex-col w-full space-y-4'>
 								<div className={`w-fit flex h-[36px] `}>
 									<SermonMonthLabel text={`${month}`} />
 								</div>
-								{sermons.map((sermon, index) => (
+								{sermons.map((sermon) => (
 									<SermonItem
 										sermon={sermon}
 										key={sermon.id}
-										index={index}
 									/>
 								))}
 							</div>
 						))
+					) : searchTerm ? (
+						<NotFound
+							title='No sermons found'
+							text={`Nothing matched "${searchTerm.trim()}". Try a different word, or clear your search.`}>
+							<ClearSearch onClick={() => setSearchTerm('')} />
+						</NotFound>
 					) : (
-						<div className={`italic text-darkred text-sm font-dm`}>No sermons found.</div>
+						<NotFound
+							title='No sermons yet'
+							text='New sermons are posted after Sunday services. Check back soon!'
+						/>
 					)}
 				</div>
-
-				{filteredAndSortedSermons.length === 0 && (
-					<p className='font-dm text-darkred text-sm italic'>No sermons found.</p>
-				)}
 			</div>
 		</div>
 	);

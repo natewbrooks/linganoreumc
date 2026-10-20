@@ -4,29 +4,31 @@ import YouTubeEmbed from '@/components/media/YouTubeEmbed';
 import MarkdownText from '@/components/ui/MarkdownText';
 import getFormat from '@/lib/getFormat';
 import { useSermons } from '@/contexts/SermonsContext';
+import ShareButton from '@/components/ui/ShareButton';
+import NotFound from '@/components/ui/NotFound';
+import Loader from '@/components/ui/Loader';
 
 export default function Sermon({ sermonID }) {
 	const { formatLongDate } = getFormat;
 
-	const { fetchSermonById } = useSermons();
+	const { sermons, fetchSermonById } = useSermons();
 
-	const [sermon, setSermon] = useState(null);
-	const [loading, setLoading] = useState(true);
+	// `sermonID` is a slug or ID. Context holds every sermon, so it renders (or 404s) on first paint with no fetch
+	const known = sermons?.find((s) => s.slug === sermonID || String(s.id) === sermonID);
+	const [sermon, setSermon] = useState(known ?? null);
+	const [loading, setLoading] = useState(!sermons?.length);
 
 	useEffect(() => {
-		const loadSermon = async () => {
-			try {
-				setLoading(true);
-				const data = await fetchSermonById(sermonID);
-				setSermon(data || null);
-			} catch (err) {
-				console.error('Error loading sermon:', err);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		loadSermon();
+		if (sermons?.length) {
+			setSermon(known ?? null);
+			setLoading(false);
+			return;
+		}
+		// Fetch fallback only when context is empty (server sermons fetch failed)
+		setLoading(true);
+		fetchSermonById(sermonID)
+			.then((data) => setSermon(data || null))
+			.finally(() => setLoading(false));
 	}, [sermonID]);
 
 	function parseDateAsLocal(dateStr) {
@@ -42,44 +44,45 @@ export default function Sermon({ sermonID }) {
 		return null;
 	};
 
-	if (loading)
-		return (
-			<div className='p-8 font-dm min-h-screen text-center italic text-sm text-darkred'>
-				Loading sermon...
-			</div>
-		);
+	if (loading) return <Loader label='Loading sermon…' />;
 	if (!sermon)
 		return (
-			<div className='p-8 font-dm text-sm italic text-center text-darkred'>Sermon not found.</div>
+			<NotFound
+				title="We couldn't find this sermon"
+				text='It may have been moved or removed. You can browse every sermon below.'
+				links={[{ href: '/sermons/', label: 'See All Sermons' }]}
+			/>
 		);
 
 	const videoId = extractYouTubeId(sermon.videoURL);
 
 	return (
-		<div className='flex flex-col items-center w-full py-8 mb-12 max-w-[1000px] mx-auto space-y-4'>
-			<div className='flex flex-col w-full space-y-4 text-center px-4'>
-				<div className='flex flex-col items-center space-y-1'>
-					<h1 className='text-3xl font-dm'>{sermon.title}</h1>
-					<div className='w-fit bg px-4 -skew-x-[30deg]'>
-						<div className='text-lg font-dm skew-x-[30deg]'>
-							{formatLongDate(parseDateAsLocal(sermon.publishDate))}
-						</div>
-					</div>
+		<div className='relative flex flex-col items-center w-full pt-12 pb-8 mb-12 max-w-[1000px] mx-auto space-y-4'>
+			<ShareButton
+				title={sermon.title}
+				label='Share Sermon'
+				className='absolute top-3 right-4'
+			/>
+			{/* Same header layout as an event: small date above the title, plain description under it */}
+			<div className='flex flex-col items-center w-full space-y-4 text-center px-4 font-dm'>
+				<div className='text-sm md:text-base text-darkred'>
+					{sermon.publishDate && formatLongDate(parseDateAsLocal(sermon.publishDate))}
 				</div>
-
-				{sermon.description && (
-					<div className='w-full font-dm bg-red px-8 py-1 -skew-x-[30deg] text-bkg text-lg leading-relaxed'>
-						<div className='skew-x-[30deg]'>{sermon.description}</div>
-					</div>
-				)}
+				<h1 className='text-3xl'>{sermon.title}</h1>
+				{sermon.description && <p className='-mt-1 md:px-12 text-base md:text-lg'>{sermon.description}</p>}
 			</div>
 
-			{videoId && <YouTubeEmbed videoID={videoId} />}
+			{videoId && (
+				// Lines up with the slanted corners of the Transcript bar
+				<div className='w-full px-2.5'>
+					<YouTubeEmbed videoID={videoId} />
+				</div>
+			)}
 
 			{sermon.body && (
 				<div className='flex flex-col space-y-4 font-dm w-full px-4'>
-					<div className='flex w-full justify-between py-1 bg-red px-4 text-bkg skew-x-[30deg]'>
-						<div className='text-lg -skew-x-[30deg]'>Transcript</div>
+					<div className='flex w-full justify-between py-0.5 md:py-1 bg-red px-4 text-bkg skew-x-[30deg]'>
+						<div className='text-base md:text-lg -skew-x-[30deg]'>Transcript</div>
 						{/* <div className='text-lg -skew-x-[30deg]'>
 							Last edited: {formatLongDate(parseDateAsLocal(sermon.lastEditDate))}
 						</div> */}
