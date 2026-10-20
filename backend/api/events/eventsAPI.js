@@ -1,4 +1,5 @@
 import pool from '../../database.js';
+import buildSlugs from '../buildSlugs.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,8 +14,9 @@ const eventImagesDir = path.join(imagesDir, 'events');
 // Public: View all Events
 export const getAllEvents = async (req, res) => {
 	try {
-		const [rows] = await pool.query('SELECT * FROM Events');
-		res.json(rows);
+		const [rows] = await pool.query('SELECT * FROM Events ORDER BY id');
+		const slugs = buildSlugs(rows);
+		res.json(rows.map((e) => ({ ...e, slug: slugs[e.id] })));
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -24,11 +26,14 @@ export const getAllEvents = async (req, res) => {
 export const getEvent = async (req, res) => {
 	const { id } = req.params;
 	try {
-		const [rows] = await pool.query('SELECT * FROM Events WHERE id = ?', [id]);
-		if (rows.length === 0) {
+		const [rows] = await pool.query('SELECT * FROM Events ORDER BY id');
+		const slugs = buildSlugs(rows);
+		// Accepts a slug, or a numeric ID for old links
+		const event = rows.find((e) => String(e.id) === id) ?? rows.find((e) => slugs[e.id] === id);
+		if (!event) {
 			return res.status(404).json({ error: 'Event not found' });
 		}
-		res.json(rows[0]);
+		res.json({ ...event, slug: slugs[event.id] });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

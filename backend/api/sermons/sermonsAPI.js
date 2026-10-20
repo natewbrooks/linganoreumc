@@ -1,10 +1,12 @@
 import pool from '../../database.js';
+import buildSlugs from '../buildSlugs.js';
 
 // Public: View all sermons
 export const getAllSermons = async (req, res) => {
 	try {
-		const [rows] = await pool.query('SELECT * FROM Sermons');
-		res.json(rows);
+		const [rows] = await pool.query('SELECT * FROM Sermons ORDER BY id');
+		const slugs = buildSlugs(rows);
+		res.json(rows.map((s) => ({ ...s, slug: slugs[s.id] })));
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -15,11 +17,14 @@ export const getSermon = async (req, res) => {
 	const { id } = req.params;
 
 	try {
-		const [rows] = await pool.query('SELECT * FROM Sermons WHERE id = ?', [id]);
-		if (rows.length === 0) {
+		const [rows] = await pool.query('SELECT * FROM Sermons ORDER BY id');
+		const slugs = buildSlugs(rows);
+		// Accepts a slug, or a numeric ID for old links
+		const sermon = rows.find((s) => String(s.id) === id) ?? rows.find((s) => slugs[s.id] === id);
+		if (!sermon) {
 			return res.status(404).json({ error: 'Sermon not found' });
 		}
-		res.json(rows[0]);
+		res.json({ ...sermon, slug: slugs[sermon.id] });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
