@@ -45,8 +45,6 @@ app.use(
 );
 
 app.use(cookieParser());
-
-app.use('/admin/media', adminMediaRouter);
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -78,6 +76,7 @@ app.use((req, res, next) => {
 });
 
 // Admin Protected Routes (JWT Required)
+app.use('/admin/media', adminMediaRouter);
 app.use('/admin/events', adminEventsRoute);
 app.use('/admin/sermons', adminSermonsRouter);
 app.use('/admin/settings', adminSettingsRouter);
