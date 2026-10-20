@@ -1,11 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap');
-
 /* @font-face {
   font-family: Newborough;
   src: url(/assets/fonts/NEWBOROU.TTF);
 } */
 
 @import "tailwindcss";
+
+/* Hover only with a mouse. Some Android phones report `hover: hover`, which made taps leave items faded */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
 
 @theme {
   --color-bkg: #FFF8EF;
@@ -15,7 +22,7 @@
   --color-darkred: #47121A;
   --color-accent: #FFCC00;
   --color-tp: rgba(0, 0, 0, .1);
-  --font-dm: DM Serif Text, "serif";
+  --font-dm: var(--font-dm-serif), serif;
   /* --font-newb: Newborough, "sans-serif"; */
   --breakpoint-xs: 480px;
   /* Small phones and old iPhones */
@@ -33,26 +40,6 @@
   /* 1080p displays and up (optional) */
 }
 
-@media (max-width: 800px) {
-  .clickable {
-    cursor: default;
-    transform: scale(1) !important;
-    opacity: 1 !important;
-  }
-
-  .clickable-l-skew {
-    cursor: default;
-    transform: skewX(-30deg) scale(1) !important;
-    opacity: 1 !important;
-  }
-
-  .clickable-r-skew {
-    cursor: default;
-    transform: skewX(30deg) scale(1) !important;
-    opacity: 1 !important;
-  }
-}
-
 :root {
   background-color: #FFF8EF;
 }
@@ -65,41 +52,41 @@
   transform: skewX(-30deg);
 }
 
+/* Opacity only: setting transform here would wipe out skew utilities on the same element */
 .clickable {
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 
-.clickable:hover {
-  transform: scale(1.02);
-  opacity: 0.5;
-}
-
-.clickable:active {
-  transform: scale(1);
+@media (hover: hover) and (pointer: fine) {
+  .clickable:hover {
+    opacity: 0.5;
+  }
 }
 
 .clickable-l-skew {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   transform: skewX(-30deg);
 }
 
-.clickable-l-skew:hover {
-  transform: skewX(-30deg);
-  opacity: 0.5;
+@media (hover: hover) and (pointer: fine) {
+  .clickable-l-skew:hover {
+    opacity: 0.5;
+  }
 }
 
 /* Right skew */
 .clickable-r-skew {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   transform: skewX(30deg);
 }
 
-.clickable-r-skew:hover {
-  transform: skewX(30deg);
-  opacity: 0.5;
+@media (hover: hover) and (pointer: fine) {
+  .clickable-r-skew:hover {
+    opacity: 0.5;
+  }
 }
 
 
@@ -117,4 +104,8 @@
   margin-left: auto;
   max-width: 1400px;
   padding-right: 8px;
+}
+/* Reserve scrollbar space so content doesn't shift horizontally when it appears */
+html {
+  scrollbar-gutter: stable;
 }

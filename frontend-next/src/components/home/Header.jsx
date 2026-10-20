@@ -13,8 +13,10 @@ function Header({ activeHeaderImage }) {
 				src={src}
 				alt='Linganore Church'
 				className='object-cover object-center'
-				priority={true} // ensures it's loaded immediately, for above-the-fold
-				unoptimized={true}
+				// Above the fold: preloaded at high priority. Optimized srcset so phones don't download the full-size original
+				priority
+				fetchPriority='high'
+				sizes='100vw'
 			/>
 		</div>
 	);
