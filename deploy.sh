@@ -21,4 +21,6 @@ for app in ${apps[@]}; do
 	docker build --platform linux/amd64 -t "$image" "$dir"
 	docker push "$image"
 	npx -y caprover deploy -u https://captain.captain.linganoreumc.com --appToken "$token" -a "$app" -i "$image"
+	# Per-commit tags pile up locally otherwise. Build cache is kept, so the next build stays fast
+	docker image rm "$image" >/dev/null
 done

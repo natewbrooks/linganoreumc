@@ -1,24 +1,19 @@
-# Project Setup
+# Linganore UMC
 
-This project uses a multi-container docker application with the following services:
+Website and admin panel for Linganore United Methodist Church.
 
-- **MySQL Server:** SQL database service on port `3306`.
-- **Express Server:** Runs the backend API using Node.js with nodemon for live reloading on port `5000`.
-- **Admin Panel:** A private-facing administrative interface using Vite and React on port `5173`.
-- **Frontend:** The public-facing application using Vite and React on port `5174`.
+| Folder | What | Production |
+| --- | --- | --- |
+| `frontend-next` | Public site (Next.js) | https://linganoreumc.com |
+| `admin-next` | Admin panel (Next.js) | https://admin.linganoreumc.com |
+| `backend` | API (Express + MySQL) | https://api.linganoreumc.com |
 
----
+## Local development
 
-## Prerequisites
+1. Copy `backend/.env.example` to `backend/.env` and `frontend-next/.env.example` to `frontend-next/.env.local`.
+2. `docker compose up -d` starts MySQL (port `3306`, seeded from `schema.sql`) and the API (port `5000`, live reload).
+3. `cd frontend-next && npm install && npm run dev` for the site, and the same in `admin-next` for the admin panel.
 
-- [Docker](https://docs.docker.com/get-docker/) must be installed.
-- [Docker Compose](https://docs.docker.com/compose/install/) is used for running the services together.
+## Deploying
 
----
-
-## Running it
-
-- Open Docker App
-- `docker-compose build` - Builds all containers
-- `docker-compose up` - Starts the services
-- `docker-compose down` - Stops the services
+See [DEPLOY.md](DEPLOY.md). In short: `./deploy.sh`.
