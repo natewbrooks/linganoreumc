@@ -1,11 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import CalendarGridItemEvent from './CalendarGridItemEvent';
 import { useEvents } from '@/contexts/EventsContext';
+import getFormat from '@/lib/getFormat';
 
 function CalendarGridItem({ day, date, isCurrentMonth }) {
 	const { events, eventDates, eventTimes } = useEvents();
 	const [sortedEventEntries, setSortedEventEntries] = useState([]);
+	// Minutes since midnight in Eastern time. Set after mount so server and client markup match
+	const [nowMinutes, setNowMinutes] = useState(null);
+	const [nowLineTop, setNowLineTop] = useState(null);
+	const cellRef = useRef(null);
+	const listRef = useRef(null);
+	const hasScrolledToNow = useRef(false);
 
 	const isSameDate = (date1, date2) => {
 		return (
@@ -21,6 +28,64 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 		date.getFullYear() === today.getFullYear() &&
 		date.getMonth() === today.getMonth() &&
 		day === today.getDate();
+
+	useEffect(() => {
+		if (!isToday) return;
+
+		const update = () => {
+			const [h, m] = new Date()
+				.toLocaleTimeString('en-GB', {
+					timeZone: 'America/New_York',
+					hour: '2-digit',
+					minute: '2-digit',
+				})
+				.split(':')
+				.map(Number);
+			setNowMinutes(h * 60 + m);
+		};
+
+		update();
+		const interval = setInterval(update, 60_000);
+		return () => clearInterval(interval);
+	}, [isToday]);
+
+	const toMinutes = (time) => {
+		const [h, m] = (time || '0:0').split(':').map(Number);
+		return h * 60 + m;
+	};
+
+	// Line goes before the first event that hasn't started yet
+	const nowLineIndex =
+		nowMinutes === null
+			? -1
+			: (() => {
+					const i = sortedEventEntries.findIndex((e) => toMinutes(e.startTime) > nowMinutes);
+					return i === -1 ? sortedEventEntries.length : i;
+				})();
+
+	// Overlay position: centered in the gap before the first upcoming event, or below the last one
+	useLayoutEffect(() => {
+		const list = listRef.current;
+		if (nowLineIndex === -1 || !list) return setNowLineTop(null);
+
+		const items = list.querySelectorAll(':scope > a');
+		const gap = 4; // matches space-y-1
+		if (items.length === 0) return setNowLineTop(gap);
+
+		const next = items[nowLineIndex];
+		const last = items[items.length - 1];
+		setNowLineTop(next ? next.offsetTop - gap / 2 : last.offsetTop + last.offsetHeight + gap / 2);
+	}, [nowLineIndex, sortedEventEntries]);
+
+	// Centers the now line once when it first appears. Scrolls only this cell, not the page
+	useEffect(() => {
+		const cell = cellRef.current;
+		const list = listRef.current;
+		if (hasScrolledToNow.current || nowLineTop === null || !cell || !list) return;
+		if (cell.scrollHeight <= cell.clientHeight) return;
+		cell.scrollTop = list.offsetTop + nowLineTop - cell.clientHeight / 2;
+		hasScrolledToNow.current = true;
+	}, [nowLineTop]);
 
 	useEffect(() => {
 		const eventEntries = [];
@@ -112,9 +177,10 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 
 	return (
 		<div
+			ref={cellRef}
 			className={`${
 				isCurrentMonth ? 'bg-tp ' : 'bg-black/20'
-			} w-full flex flex-col font-dm text-lg h-[150px] aspect-square relative overflow-hidden overflow-y-auto`}>
+			} w-full h-full min-h-0 flex flex-col font-dm text-base relative overflow-hidden overflow-y-auto`}>
 			<div className='flex justify-between text-bkg  sticky z-10 top-0 '>
 				<div
 					className={`${
@@ -129,16 +195,30 @@ function CalendarGridItem({ day, date, isCurrentMonth }) {
 					{day}
 				</div>
 			</div>
-			<div className='flex flex-col p-2 space-y-1 w-full '>
+			<div
+				ref={listRef}
+				className='relative flex flex-col p-1 space-y-1 w-full'>
 				{sortedEventEntries.map((e, index) => (
 					<CalendarGridItemEvent
 						key={`${e.id}-${index}`}
 						event={e}
-						// date={date}
-						// time={e.time}
-						isPast={isPast}
+						isPast={e.timeDate < today}
 					/>
 				))}
+				{/* Two segments with the time between, so the gap stays transparent over any background */}
+				{nowLineTop !== null && (
+					<div
+						style={{ top: nowLineTop }}
+						className='absolute left-0 right-1 z-[5] h-0 flex items-center pointer-events-none'>
+						{/* Right-pointing triangle. -mr-1 slides the line into its body so the thin tip leaves no visual gap */}
+						<div className='shrink-0 -mr-1 w-0 h-0 border-y-[5px] border-y-transparent border-l-[7px] border-l-dark' />
+						<div className='flex-1 h-0.5 bg-dark' />
+						<div className='mx-1 px-1 bg-dark text-bkg font-dm text-[11px] leading-4 whitespace-nowrap'>
+							{getFormat.formatTime(`${Math.floor(nowMinutes / 60)}:${nowMinutes % 60}`)}
+						</div>
+						<div className='flex-1 h-0.5 bg-dark' />
+					</div>
+				)}
 			</div>
 		</div>
 	);

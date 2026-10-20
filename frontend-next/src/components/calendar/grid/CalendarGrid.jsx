@@ -1,10 +1,27 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CalendarGridItem from './CalendarGridItem';
 
 function CalendarGrid({ month, year }) {
 	const [date, setDate] = useState(new Date(year, month + 1, 0)); // Last day of the current month
 	const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']; // Sunday first
+
+	// Remembers the user's dragged grid height. Inline `style.height` is only set by the native resize handle or this restore
+	const gridRef = useRef(null);
+	useEffect(() => {
+		const el = gridRef.current;
+		try {
+			const saved = localStorage.getItem('calendarGridHeight');
+			if (saved) el.style.height = saved;
+		} catch {}
+		const observer = new ResizeObserver(() => {
+			try {
+				if (el.style.height) localStorage.setItem('calendarGridHeight', el.style.height);
+			} catch {}
+		});
+		observer.observe(el);
+		return () => observer.disconnect();
+	}, []);
 
 	useEffect(() => {
 		setDate(new Date(year, month + 1, 0)); // Update last day when month/year changes
@@ -61,7 +78,8 @@ function CalendarGrid({ month, year }) {
 					<div key={i}>{day}</div>
 				))}
 			</div>
-			<div className='grid grid-cols-7 gap-1 w-full'>
+			{/* Rows share the viewport height under the nav and header. Native resize handle lets users drag it taller or shorter */}
+			<div ref={gridRef} className='grid grid-cols-7 auto-rows-fr gap-1 w-full h-[calc(100dvh-280px)] min-h-[540px] resize-y overflow-hidden'>
 				{allDays.map((dayObj, index) => (
 					<CalendarGridItem
 						key={`day-${index}`}

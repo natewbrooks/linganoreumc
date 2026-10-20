@@ -49,6 +49,8 @@ export default function Calendar() {
 		});
 	};
 
+	const isCurrentMonth = month === new Date().getMonth() && year === new Date().getFullYear();
+
 	const changeMode = (modeStr) => {
 		setMode(modeStr);
 	};
@@ -57,25 +59,26 @@ export default function Calendar() {
 		<div className={`flex flex-col w-full my-4 min-h-[800px]`}>
 			{/* Title header thing */}
 			<div className={`flex flex-col jusify-center `}>
-				<div className={`w-full flex justify-center items-center`}>
-					<div className={`text-black text-xl font-dm`}>CALENDAR</div>
+				{/* TODAY is absolute so CALENDAR stays centered. Hidden on the current month */}
+				<div className={`relative w-full flex justify-center items-center py-1 px-4`}>
+					<div className={`text-black text-lg font-dm`}>CALENDAR</div>
+					{!isCurrentMonth && (
+						<button
+							onClick={() => returnToToday()}
+							className={`absolute right-4 bg-red -skew-x-[30deg] px-3 py-0.5 font-dm text-bkg text-sm clickable`}>
+							<div className='skew-x-[30deg] whitespace-nowrap'>TODAY</div>
+						</button>
+					)}
 				</div>
-				<div className={`flex justify-around items-center bg-red w-full py-2 text-bkg`}>
-					<button
-						onClick={() => returnToToday()}
-						className={`bg-bkg rounded-full  w-[80px] sm:w-[100px] font-dm text-red text-sm sm:text-lg clickable`}>
-						TODAY
-					</button>
-					<div className={`flex justify-center text-center space-x-4 text-2xl`}>
+				<div className={`flex justify-around items-center gap-2 bg-red w-full py-2 px-2 text-bkg`}>
+					{/* Desktop spacer balancing GRID | LIST */}
+					<div className={`hidden lg:block w-[100px]`} />
+					<div className={`flex justify-center items-center text-center space-x-4 text-2xl`}>
 						<button
 							onClick={() => previousMonth()}
 							className={`clickable`}>{`<`}</button>
-						<h1 className={`block sm:hidden font-dm w-[120px] md:w-[200px]`}>
-							{monthNames[month].toUpperCase()}
-							<br />
-							{year}
-						</h1>
-						<h1 className={`hidden sm:block font-dm w-[120px] md:w-[200px]`}>
+						{/* Fixed width keeps the arrows still between months. Wraps only if it can't fit */}
+						<h1 className={`font-dm leading-tight text-xl sm:text-2xl w-[190px] sm:w-[240px]`}>
 							{monthNames[month].toUpperCase()}
 							{` `}
 							{year}
@@ -85,7 +88,7 @@ export default function Calendar() {
 							onClick={() => nextMonth()}>{`>`}</button>
 					</div>
 					<div
-						className={`invisible sm:visible space-x-2 w-[80px] sm:w-[100px] font-dm text-sm sm:text-lg`}>
+						className={`hidden lg:block space-x-2 w-[100px] font-dm text-lg`}>
 						<button
 							onClick={() => changeMode('grid')}
 							className={`${mode == 'grid' ? 'underline underline-offset-4' : ''} clickable`}>
@@ -102,14 +105,14 @@ export default function Calendar() {
 			</div>
 
 			<div className={`w-full`}>
-				<div className={`block sm:hidden mx-auto px-2`}>
+				<div className={`block lg:hidden mx-auto px-2 w-full max-w-[800px]`}>
 					<CalendarList
 						month={month}
 						year={year}
 					/>
 				</div>
 				<div
-					className={`hidden sm:block mx-auto ${
+					className={`hidden lg:block mx-auto ${
 						mode === 'grid' ? 'page-wrapper' : 'max-w-[800px]'
 					} `}>
 					{mode === 'grid' ? (
