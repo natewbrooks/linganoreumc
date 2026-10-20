@@ -11,7 +11,9 @@ export async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 
 			if (!response.ok) {
 				const text = await response.text();
-				throw new Error(`Request failed with status ${response.status}: ${text}`);
+				const err = new Error(`Request failed with status ${response.status}: ${text}`);
+				err.status = response.status;
+				throw err;
 			}
 
 			return await response.json();
@@ -19,7 +21,10 @@ export async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 			lastError = error;
 
 			// Don't retry if it's an abort error (timeout or user-initiated)
-			if (error.name === 'AbortError') break;
+			if (error.name === 'AbortError' || error.name === 'TimeoutError') break;
+
+			// 4xx won't change on retry (e.g. 404 missing event)
+			if (error.status >= 400 && error.status < 500) break;
 
 			// Don't retry on the last attempt
 			if (attempt === maxRetries - 1) break;

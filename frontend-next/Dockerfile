@@ -9,6 +9,8 @@ RUN npm run build
 # Run stage
 FROM node:18-alpine AS runner
 WORKDIR /app
+# Event date math runs on the server too. Match church-local time so SSR agrees with browsers
+ENV TZ=America/New_York
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next

@@ -1,71 +1,16 @@
 'use client';
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import { fetchWithRetry } from '@/lib/fetchWithRetry';
 
 const EventsContext = createContext();
 
-export const EventsProvider = ({ children }) => {
-	const [events, setEvents] = useState([]);
-	const [eventDates, setEventDates] = useState([]);
-	const [eventTimes, setEventTimes] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-
-	useEffect(() => {
-		const fetchEvents = async () => {
-			try {
-				const data = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/all`);
-				const filtered = data.filter((event) => !event.isArchived);
-				setEvents(filtered);
-			} catch (err) {
-				console.error('Failed to fetch events:', err);
-				setError(err.message);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchEvents();
-	}, []);
-
-	useEffect(() => {
-		const fetchAllDates = async () => {
-			try {
-				const data = await fetchWithRetry(
-					`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/dates/all`
-				);
-				setEventDates(Array.isArray(data) ? data : []);
-			} catch (err) {
-				console.error('Failed to fetch event dates:', err);
-				setError(err.message);
-			}
-		};
-
-		fetchAllDates();
-	}, []);
-
-	useEffect(() => {
-		const fetchAllTimes = async () => {
-			try {
-				const data = await fetchWithRetry(
-					`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/times/all`
-				);
-				setEventTimes(Array.isArray(data) ? data : []);
-			} catch (err) {
-				console.error('Failed to fetch event times:', err);
-				setError(err.message);
-			}
-		};
-
-		fetchAllTimes();
-	}, []);
-
+/** Provides events data fetched server-side in `layout.js`. */
+export const EventsProvider = ({ events, eventDates, eventTimes, eventImages, children }) => {
 	const fetchEventById = async (eventId) => {
 		try {
 			return await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${eventId}`);
 		} catch (err) {
 			console.error(`Error fetching event ${eventId}:`, err);
-			setError(err.message);
 			return null;
 		}
 	};
@@ -78,7 +23,6 @@ export const EventsProvider = ({ children }) => {
 			return Array.isArray(data) ? data : [];
 		} catch (err) {
 			console.error(`Error fetching dates for event ${eventId}:`, err);
-			setError(err.message);
 			return [];
 		}
 	};
@@ -91,7 +35,6 @@ export const EventsProvider = ({ children }) => {
 			return Array.isArray(data) ? data : [];
 		} catch (err) {
 			console.error(`Error fetching times for date ${eventDateId}:`, err);
-			setError(err.message);
 			return [];
 		}
 	};
@@ -124,7 +67,6 @@ export const EventsProvider = ({ children }) => {
 			return mergedTimes;
 		} catch (err) {
 			console.error('Error in fetchEventTimesByEventId:', err);
-			setError?.(err.message);
 			return [];
 		}
 	};
@@ -140,7 +82,6 @@ export const EventsProvider = ({ children }) => {
 			}));
 		} catch (err) {
 			console.error('Error fetching event images:', err);
-			setError(err.message);
 			return [];
 		}
 	};
@@ -151,8 +92,7 @@ export const EventsProvider = ({ children }) => {
 				events,
 				eventDates,
 				eventTimes,
-				loading,
-				error,
+				eventImages,
 				fetchEventById,
 				fetchEventDatesById,
 				fetchEventTimesByDateId,

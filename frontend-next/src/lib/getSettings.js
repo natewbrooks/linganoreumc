@@ -5,8 +5,8 @@ export async function getSettings() {
 
 	try {
 		const [general, home] = await Promise.all([
-			fetchWithRetry(`${base}/settings/general`, { cache: 'force-cache' }),
-			fetchWithRetry(`${base}/settings/home`, { cache: 'force-cache' }),
+			fetchWithRetry(`${base}/settings/general`, { cache: 'no-store' }),
+			fetchWithRetry(`${base}/settings/home`, { cache: 'no-store' }),
 		]);
 
 		return { general, home };

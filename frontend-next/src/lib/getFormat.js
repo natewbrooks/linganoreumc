@@ -51,7 +51,19 @@ const getLongDayOfWeek = (input) => {
 		: '';
 };
 
+/** Formats minutes as e.g. `2 hrs 15 min`. */
+const formatDuration = (mins) => {
+	const h = Math.floor(mins / 60);
+	const m = mins % 60;
+	return [h && `${h} ${h > 1 ? 'hrs' : 'hr'}`, m && `${m} min`].filter(Boolean).join(' ');
+};
+
+/** Slug comes from the API. ID fallback for events fetched without one */
+const eventPath = (event) => `/events/${event.slug ?? event.id}`;
+
 const getFormat = {
+	eventPath,
+	formatDuration,
 	formatLongDate,
 	formatDate,
 	formatTime,
