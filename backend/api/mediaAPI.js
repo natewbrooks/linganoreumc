@@ -154,7 +154,8 @@ export const getImage = (req, res) => {
 		return res.status(404).json({ error: 'Image not found.' });
 	}
 
-	return res.sendFile(fileLocation);
+	// Let browsers reuse images for a day instead of revalidating on every page load
+	return res.sendFile(fileLocation, { maxAge: '1d' });
 };
 
 export const deleteImage = async (req, res) => {
