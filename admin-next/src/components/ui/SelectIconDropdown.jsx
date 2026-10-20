@@ -3,6 +3,7 @@ import { FaSearch, FaTimes } from 'react-icons/fa';
 import * as FaIcons from 'react-icons/fa';
 import * as Fa6Icons from 'react-icons/fa6';
 import * as SiIcons from 'react-icons/si';
+import * as BiIcons from 'react-icons/bi';
 
 function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }) {
 	const [enabled, setEnabled] = useState(false);
@@ -20,6 +21,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 		...Object.entries(FaIcons),
 		...Object.entries(Fa6Icons),
 		...Object.entries(SiIcons),
+		...Object.entries(BiIcons),
 	];
 
 	// Close dropdown when clicking outside
@@ -66,6 +68,7 @@ function SelectIconDropdown({ initialSelectedIcon = '', onIconChange, onXClick }
 						className='flex flex-col w-full items-center justify-center space-y-1'>
 						{FaIcons[selectedIcon] && React.createElement(FaIcons[selectedIcon], { size: 36 })}
 						{SiIcons[selectedIcon] && React.createElement(SiIcons[selectedIcon], { size: 36 })}
+						{BiIcons[selectedIcon] && React.createElement(BiIcons[selectedIcon], { size: 36 })}
 					</div>
 				) : (
 					<p

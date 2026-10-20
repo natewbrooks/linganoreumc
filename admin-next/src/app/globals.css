@@ -35,40 +35,34 @@
   transform: skewX(-30deg);
 }
 
+/* Opacity only: setting transform here would wipe out skew utilities on the same element */
 .clickable {
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .clickable:hover {
-  transform: scale(1.02);
   opacity: 0.5;
-}
-
-.clickable:active {
-  transform: scale(1);
 }
 
 .clickable-l-skew {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   transform: skewX(-30deg);
 }
 
 .clickable-l-skew:hover {
-  transform: skewX(-30deg);
   opacity: 0.5;
 }
 
 /* Right skew */
 .clickable-r-skew {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   transform: skewX(30deg);
 }
 
 .clickable-r-skew:hover {
-  transform: skewX(30deg);
   opacity: 0.5;
 }
 
