@@ -9,6 +9,7 @@ const navItems = [
 	{ path: '/calendar/', label: 'CALENDAR' },
 	{ path: '/events/', label: 'EVENTS' },
 	{ path: '/sermons/', label: 'SERMONS' },
+	{ path: '/give/', label: 'GIVE' },
 ];
 
 /** True when `pathname` is `path` or one of its subpages, ignoring trailing slashes. */

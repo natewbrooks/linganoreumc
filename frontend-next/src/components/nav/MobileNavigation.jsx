@@ -61,6 +61,7 @@ function MobileNavigation({ announcementBannerEnabled }) {
 		{ path: '/calendar/', label: 'CALENDAR' },
 		{ path: '/events/', label: 'EVENTS' },
 		{ path: '/sermons/', label: 'SERMONS' },
+		{ path: '/give/', label: 'GIVE' },
 	];
 
 	return (

@@ -52,11 +52,11 @@ function Footer({ settings }) {
 						className={`text-bkg`}>
 						S<span className={`text-lg`}>ERMONS</span>
 					</Link>
-					{/* <Link
-						href={`/`}
+					<Link
+						href={`/give`}
 						className={`text-bkg`}>
 						G<span className={`text-lg`}>IVE</span>
-					</Link> */}
+					</Link>
 				</div>
 			</div>
 

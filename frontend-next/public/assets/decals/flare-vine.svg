@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" width="240" height="48" aria-hidden="true">
+  <defs>
+    <path id="leaf" d="M0 0 C-4 -14 -16 -16 -24 -8 C-16 -4 -6 -2 0 0 Z" fill="#AD2C3F"/>
+  </defs>
+  <path d="M236 24 C170 22 110 26 40 24 C26 24 18 16 24 11 C29 7 34 14 28 16" fill="none" stroke="#AD2C3F" stroke-width="2" stroke-linecap="round"/>
+  <use href="#leaf" transform="translate(208 24)"/>
+  <use href="#leaf" transform="translate(168 24)"/>
+  <use href="#leaf" transform="translate(128 24)"/>
+  <use href="#leaf" transform="translate(88 24)"/>
+  <use href="#leaf" transform="translate(188 24) scale(1 -1)"/>
+  <use href="#leaf" transform="translate(148 24) scale(1 -1)"/>
+  <use href="#leaf" transform="translate(108 24) scale(1 -1)"/>
+  <use href="#leaf" transform="translate(68 24) scale(1 -1)"/>
+</svg>
